@@ -1,0 +1,22 @@
+{
+  "orders": [
+    {
+      "service": "electrical",
+      "name": "никита ",
+      "email": "кывеанпгршо",
+      "phone": "89326060565",
+      "date": "2025-05-23T20:30:23.514Z",
+      "status": "new",
+      "id": 1
+    },
+    {
+      "service": "нужно сделать свет в огороде",
+      "name": "nikita",
+      "email": "Nikfigfmovb",
+      "phone": "89326060565",
+      "date": "2025-05-23T21:17:38.783Z",
+      "status": "new",
+      "id": 2
+    }
+  ]
+}

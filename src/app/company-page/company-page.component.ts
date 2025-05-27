@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,17 +11,28 @@ import { FormsModule } from '@angular/forms';
 })
 export class CompanyPageComponent implements OnInit {
   isFeedbackModalOpen = false;
+  isActivitiesExpanded = false;
   feedbackForm = {
     name: '',
     phone: '',
-    message: ''
+    email: '',
+    message: '',
+    privacyAccepted: false
   };
+  isScrollButtonVisible = false;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.checkScroll();
     // Добавляем функцию сворачивания/разворачивания видов деятельности в глобальный объект window
     (window as any).toggleActivities = this.toggleActivities;
+  }
+
+  @HostListener('window:scroll', [])
+  checkScroll() {
+    // Показываем кнопку, когда прокрутка больше 300px
+    this.isScrollButtonVisible = window.pageYOffset > 300;
   }
 
   // Метод для прокрутки наверх страницы
@@ -42,10 +53,11 @@ export class CompanyPageComponent implements OnInit {
         activitiesList.classList.remove('collapsed');
         activitiesList.classList.add('expanded');
         toggleIcon.textContent = '−';
-        toggleButton.innerHTML = '<span class="toggle-icon"></span> Свернуть';
+        toggleButton.innerHTML = '<span class="toggle-icon">−</span> Свернуть';
         activitiesNote.textContent = 'Показаны все виды деятельности. Нажмите "Свернуть" для скрытия.';
+        this.isActivitiesExpanded = true;
         
-        // Плавная прокрутка к нижней части списка (опционально)
+        // Плавная прокрутка к нижней части списка
         setTimeout(() => {
           activitiesNote.scrollIntoView({ behavior: 'smooth' });
         }, 100);
@@ -54,10 +66,11 @@ export class CompanyPageComponent implements OnInit {
         activitiesList.classList.remove('expanded');
         activitiesList.classList.add('collapsed');
         toggleIcon.textContent = '+';
-        toggleButton.innerHTML = '<span class="toggle-icon"></span> Развернуть';
+        toggleButton.innerHTML = '<span class="toggle-icon">+</span> Развернуть';
         activitiesNote.textContent = 'Показано 100+ видов деятельности. Нажмите "Развернуть все" для просмотра полного списка.';
+        this.isActivitiesExpanded = false;
         
-        // Прокрутка к началу списка (опционально)
+        // Прокрутка к началу списка
         setTimeout(() => {
           const activityHeader = document.querySelector('.activity-header');
           if (activityHeader) {
@@ -81,13 +94,18 @@ export class CompanyPageComponent implements OnInit {
     this.feedbackForm = {
       name: '',
       phone: '',
-      message: ''
+      email: '',
+      message: '',
+      privacyAccepted: false
     };
   }
 
   submitFeedback() {
-    // Здесь будет логика отправки формы
-    console.log('Отправка формы:', this.feedbackForm);
-    this.closeFeedbackModal();
+    if (this.feedbackForm.privacyAccepted) {
+      console.log('Отправка формы:', this.feedbackForm);
+      this.resetForm();
+      this.closeFeedbackModal();
+      alert('Спасибо за обратную связь! Мы свяжемся с вами в ближайшее время.');
+    }
   }
 }

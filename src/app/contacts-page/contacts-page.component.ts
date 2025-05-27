@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,42 +10,60 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./contacts-page.component.css']
 })
 export class ContactsPageComponent implements OnInit {
-  isFeedbackModalOpen = false;
-  feedbackForm = {
+  feedbackModalVisible = false;
+  isScrollButtonVisible = false;
+  
+  feedbackData = {
     name: '',
+    email: '',
     phone: '',
-    message: ''
+    message: '',
+    privacyAccepted: false
   };
 
   constructor() { }
 
   ngOnInit(): void {
+    this.checkScroll();
+  }
+
+  @HostListener('window:scroll', [])
+  checkScroll() {
+    // Показываем кнопку, когда прокрутка больше 300px
+    this.isScrollButtonVisible = window.pageYOffset > 300;
   }
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  openFeedbackModal() {
-    this.isFeedbackModalOpen = true;
+  openFeedbackModal(): void {
+    this.feedbackModalVisible = true;
   }
 
-  closeFeedbackModal() {
-    this.isFeedbackModalOpen = false;
+  closeFeedbackModal(): void {
+    this.feedbackModalVisible = false;
     this.resetForm();
   }
 
   resetForm() {
-    this.feedbackForm = {
+    this.feedbackData = {
       name: '',
+      email: '',
       phone: '',
-      message: ''
+      message: '',
+      privacyAccepted: false
     };
   }
 
-  submitFeedback() {
-    // Здесь будет логика отправки формы
-    console.log('Отправка формы:', this.feedbackForm);
-    this.closeFeedbackModal();
+  submitFeedback(): void {
+    if (this.feedbackData.name && this.feedbackData.email && this.feedbackData.message && this.feedbackData.privacyAccepted) {
+      // Здесь можно добавить логику отправки данных на сервер
+      console.log('Отправка сообщения:', this.feedbackData);
+      
+      this.resetForm();
+      this.closeFeedbackModal();
+      alert('Ваше сообщение успешно отправлено!');
+    }
   }
 }

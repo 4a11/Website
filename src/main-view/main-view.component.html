@@ -8,7 +8,7 @@
                 <div class="working-hours">Круглосуточно</div>
                 <a href="tel:+7994444451" class="phone-number">+7 (922) 128-62-22 </a>
             </div>
-            <button class="feedback-button">Обратная связь</button>
+            <button class="feedback-button" (click)="openFeedbackModal()">Обратная связь</button>
         </div>
 
         <nav class="nav-menu">
@@ -77,7 +77,7 @@
                 <div class="advantage-icon-circle">
                     <div class="advantage-icon">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8 S16.41,20,12,20z M9.29,16.29L5.7,12.7c-0.39-0.39-0.39-1.02,0-1.41c0.39-0.39,1.02-0.39,1.41,0L10,14.17l6.88-6.88 c0.39-0.39,1.02-0.39,1.41,0c0.39,0.39,0.39,1.02,0,1.41l-7.59,7.59C10.32,16.68,9.68,16.68,9.29,16.29z"/>
+                            <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z M9.29,16.29L5.7,12.7c-0.39-0.39-0.39-1.02,0-1.41c0.39-0.39,1.02-0.39,1.41,0L10,14.17l6.88-6.88 c0.39-0.39,1.02-0.39,1.41,0c0.39,0.39,0.39,1.02,0,1.41l-7.59,7.59C10.32,16.68,9.68,16.68,9.29,16.29z"/>
                         </svg>
                     </div>
                 </div>
@@ -133,66 +133,75 @@
                 <div class="service-card">
                     <div class="service-icon-circle">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM15 16H5V8h10v8zm-6-1h2v-2h2v-2h-2V9H9v2H7v2h2z"/>
+                            <path d="M18 4v1h-2V4c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1v1H6V4c0-.55-.45-1-1-1s-1 .45-1 1v16c0 .55.45 1 1 1s1-.45 1-1v-1h2v1c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-1h2v1c0 .55.45 1 1 1s1-.45 1-1V4c0-.55-.45-1-1-1s-1 .45-1 1zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm-4 3c0 1.1-.89 2-2 2s-2-.9-2-2 .89-2 2-2 2 .9 2 2 2 2z"/>
                         </svg>
                     </div>
                     <h3 class="service-title">Видеонаблюдение</h3>
-                    <button class="service-button">Подробнее</button>
+                    <button class="service-button" (click)="navigateToService('video')">Подробнее</button>
                 </div>
                 
-                <!-- Сервис 2: Домофонные системы -->
+                <!-- Сервис 2: Сборка электрощитков -->
                 <div class="service-card">
                     <div class="service-icon-circle">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18,11c0,0.67,0,1.33,0,2c1.2,0,2.76,0,4,0c0-0.67,0-1.33,0-2C20.76,11,19.2,11,18,11z M16,17.61c0.96,0.71,2.21,1.65,3.2,2.39c0.4-0.53,0.8-1.07,1.2-1.6c-0.99-0.74-2.24-1.68-3.2-2.4C16.8,16.54,16.4,17.08,16,17.61z M20.4,5.6c-0.4-0.53-0.8-1.07-1.2-1.6c-0.99,0.74-2.24,1.68-3.2,2.4c0.4,0.53,0.8,1.07,1.2,1.6C18.16,7.28,19.41,6.35,20.4,5.6z M4,9c-1.1,0-2,0.9-2,2v2c0,1.1,0.9,2,2,2h1v4h2v-4h1l5,3V6L8,9H4z M9.03,10.71L11,9.53v4.94l-1.97-1.18L8.55,13H4v-2h4.55L9.03,10.71z M15.5,12c0-1.33-0.58-2.53-1.5-3.35v6.69C14.92,14.53,15.5,13.33,15.5,12z"></path>
+                            <path d="M20 4c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h16m0 2H4v12h16V6"/>
+                            <path d="M13 8l-3 5h3l-1 3 3-5h-3z"/>
+                            <path d="M7 8h2v2H7zm0 4h2v2H7zm0 4h2v2H7z"/>
+                            <path d="M15 8h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2z"/>
                         </svg>
                     </div>
-                    <h3 class="service-title">Домофонные системы</h3>
-                    <button class="service-button">Подробнее</button>
+                    <h3 class="service-title">Сборка электрощитков</h3>
+                    <button class="service-button" (click)="navigateToService('electrical')">Подробнее</button>
                 </div>
                 
                 <!-- Сервис 3: Система контроля и управлением доступа -->
                 <div class="service-card">
                     <div class="service-icon-circle">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12,17c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S10.9,17,12,17z M18,8h-1V6c0-2.76-2.24-5-5-5S7,3.24,7,6v2H6c-1.1,0-2,0.9-2,2v10c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V10C20,8.9,19.1,8,18,8z M8.9,6c0-1.71,1.39-3.1,3.1-3.1s3.1,1.39,3.1,3.1v2H8.9V6z M18,20H6V10h12V20z"></path>
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10z"/>
+                            <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2 2z"/>
                         </svg>
                     </div>
                     <h3 class="service-title">Система контроля и управлением доступа</h3>
-                    <button class="service-button">Подробнее</button>
+                    <button class="service-button" (click)="navigateToService('access')">Подробнее</button>
                 </div>
                 
                 <!-- Сервис 4: Охранная система -->
                 <div class="service-card">
                     <div class="service-icon-circle">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.83-2.61 9.18-7 10.93-4.39-1.75-7-6.1-7-10.93v-4.7l7-3.12zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1zm0 2.18l7 3.12v4.7c0 4.83-2.72 9.38-7 10.93-4.28-1.55-7-6.1-7-10.93V6.3l7-3.12z"/>
+                            <path d="M12 6c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/>
+                            <path d="M11 9h2v2h-2z"/>
+                            <path d="M12 12c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1z"/>
                         </svg>
                     </div>
                     <h3 class="service-title">Охранная система</h3>
-                    <button class="service-button">Подробнее</button>
+                    <button class="service-button" (click)="navigateToService('security')">Подробнее</button>
                 </div>
                 
-                <!-- Сервис 5: Сети связи -->
+                <!-- Сервис 5: Сети связи и оптоволокно -->
                 <div class="service-card">
                     <div class="service-icon-circle">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+                            <path d="M20 3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h3l-1 1v2h12v-2l-1-1h3c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 13H4V5h16v11z"/>
+                            <path d="M12 14c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0-8c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3z"/>
+                            <path d="M12 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
                         </svg>
                     </div>
-                    <h3 class="service-title">Сети связи</h3>
-                    <button class="service-button">Подробнее</button>
+                    <h3 class="service-title">Сети связи и оптоволокно</h3>
+                    <button class="service-button" (click)="navigateToService('network')">Подробнее</button>
                 </div>
                 
-                <!-- Сервис 6: Мониторы для видеонаблюдения -->
+                <!-- Сервис 6: Электромонтажные работы -->
                 <div class="service-card">
                     <div class="service-icon-circle">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21,3H3C1.9,3,1,3.9,1,5v12c0,1.1,0.9,2,2,2h5v2h8v-2h5c1.1,0,2-0.9,2-2V5C23,3.9,22.1,3,21,3z M21,17H3V5h18V17z M5,7h4v4H5V7z M10,7h4v4h-4V7z M15,7h4v4h-4V7z M5,12h4v4H5V12z M10,12h4v4h-4V12z M15,12h4v4h-4V12z"/>
+                            <path d="M14.69 2.21L4.33 11.49c-.64.58-.28 1.65.58 1.73L13 14l-4.85 6.76c-.22.31-.19.74.08 1.01.3.3.77.31 1.08.02l10.36-9.28c.64-.58.28-1.65-.58-1.73L11 10l4.85-6.76c.22-.31.19-.74-.08-1.01-.3-.3-.77-.31-1.08-.02z"/>
                         </svg>
                     </div>
-                    <h3 class="service-title">Мониторы для видеонаблюдения</h3>
-                    <button class="service-button">Подробнее</button>
+                    <h3 class="service-title">Электромонтажные работы</h3>
+                    <button class="service-button" (click)="navigateToService('installation')">Подробнее</button>
                 </div>
             </div>
         </section>
@@ -228,7 +237,9 @@
                         <div class="work-step second-step">
                             <div class="step-icon">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19,3h-4.18C14.4,1.84,13.3,1,12,1S9.6,1.84,9.18,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5 C21,3.9,20.1,3,19,3z M12,2.75c0.41,0,0.75,0.34,0.75,0.75S12.41,4.25,12,4.25s-0.75-0.34-0.75-0.75S11.59,2.75,12,2.75z M19,19H5V5 h14V19z M12,15c-1.65,0-3-1.35-3-3s1.35-3,3-3s3,1.35,3,3S13.65,15,12,15z M12,10.5c-0.83,0-1.5,0.67-1.5,1.5s0.67,1.5,1.5,1.5 s1.5-0.67,1.5-1.5S12.83,10.5,12,10.5z"/>
+                                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.22 0 .41.1.55.25.12.13.2.31.2.5 0 .41-.34.75-.75.75s-.75-.34-.75-.75c0-.19.08-.37.2-.5.14-.15.33-.25.55-.25zM19 19H5V5h14v14z"/>
+                                    <path d="M7 12h10v2H7zm0-4h10v2H7zm0 8h7v2H7z"/>
+                                    <path d="M19 15.5c-.16 0-.31.06-.43.17l-2 2-.57-.57a.61.61 0 00-.87 0c-.24.24-.24.64 0 .88l1 1c.12.12.28.18.44.18.16 0 .32-.06.44-.18l2.5-2.5c.24-.24.24-.64 0-.88a.61.61 0 00-.51-.1z"/>
                                 </svg>
                             </div>
                             <div class="step-content">
@@ -253,24 +264,204 @@
             </div>
             
             <!-- Форма заказа -->
-            <div id="orderForm" class="order-form-container">
+            <div class="order-form-container" id="orderForm">
                 <h3 class="order-form-header">Оформите заявку онлайн!</h3>
                 
-                <div class="order-form">
-                    <input type="text" placeholder="*Ваше имя:" class="form-input">
-                    <input type="email" placeholder="*Эл. почта:" class="form-input">
-                    <input type="tel" placeholder="*Телефон:" class="form-input">
-                    <button type="submit" class="order-button">Оставить заявку</button>
-                </div>
+                <form #orderFormElement="ngForm" class="order-form" (ngSubmit)="submitOrder()">
+                    <select class="form-input service-select" 
+                            [(ngModel)]="orderForm.service" 
+                            name="service" 
+                            (ngModelChange)="onServiceChange($event)" 
+                            required>
+                        <option value="" disabled selected>*Какая услуга вас интересует:</option>
+                        <option value="video">Видеонаблюдение</option>
+                        <option value="electrical">Сборка электрощитков</option>
+                        <option value="access">Система контроля и управления доступом</option>
+                        <option value="security">Охранная система</option>
+                        <option value="network">Сети связи и оптоволокно</option>
+                        <option value="installation">Электромонтажные работы</option>
+                        <option value="other">Другое</option>
+                    </select>
+                    
+                    <input *ngIf="orderForm.service === 'other'" 
+                           type="text" 
+                           [(ngModel)]="orderForm.customService"
+                           name="customService" 
+                           placeholder="*Опишите вашу проблему:" 
+                           class="form-input custom-service-input" 
+                           required>
+                           
+                    <input type="text" 
+                           [(ngModel)]="orderForm.name"
+                           name="name" 
+                           placeholder="*Ваше имя:" 
+                           class="form-input" 
+                           required>
+                           
+                    <input type="email" 
+                           [(ngModel)]="orderForm.email"
+                           name="email" 
+                           placeholder="*Эл. почта:" 
+                           class="form-input" 
+                           required
+                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                           
+                    <input type="tel" 
+                           [(ngModel)]="orderForm.phone"
+                           name="phone" 
+                           placeholder="*Телефон:" 
+                           class="form-input" 
+                           required
+                           pattern="[0-9+()-\s]{10,}">
+                           
+                    <div class="button-container">
+                        <button type="submit" class="order-button">Оставить заявку</button>
+                    </div>
+                </form>
             </div>
         </section>
         
-        <!-- Здесь может быть дополнительный контент для прокрутки -->
+        <!-- Секция портфолио -->
+        <section class="portfolio-section">
+            <h2 class="portfolio-header">Наши работы</h2>
+            
+            <div class="portfolio-container">
+                <button class="portfolio-button prev" (click)="slidePrev()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                
+                <div class="portfolio-track-container">
+                    <div class="portfolio-track" #portfolioSlider 
+                         (mousedown)="startDragging($event)"
+                         (mousemove)="onDragging($event)"
+                         (mouseup)="stopDragging()"
+                         (mouseleave)="stopDragging()"
+                         (touchstart)="startDragging($event)"
+                         (touchmove)="onDragging($event)"
+                         (touchend)="stopDragging()"
+                         (touchcancel)="stopDragging()">
+                        <div class="portfolio-item" *ngFor="let item of portfolioItems">
+                            <img [src]="item.image" [alt]="item.title" class="portfolio-image">
+                            <div class="portfolio-overlay">
+                                <h3 class="portfolio-title">{{item.title}}</h3>
+                                <p class="portfolio-description">{{item.description}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="portfolio-button next" (click)="slideNext()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18L15 12L9 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Секция отзывов -->
+        <section class="reviews-section">
+            <h2 class="reviews-header">Отзывы наших клиентов</h2>
+            
+            <div class="reviews-container">
+                <div class="reviews-track">
+                    <div class="review-card" *ngFor="let review of displayedReviews" [@fadeInOut] [style.animation-delay]="review.animationDelay">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-name">{{ review.name }}</div>
+                                <div class="review-date">{{ review.date }}</div>
+                                <div class="review-rating">
+                                    <span class="star" *ngFor="let star of [].constructor(review.rating)">★</span>
+                                    <span class="star empty" *ngFor="let star of [].constructor(5 - review.rating)">☆</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-text">{{ review.text }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leave-review-button-container">
+                <button class="leave-review-button" (click)="navigateToReviews()">Оставить отзыв</button>
+            </div>
+        </section>
     </main>
 
-    <button class="scroll-to-top-button" (click)="scrollToTop()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
-        <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.59 5.58L20 12l-8-8-8 8z"/>
-      </svg>
+    <!-- Кнопка прокрутки наверх -->
+    <button class="scroll-to-top-button" [class.visible]="isScrollButtonVisible" (click)="scrollToTop()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
     </button>
+
+    <!-- Секция с картой и контактами -->
+    <footer class="contact-map-section">
+        <div class="map-container">
+            <!-- Яндекс Карта -->
+            <iframe src="https://yandex.ru/map-widget/v1/?ll=62.34465,56.90743&z=17&mode=search&text=Россия%2C%20Свердловская%20область%2C%20Сухой%20Лог%2C%20Уральская%20улица%2C%201Ж" 
+                    width="100%" 
+                    height="400" 
+                    frameborder="0"
+                    class="yandex-map"></iframe>
+            
+            <div class="map-controls">
+                <button class="map-button" (click)="openMap()">
+                    Открыть в Яндекс.Картах
+                </button>
+            </div>
+        </div>
+
+        <div class="contact-footer">
+            <div class="contact-info-block">
+                <a href="tel:+79221286222" class="contact-phone">+7 (922) 128-62-22</a>
+            </div>
+            
+            <div class="contact-info-block address">
+                Свердловская область, г. Сухой Лог, Уральская улица, 1Ж
+            </div>
+            
+            <div class="contact-info-block">
+                <a href="https://vk.com/ooonovadom" class="contact-email" target="_blank">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#0077FF">
+                        <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93V15.07C2 20.67 3.33 22 8.93 22H15.07C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2ZM18.24 16.83H16.74C16.07 16.83 15.87 16.35 14.67 15.15C13.6 14.12 13.18 14 12.87 14C12.41 14 12.29 14.11 12.29 14.78V16.08C12.29 16.54 12.14 16.83 11.09 16.83C9.72 16.83 8.2 16.06 7.11 14.61C5.37 12.36 4.77 10.71 4.77 10.19C4.77 9.93 4.89 9.69 5.38 9.69H6.89C7.38 9.69 7.55 9.89 7.72 10.37C8.45 12.23 9.7 13.88 10.19 13.88C10.47 13.88 10.59 13.77 10.59 13.03V11.12C10.53 10.14 10 10.05 10 9.59C10 9.39 10.16 9.19 10.42 9.19H12.87C13.28 9.19 13.41 9.39 13.41 9.85V12.5C13.41 12.92 13.57 13.05 13.71 13.05C13.99 13.05 14.22 12.92 14.75 12.39C15.72 11.33 16.42 9.77 16.42 9.77C16.54 9.53 16.75 9.31 17.24 9.31H18.75C19.34 9.31 19.46 9.57 19.34 9.99C19.07 11 17.63 13.03 17.63 13.03C17.43 13.37 17.36 13.49 17.63 13.85C17.82 14.12 18.43 14.67 18.85 15.15C19.56 15.96 20.12 16.65 20.29 17.13C20.47 17.61 20.19 17.83 19.63 17.83L18.24 16.83Z"/>
+                    </svg>
+                    <span>ООО "НоваДом"</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно обратной связи -->
+    <div class="modal feedback-modal" [class.visible]="isFeedbackModalOpen">
+        <div class="modal-content">
+            <span class="close-button" (click)="closeFeedbackModal()">&times;</span>
+            <h2>Связаться с администратором</h2>
+            <form class="feedback-form" (submit)="submitFeedback(); $event.preventDefault()">
+                <div class="form-group">
+                    <label for="feedbackName">Ваше имя:</label>
+                    <input type="text" id="feedbackName" name="feedbackName" [(ngModel)]="feedbackForm.name" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackEmail">Email:</label>
+                    <input type="email" id="feedbackEmail" name="feedbackEmail" [(ngModel)]="feedbackForm.email" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackPhone">Телефон:</label>
+                    <input type="tel" id="feedbackPhone" name="feedbackPhone" [(ngModel)]="feedbackForm.phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackMessage">Ваше сообщение:</label>
+                    <textarea id="feedbackMessage" name="feedbackMessage" rows="5" [(ngModel)]="feedbackForm.message" required></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="privacyPolicy" name="privacyPolicy" [(ngModel)]="feedbackForm.privacyAccepted" required>
+                        <label for="privacyPolicy">Я принимаю условия обработки моих персональных данных</label>
+                    </div>
+                </div>
+                <button type="submit" [disabled]="!feedbackForm.privacyAccepted">Отправить</button>
+            </form>
+        </div>
+    </div>
 </body>

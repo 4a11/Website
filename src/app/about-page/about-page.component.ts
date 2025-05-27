@@ -1,47 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Review {
-  name: string;
-  email: string;
-  text: string;
-  date: Date;
-}
+import { ReviewsService, Review } from '../services/reviews.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-about-page',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './about-page.component.html',
-  styleUrl: './about-page.component.css'
+  styleUrls: ['./about-page.component.css']
 })
-export class AboutPageComponent {
-  public modalVisible = false;
-  public reviews: Review[] = [
-    { 
-      name: 'Иван Петров', 
-      email: 'ivan@example.com', 
-      text: 'Отличный сервис! Установили систему видеонаблюдения быстро и качественно. Теперь чувствую себя в безопасности.', 
-      date: new Date('2023-05-15') 
-    },
-    { 
-      name: 'Анна Сидорова', 
-      email: 'anna@example.com', 
-      text: 'Спасибо за профессиональный подход. Бригада приехала вовремя, всё установили аккуратно и дали подробные рекомендации по использованию.', 
-      date: new Date('2023-06-20') 
-    },
-    { 
-      name: 'Дмитрий Кузнецов', 
-      email: 'dmitriy@example.com', 
-      text: 'Заказывал установку охранной системы. Ребята сработали на отлично! Всё функционирует как часы, рекомендую!', 
-      date: new Date('2023-07-10') 
-    }
-  ];
-  public newReview: Review = { name: '', email: '', text: '', date: new Date() };
+export class AboutPageComponent implements OnInit, OnDestroy {
+  reviews: Review[] = [];
+  private reviewsSubscription: Subscription | null = null;
+  hoverRating = 0;
+  
+  newReview = {
+    name: '',
+    text: '',
+    rating: 5,
+    privacyAccepted: false
+  };
 
-  public feedbackModalVisible = false;
-  public feedbackData = {
+  modalVisible = false;
+  feedbackModalVisible = false;
+  
+  feedbackData = {
     name: '',
     email: '',
     phone: '',
@@ -49,7 +34,41 @@ export class AboutPageComponent {
     privacyAccepted: false
   };
 
+  private readonly STORAGE_KEY = 'reviews';
+
+  constructor(private reviewsService: ReviewsService) {}
+
+  ngOnInit(): void {
+    this.reviewsSubscription = this.reviewsService.getReviews().subscribe(
+      reviews => this.reviews = reviews
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.reviewsSubscription) {
+      this.reviewsSubscription.unsubscribe();
+    }
+  }
+
+  private resetReviewForm(): void {
+    this.newReview = {
+      name: '',
+      text: '',
+      rating: 5,
+      privacyAccepted: false
+    };
+    this.hoverRating = 0;
+  }
+
+  private hasUnsavedChanges(): boolean {
+    return this.newReview.name !== '' || 
+           this.newReview.text !== '' || 
+           this.newReview.rating !== 5 ||
+           this.newReview.privacyAccepted;
+  }
+
   openModal(): void {
+    this.resetReviewForm();
     this.modalVisible = true;
   }
 
@@ -58,9 +77,15 @@ export class AboutPageComponent {
   }
 
   submitReview(): void {
-    this.reviews.unshift({...this.newReview, date: new Date()});
-    this.newReview = { name: '', email: '', text: '', date: new Date() };
-    this.closeModal();
+    if (this.newReview.name && this.newReview.text && this.newReview.privacyAccepted) {
+      this.reviewsService.addReview({
+        name: this.newReview.name,
+        text: this.newReview.text,
+        rating: this.newReview.rating
+      });
+      
+      this.closeModal();
+    }
   }
 
   openFeedbackModal(): void {
@@ -72,18 +97,29 @@ export class AboutPageComponent {
   }
 
   submitFeedback(): void {
-    console.log('Отправка сообщения:', this.feedbackData);
-    
-    this.feedbackData = {
-      name: '',
-      email: '',
-      phone: '',
-      message: '',
-      privacyAccepted: false
-    };
-    
-    this.closeFeedbackModal();
-    
-    alert('Ваше сообщение успешно отправлено!');
+    if (this.feedbackData.name && this.feedbackData.email && this.feedbackData.message && this.feedbackData.privacyAccepted) {
+      // Здесь можно добавить логику отправки данных на сервер
+      console.log('Отправка сообщения:', this.feedbackData);
+      
+      // Очищаем форму
+      this.feedbackData = {
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        privacyAccepted: false
+      };
+
+      this.closeFeedbackModal();
+      alert('Ваше сообщение успешно отправлено!');
+    }
+  }
+
+  setRating(rating: number): void {
+    this.newReview.rating = rating;
+  }
+
+  private saveToLocalStorage(): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.reviews));
   }
 }

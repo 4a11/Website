@@ -581,16 +581,22 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     onEquipmentAdded(equipment: Equipment): void {
-        this.equipmentService.addEquipment(equipment).subscribe(() => {
-            this.loadEquipment();
-            this.onCloseAddEquipmentModal();
+        this.equipmentService.addEquipment(equipment).subscribe({
+            next: () => {
+                this.loadEquipment();
+                this.showAddEquipmentModal = false;
+            },
+            error: (error) => console.error('Ошибка при добавлении оборудования:', error)
         });
     }
 
     onEquipmentUpdated(equipment: Equipment): void {
-        this.equipmentService.updateEquipment(equipment).subscribe(() => {
-            this.loadEquipment();
-            this.onCloseAddEquipmentModal();
+        this.equipmentService.updateEquipment(equipment).subscribe({
+            next: () => {
+                this.loadEquipment();
+                this.selectedEquipment = null;
+            },
+            error: (error) => console.error('Ошибка при обновлении оборудования:', error)
         });
     }
 
@@ -601,8 +607,11 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     onDeleteEquipment(equipment: Equipment): void {
         if (confirm('Вы уверены, что хотите удалить это оборудование?')) {
-            this.equipmentService.deleteEquipment(equipment.id).subscribe(() => {
-                this.loadEquipment();
+            this.equipmentService.deleteEquipment(equipment.id).subscribe({
+                next: () => {
+                    this.loadEquipment();
+                },
+                error: (error) => console.error('Ошибка при удалении оборудования:', error)
             });
         }
     }
@@ -643,7 +652,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             this.onCloseAddNewsModal();
         });
     }
-
     onAddReport() {
         this.selectedReport = null;
         this.showAddReportModal = true;

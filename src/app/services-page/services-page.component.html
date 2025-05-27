@@ -8,27 +8,136 @@
                 <div class="working-hours">Круглосуточно</div>
                 <a href="tel:+7994444451" class="phone-number">+7 (922) 128-62-22</a>
             </div>
-            <button class="feedback-button">Обратная связь</button>
+            <button class="feedback-button" (click)="openFeedbackModal()">Обратная связь</button>
         </div>
 
         <nav class="nav-menu">
-            <a href="main-view" class="nav-item">Главная</a>
-            <a href="company-page" class="nav-item">О компании</a>
-            <a href="services-page" class="nav-item">Услуги</a>
-            <a href="contacts-page" class="nav-item">Контакты</a>
-            <a href="equipment-page" class="nav-item">Оборудование</a>
-            <a href="about-page" class="nav-item">Отзывы</a>
+            <a routerLink="/main-view" class="nav-item">Главная</a>
+            <a routerLink="/company-page" class="nav-item">О компании</a>
+            <a routerLink="/services-page" class="nav-item">Услуги</a>
+            <a routerLink="/contacts-page" class="nav-item">Контакты</a>
+            <a routerLink="/equipment-page" class="nav-item">Оборудование</a>
+            <a routerLink="/about-page" class="nav-item">Отзывы</a>
         </nav>
     </header>
 
     <main class="main-content">
         <div class="rounded-image-container">
-            <img src="assets/images/camera.jpg" alt="Камера видеонаблюдения" class="rounded-image">
+            <img src="assets/images/camera.jpg" alt="Системы безопасности" class="rounded-image">
             <div class="image-overlay-text">
                
             </div>
         </div>
         
-        <!-- Здесь может быть дополнительный контент для прокрутки -->
+        <section class="services-intro">
+            <div class="intro-text">
+                <h1 class="intro-title">Профессиональные решения для вашего комфорта и безопасности</h1>
+                <p class="main-description">
+                    Мы предлагаем полный спектр услуг по монтажу и настройке оборудования. Наши специалисты всегда готовы предложить вам профессиональные решения в области телекоммуникаций, безопасности и электротехники. Каждая работа выполняется с точностью и вниманием к деталям — потому что ваш комфорт и безопасность для нас важнее всего. Мы работаем с современными технологиями и используем только качественное оборудование, чтобы обеспечить надежность и долговечность наших решений.
+                </p>
+                <h2 class="services-subtitle">В число наших услуг входят:</h2>
+                <div class="service-list">
+                    <div id="video" class="service-item">
+                        <div class="service-info">
+                            <h3>Настройка оборудования</h3>
+                            <p>Обеспечиваем корректную установку и конфигурацию сетевого, серверного и телекоммуникационного оборудования для стабильной работы вашей инфраструктуры.</p>
+                        </div>
+                    </div>
+
+                    <div id="network" class="service-item">
+                        <div class="service-info">
+                            <h3>Протяжка и спайка оптоволокна</h3>
+                            <p>Выполняем прокладку и сварку оптических линий связи с соблюдением всех технических стандартов, гарантируя высокую скорость и бесперебойную передачу данных.</p>
+                        </div>
+                    </div>
+
+                    <div id="security" class="service-item">
+                        <div class="service-info">
+                            <h3>Установка видеонаблюдения</h3>
+                            <p>Подбираем и монтируем системы видеомониторинга любой сложности — от квартир и офисов до промышленных объектов, обеспечивая безопасность и контроль 24/7.</p>
+                        </div>
+                    </div>
+
+                    <div id="access" class="service-item">
+                        <div class="service-info">
+                            <h3>Системы контроля и управления доступом (СКУД)</h3>
+                            <p>Внедряем решения для ограничения и учета доступа на объекты, включая турникеты, домофоны, электронные замки и программное управление.</p>
+                        </div>
+                    </div>
+
+                    <div id="electrical" class="service-item">
+                        <div class="service-info">
+                            <h3>Сборка электрощитков</h3>
+                            <p>Проектируем и собираем распределительные щиты с учетом всех требований безопасности и индивидуальных потребностей заказчика.</p>
+                        </div>
+                    </div>
+
+                    <div id="installation" class="service-item">
+                        <div class="service-info">
+                            <h3>Контрактное обслуживание</h3>
+                            <p>Предлагаем выгодные условия долгосрочного сотрудничества по контрактному обслуживанию:</p>
+                            <ul class="contract-list">
+                                <li>Помесячное обслуживание с фиксированной стоимостью</li>
+                                <li>Приоритетное реагирование на заявки</li>
+                                <li>Регулярные профилактические проверки</li>
+                                <li>Бесплатные консультации по техническим вопросам</li>
+                                <li>Специальные цены на дополнительные услуги</li>
+                            </ul>
+                            <h4>Электромонтажные работы</h4>
+                            <p>Выполняем полный спектр электромонтажных работ с соблюдением всех норм безопасности и использованием современных материалов.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="service-footer">Доверьте нам вашу инфраструктуру — и мы обеспечим ее надежную и бесперебойную работу!</p>
+            </div>
+        </section>
+
+        <section class="services-section">
+            <!-- Здесь может быть дополнительный контент для прокрутки -->
+        </section>
     </main>
+
+    <!-- Модальное окно для связи с администратором -->
+    <div class="modal feedback-modal" [class.visible]="feedbackModalVisible">
+        <div class="modal-content">
+            <span class="close-button" (click)="closeFeedbackModal()">&times;</span>
+            <h2>Связаться с администратором</h2>
+            <form class="feedback-form" (submit)="submitFeedback(); $event.preventDefault()">
+                <div class="form-group">
+                    <label for="feedbackName">Ваше имя:</label>
+                    <input type="text" id="feedbackName" name="feedbackName" [(ngModel)]="feedbackData.name" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackEmail">Email:</label>
+                    <input type="email" id="feedbackEmail" name="feedbackEmail" [(ngModel)]="feedbackData.email" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackPhone">Телефон:</label>
+                    <input type="tel" id="feedbackPhone" name="feedbackPhone" [(ngModel)]="feedbackData.phone">
+                </div>
+                <div class="form-group">
+                    <label for="feedbackMessage">Ваше сообщение:</label>
+                    <textarea id="feedbackMessage" name="feedbackMessage" rows="5" [(ngModel)]="feedbackData.message" required></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="privacyPolicy" name="privacyPolicy" [(ngModel)]="feedbackData.privacyAccepted" required>
+                        <label for="privacyPolicy">Я принимаю условия обработки моих персональных данных</label>
+                    </div>
+                </div>
+                <button type="submit" 
+                        class="submit-feedback-button" 
+                        [disabled]="!feedbackData.privacyAccepted">
+                    Отправить
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Кнопка прокрутки наверх -->
+    <button class="scroll-to-top-button" [class.visible]="isScrollButtonVisible" (click)="scrollToTop()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
 </body>

@@ -30,28 +30,36 @@
         </div>
         
         <!-- Секция отзывов -->
-        <section class="reviews-section">
+        <div class="reviews-section">
+            <h2 class="reviews-header">Отзывы наших клиентов</h2>
+            
             <div class="reviews-container">
                 <div class="review-card" *ngFor="let review of reviews">
                     <div class="review-header">
-                        <div class="reviewer-avatar"></div>
-                        <div class="reviewer-name">{{ review.name }}</div>
+                        <div class="reviewer-info">
+                            <div class="reviewer-name">{{ review.name }}</div>
+                            <div class="review-date">{{ review.date }}</div>
+                            <div class="review-rating">
+                                <span class="star" *ngFor="let star of [].constructor(review.rating)">★</span>
+                                <span class="star empty" *ngFor="let star of [].constructor(5 - review.rating)">☆</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="review-text">
-                        {{ review.text }}
-                    </div>
+                    <div class="review-text">{{ review.text }}</div>
                 </div>
             </div>
-            <!-- Кнопка "Оставить отзыв" под отзывами -->
+
             <div class="leave-review-button-container">
                 <button class="leave-review-button" (click)="openModal()">Оставить отзыв</button>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- Модальное окно для отзыва -->
-    <div class="modal" [class.visible]="modalVisible">
-        <div class="modal-content">
+    <div class="modal" 
+         [class.visible]="modalVisible"
+         (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
             <span class="close-button" (click)="closeModal()">&times;</span>
             <h2>Оставить отзыв</h2>
             <form class="review-form" (submit)="submitReview(); $event.preventDefault()">
@@ -60,14 +68,41 @@
                     <input type="text" id="name" name="name" [(ngModel)]="newReview.name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" [(ngModel)]="newReview.email" required>
+                    <div class="rating-container">
+                        <label class="rating-label">Оценка:</label>
+                        <div class="rating-input">
+                            <span class="star" 
+                                  *ngFor="let star of [1,2,3,4,5]" 
+                                  [class.active]="(hoverRating || newReview.rating) >= star"
+                                  (click)="setRating(star)"
+                                  (mouseenter)="hoverRating = star"
+                                  (mouseleave)="hoverRating = 0">
+                                ★
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="review">Ваш отзыв:</label>
                     <textarea id="review" name="review" rows="5" [(ngModel)]="newReview.text" required></textarea>
                 </div>
-                <button type="submit" class="submit-review-button">Отправить</button>
+                <div class="form-group checkbox-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" 
+                               id="privacyPolicy" 
+                               name="privacyPolicy" 
+                               [(ngModel)]="newReview.privacyAccepted" 
+                               required>
+                        <label for="privacyPolicy">
+                            Я принимаю условия обработки моих персональных данных <span class="required">*</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" 
+                        class="submit-review-button" 
+                        [disabled]="!newReview.privacyAccepted">
+                    Отправить
+                </button>
             </form>
         </div>
     </div>
@@ -104,5 +139,5 @@
             </form>
         </div>
     </div>
-</body>ы
+</body>
 

@@ -13,119 +13,78 @@
 
 .modal-content {
     background: white;
-    padding: 20px;
+    padding: 2rem;
     border-radius: 8px;
-    width: 100%;
-    max-width: 500px;
+
+    width: 90%;
+    max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-    margin: 20px;
 }
 
-.modal-content.dark-theme {
-    background: #2d2d2d;
-    color: #fff;
-}
-
-.modal-content.dark-theme input,
-.modal-content.dark-theme select {
-    background: #3d3d3d;
-    border-color: #4d4d4d;
-    color: #fff;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.modal-content.dark-theme .btn-secondary {
-    background: #4d4d4d;
-    color: #fff;
-    border-color: #5d5d5d;
-}
-
-.modal-content.dark-theme .btn-primary {
-    background: #2e7d32;
-}
-
-.modal-content.dark-theme label {
-    color: #ddd;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: inherit;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: inherit;
-    padding: 0;
-    margin-left: 10px;
+h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #333;
 }
 
 .form-group {
-    margin-bottom: 15px;
-    width: 100%;
+    margin-bottom: 1rem;
 }
 
-.form-group label {
+label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #666;
 }
 
-.form-group input,
-.form-group select {
+input, select, textarea {
     width: 100%;
-    padding: 8px 12px;
+    padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 14px;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
+    font-size: 1rem;
 }
 
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+textarea {
+    resize: vertical;
+    min-height: 100px;
 }
 
-.modal-body {
-    width: 100%;
-    box-sizing: border-box;
+.features-list {
+    margin: 0.5rem 0;
 }
 
-.modal-footer {
+.feature-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: #f5f5f5;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+.feature-item button {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-    width: 100%;
-    box-sizing: border-box;
+    gap: 1rem;
+    margin-top: 1.5rem;
+
 }
 
-.btn {
-    padding: 8px 16px;
+button {
+    padding: 0.5rem 1rem;
+    border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
@@ -134,22 +93,28 @@
     white-space: nowrap;
 }
 
-.btn-primary {
-    background-color: #007bff;
+button[type="submit"] {
+    background: #4CAF50;
     color: white;
-    border: none;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+button[type="submit"]:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-    border: none;
+button[type="button"] {
+    background: #f5f5f5;
+    color: #333;
 }
 
+button[type="button"]:hover {
+    background: #e0e0e0;
+}
+
+
+button[type="submit"]:hover:not(:disabled) {
+ 
 .btn-secondary:hover {
     background-color: #5a6268;
 }
@@ -168,6 +133,7 @@
     .btn {
         padding: 6px 12px;
     }
+
 }
 
 /* Темная тема */

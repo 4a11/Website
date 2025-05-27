@@ -20,18 +20,7 @@ export class AddEquipmentModalComponent implements OnInit {
     equipment: Partial<Equipment> = {
         name: '',
         type: '',
-        status: 'Исправно',
-        inventory_number: '',
-        purchase_date: new Date(),
-        last_maintenance_date: new Date(),
-        next_maintenance_date: new Date(),
-        location: '',
-        description: '',
-        company_id: 0,
-        created_at: new Date()
-    };
 
-    ngOnInit(): void {
         if (this.equipmentToEdit) {
             this.equipment = {
                 ...this.equipmentToEdit,
@@ -49,12 +38,23 @@ export class AddEquipmentModalComponent implements OnInit {
                 ...this.equipment
             } as Equipment);
         } else {
-            this.equipmentAdded.emit(this.equipment as Equipment);
+
         }
         this.onClose();
     }
 
     onClose(): void {
         this.close.emit();
+    }
+
+    addFeature() {
+        const feature = prompt('Введите характеристику оборудования:');
+        if (feature) {
+            this.equipment.features = [...this.equipment.features, feature];
+        }
+    }
+
+    removeFeature(index: number) {
+        this.equipment.features = this.equipment.features.filter((_, i) => i !== index);
     }
 } 

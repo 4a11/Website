@@ -15,6 +15,12 @@ import { FeedbackFormComponent } from './features/feedback/components/feedback-f
 
 export const routes: Routes = [
     { path: '', redirectTo: '/admin', pathMatch: 'full' },
+
+    { path: 'admin', component: AdminComponent },
+    { path: 'admin/employees', component: AdminComponent },
+    { path: 'admin/facilities', component: AdminComponent },
+    { path: 'admin/reports', component: AdminComponent },
+    { path: 'admin/settings', component: AdminComponent },
     { path: 'login', component: LoginComponent },
     { path: 'forbidden', component: ForbiddenComponent },
     { 
@@ -78,6 +84,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         data: { roles: [UserRole.ADMIN] }
     },
+
     { path: 'main-view', component: MainViewComponent },
     { path: 'about-page', component: AboutPageComponent },
     { path: 'services-page', component: ServicesPageComponent },

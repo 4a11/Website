@@ -7,17 +7,17 @@ html {
 
 /* Основные стили для body */
 body {
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    line-height: 1.6;
+    font-weight: 400;
     background-color: #1C243C;
-    width: 100%;
-    height: 700px;
     margin: 0;
     padding: 0;
-    min-height: 1000px;
+    width: 100%;
     overflow-x: hidden;
-    font-family: 'Roboto', Arial, sans-serif;
-    line-height: 1.6;
-    font-weight: 300;
-    color: #fff;
+    min-height: 100vh;
+    position: relative;
 }
 
 /* Стили для названия компании */
@@ -66,7 +66,7 @@ body {
     align-items: flex-end;
     gap: 5px;
     position: relative;
-    z-index: 1500;
+    z-index: 1000;
 }
 
 /* Разделительная линия после контактного текста */
@@ -398,55 +398,117 @@ body {
 
 /* Секция отзывов */
 .reviews-section {
-    padding: 40px 20px;
-    margin-top: 15px;
+    width: 95%;
+    max-width: 1800px;
+    margin: 80px auto;
+    position: relative;
+    z-index: 950;
+    padding: 20px 0 60px;
+}
+
+.reviews-header {
+    font-size: 36px;
+    font-weight: bold;
+    color: #FF2B72;
+    text-align: center;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+/* Удаляем стили для разделительных полос */
+.reviews-header::before,
+.reviews-header::after {
+    display: none;
 }
 
 .reviews-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 20px;
 }
 
 .review-card {
-    width: 100%;
-    max-width: 350px;
-    background-color: #273050;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s;
+    background-color: rgba(36, 44, 72, 0.6);
+    border-radius: 15px;
+    padding: 25px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .review-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .review-header {
     display: flex;
-    align-items: center;
     margin-bottom: 15px;
 }
 
-.reviewer-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    margin-right: 15px;
+.reviewer-info {
+    flex: 1;
 }
 
 .reviewer-name {
+    font-size: 18px;
     font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.review-date {
+    font-size: 14px;
+    color: #a0a0a0;
+    margin-bottom: 5px;
+}
+
+.review-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.star {
+    color: #FF2B72;
     font-size: 18px;
 }
 
+.star.empty {
+    color: rgba(255, 43, 114, 0.3);
+}
+
 .review-text {
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.9);
+    color: #ffffff;
+    line-height: 1.6;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.leave-review-button-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.leave-review-button {
+    background-color: #FF2B72;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 15px 35px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.leave-review-button:hover {
+    background-color: #ff4785;
+    transform: translateY(-2px);
 }
 
 /* Медиа-запросы для адаптивности */
@@ -565,12 +627,20 @@ body {
     }
 
     .reviews-container {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr;
+        padding: 10px;
     }
 
     .review-card {
-        max-width: 100%;
+        padding: 20px;
+    }
+
+    .reviewer-name {
+        font-size: 16px;
+    }
+
+    .review-text {
+        font-size: 14px;
     }
 }
 
@@ -727,9 +797,10 @@ body {
     }
 }
 
-/* Стили для чекбокса и его контейнера */
+/* Стили для группы чекбокса */
 .checkbox-group {
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .checkbox-container {
@@ -739,14 +810,73 @@ body {
 }
 
 .checkbox-container input[type="checkbox"] {
-    margin-top: 3px;
+    margin-top: 4px;
     cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #FF2B72;
 }
 
 .checkbox-container label {
     font-size: 14px;
-    line-height: 1.4;
     color: #ffffff;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+/* Стили для обязательного поля */
+.required {
+    color: #FF2B72;
+    margin-left: 4px;
+}
+
+/* Стили для отключенной кнопки */
+.submit-review-button:disabled {
+    background-color: rgba(255, 43, 114, 0.5);
+    cursor: not-allowed;
+}
+
+.submit-review-button:disabled:hover {
+    background-color: rgba(255, 43, 114, 0.5);
+    transform: none;
+}
+
+/* Стили для звездочек */
+.rating-input {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.rating-input .star {
+    font-size: 24px;
+    color: rgba(255, 43, 114, 0.3);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.rating-input .star:hover,
+.rating-input .star.active {
+    color: #FF2B72;
+}
+
+/* Улучшаем стили для группы рейтинга */
+.form-group .rating-input {
+    margin-top: 5px;
+    justify-content: flex-start;
+}
+
+/* Стили для контейнера рейтинга */
+.rating-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rating-label {
+    margin: 0;
+    min-width: 70px;
 }
 
 

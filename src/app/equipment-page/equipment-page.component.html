@@ -8,7 +8,7 @@
                 <div class="working-hours">Круглосуточно</div>
                 <a href="tel:+7994444451" class="phone-number">+7 (922) 128-62-22</a>
             </div>
-            <button class="feedback-button">Обратная связь</button>
+            <button class="feedback-button" (click)="openFeedbackModal()">Обратная связь</button>
         </div>
 
         <nav class="nav-menu">
@@ -20,37 +20,99 @@
             <a href="about-page" class="nav-item">Отзывы</a>
         </nav>
     </header>
-
+    
     <main class="main-content">
         <div class="rounded-image-container">
             <img src="assets/images/camera.jpg" alt="Камера видеонаблюдения" class="rounded-image">
+           
         </div>
-        
-        <!-- Секция с оборудованием -->
-        <section class="equipment-section">
-            <div class="equipment-description">
-                <p>Мы предлагаем широкий ассортимент оборудования для обеспечения безопасности вашего дома и бизнеса. Наши решения включают в себя системы видеонаблюдения, охранные сигнализации, системы контроля доступа и многое другое.</p>
-            </div>
-            <div class="equipment-cards">
-                <div class="equipment-card">
-                    <img src="assets/images/equipment1.jpg" alt="Камера видеонаблюдения" class="equipment-image">
-                    <h3 class="equipment-title">Камеры видеонаблюдения</h3>
-                    <p class="equipment-text">Высококачественные камеры для внутреннего и наружного наблюдения.</p>
-                    <button class="equipment-button">Подробнее</button>
-                </div>
-                <div class="equipment-card">
-                    <img src="assets/images/equipment2.jpg" alt="Охранная сигнализация" class="equipment-image">
-                    <h3 class="equipment-title">Охранные сигнализации</h3>
-                    <p class="equipment-text">Надежные системы для защиты вашего имущества.</p>
-                    <button class="equipment-button">Подробнее</button>
-                </div>
-                <div class="equipment-card">
-                    <img src="assets/images/equipment3.jpg" alt="Система контроля доступа" class="equipment-image">
-                    <h3 class="equipment-title">Системы контроля доступа</h3>
-                    <p class="equipment-text">Современные решения для управления доступом.</p>
-                    <button class="equipment-button">Подробнее</button>
-                </div>
-            </div>
-        </section>
     </main>
+
+    <main class="equipment-content">
+
+        <div class="filters-panel">
+            <div class="search-box">
+                <input type="text" 
+                       placeholder="Поиск оборудования..." 
+                       class="search-input"
+                       [(ngModel)]="searchQuery"
+                       (input)="onSearch()">
+                <button class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="categories">
+                <button *ngFor="let category of categories"
+                        class="category-button"
+                        [class.active]="category === selectedCategory"
+                        (click)="onCategorySelect(category)">
+                    {{category}}
+                </button>
+            </div>
+        </div>
+
+        <!-- Сетка товаров -->
+        <div class="products-grid">
+            <div *ngFor="let item of equipment" class="product-card">
+                <div class="product-image">
+                    <img [src]="item.image" [alt]="item.name">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">{{item.name}}</h3>
+                    <ul class="product-features">
+                        <li *ngFor="let feature of item.features">{{feature}}</li>
+                    </ul>
+                    <div class="product-price">{{item.price | number:'1.0-0'}} ₽</div>
+                    <div class="product-buttons">
+                        <button class="details-button">Подробнее</button>
+                        <button class="order-button">Заказать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Пагинация -->
+        <div class="pagination" *ngIf="equipment.length > 0">
+            <button class="pagination-button active">1</button>
+            <button class="pagination-button">2</button>
+            <button class="pagination-button">3</button>
+            <button class="pagination-button">4</button>
+            <span class="pagination-dots">...</span>
+            <button class="pagination-button">10</button>
+        </div>
+    </main>
+
+    <!-- Модальное окно для связи с администратором -->
+    <div class="modal feedback-modal" [class.visible]="feedbackModalVisible">
+        <div class="modal-content">
+            <span class="close-button" (click)="closeFeedbackModal()">&times;</span>
+            <h2>Связаться с администратором</h2>
+            <form class="feedback-form" (submit)="submitFeedback(); $event.preventDefault()">
+                <div class="form-group">
+                    <label for="feedbackName">Ваше имя:</label>
+                    <input type="text" id="feedbackName" name="feedbackName" [(ngModel)]="feedbackData.name" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackEmail">Email:</label>
+                    <input type="email" id="feedbackEmail" name="feedbackEmail" [(ngModel)]="feedbackData.email" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackPhone">Телефон:</label>
+                    <input type="tel" id="feedbackPhone" name="feedbackPhone" [(ngModel)]="feedbackData.phone">
+                </div>
+                <div class="form-group">
+                    <label for="feedbackMessage">Ваше сообщение:</label>
+                    <textarea id="feedbackMessage" name="feedbackMessage" rows="5" [(ngModel)]="feedbackData.message" required></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="privacyPolicy" name="privacyPolicy" [(ngModel)]="feedbackData.privacyAccepted" required>
+                        <label for="privacyPolicy">Я принимаю условия обработки моих персональных данных</label>
+                    </div>
+                </div>
+                <button type="submit" class="submit-feedback-button" [disabled]="!feedbackData.privacyAccepted">Отправить</button>
+            </form>
+        </div>
+    </div>
 </body>
