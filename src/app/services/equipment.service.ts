@@ -3,12 +3,13 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Equipment } from '../models/equipment.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EquipmentService {
-    private apiUrl = `${environment.apiUrl}/equipment`;
+    private apiUrl = '/api/equipment';
     private equipment: Equipment[] = [];
     private equipmentSubject = new BehaviorSubject<Equipment[]>([]);
     private selectedCategorySubject = new BehaviorSubject<string>('Все');
@@ -29,8 +30,11 @@ export class EquipmentService {
     }
 
     getEquipment(): Observable<Equipment[]> {
+        return this.http.get<Equipment[]>(this.apiUrl);
+    }
 
-        return this.equipmentSubject.asObservable();
+    getEquipmentById(id: number): Observable<Equipment> {
+        return this.http.get<Equipment>(`${this.apiUrl}/${id}`);
     }
 
     getSelectedCategory(): Observable<string> {
@@ -64,8 +68,10 @@ export class EquipmentService {
         if (query) {
             filteredEquipment = filteredEquipment.filter(item =>
                 item.name.toLowerCase().includes(query) ||
-                item.features.some(feature => feature.toLowerCase().includes(query)) ||
-                item.description?.toLowerCase().includes(query)
+                item.features.some(feature => 
+                    feature.name.toLowerCase().includes(query) ||
+                    feature.value.toLowerCase().includes(query)
+                )
             );
         }
 
@@ -77,23 +83,30 @@ export class EquipmentService {
     }
 
     addEquipment(equipment: Omit<Equipment, 'id'>): Observable<Equipment> {
-        return this.http.get<Equipment[]>(this.apiUrl);
-    }
-
-    addEquipment(equipment: Equipment): Observable<Equipment> {
-
         return this.http.post<Equipment>(this.apiUrl, equipment);
     }
 
-    updateEquipment(equipment: Equipment): Observable<Equipment> {
-        return this.http.put<Equipment>(`${this.apiUrl}/${equipment.id}`, equipment);
+    updateEquipment(id: number, equipment: Partial<Equipment>): Observable<Equipment> {
+        return this.http.put<Equipment>(`${this.apiUrl}/${id}`, equipment);
     }
 
     deleteEquipment(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 
-    getEquipmentById(id: number): Observable<Equipment | undefined> {
-        return of(this.equipment.find(e => e.id === id));
+    searchEquipment(query: string): Observable<Equipment[]> {
+        return this.getEquipment().pipe(
+            map(equipment => equipment.filter(item => 
+                item.name.toLowerCase().includes(query.toLowerCase()) ||
+                item.type.toLowerCase().includes(query.toLowerCase()) ||
+                item.category.toLowerCase().includes(query.toLowerCase()) ||
+                item.location.toLowerCase().includes(query.toLowerCase()) ||
+                item.responsiblePerson.toLowerCase().includes(query.toLowerCase()) ||
+                item.features.some(feature => 
+                    feature.name.toLowerCase().includes(query.toLowerCase()) ||
+                    feature.value.toLowerCase().includes(query.toLowerCase())
+                )
+            ))
+        );
     }
 } 

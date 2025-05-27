@@ -591,10 +591,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     onEquipmentUpdated(equipment: Equipment): void {
-        this.equipmentService.updateEquipment(equipment).subscribe({
+        if (!equipment.id && this.selectedEquipment) {
+            equipment.id = this.selectedEquipment.id;
+        }
+        this.equipmentService.updateEquipment(equipment.id, equipment).subscribe({
             next: () => {
                 this.loadEquipment();
                 this.selectedEquipment = null;
+                this.showAddEquipmentModal = false;
             },
             error: (error) => console.error('Ошибка при обновлении оборудования:', error)
         });

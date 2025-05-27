@@ -54,20 +54,17 @@
 
         <!-- Сетка товаров -->
         <div class="products-grid">
-            <div *ngFor="let item of equipment" class="product-card">
-                <div class="product-image">
-                    <img [src]="item.image" [alt]="item.name">
+            <div class="equipment-card" *ngFor="let item of equipment">
+                <div class="equipment-image">
+                    <img [src]="'/assets/images/equipment-placeholder.png'" [alt]="item.name">
                 </div>
-                <div class="product-info">
-                    <h3 class="product-title">{{item.name}}</h3>
-                    <ul class="product-features">
-                        <li *ngFor="let feature of item.features">{{feature}}</li>
-                    </ul>
-                    <div class="product-price">{{item.price | number:'1.0-0'}} ₽</div>
-                    <div class="product-buttons">
-                        <button class="details-button">Подробнее</button>
-                        <button class="order-button">Заказать</button>
-                    </div>
+                <div class="equipment-info">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.type }}</p>
+                    <p>Статус: {{ item.status === 'active' ? 'Активно' : 
+                                 item.status === 'inactive' ? 'Неактивно' : 'На обслуживании' }}</p>
+                    <p>Местоположение: {{ item.location }}</p>
+                    <p>Инв. номер: {{ item.inventoryNumber }}</p>
                 </div>
             </div>
         </div>

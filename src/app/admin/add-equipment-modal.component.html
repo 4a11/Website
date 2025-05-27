@@ -1,145 +1,84 @@
-
 <div class="modal-overlay" (click)="onClose()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <h2>{{ equipmentToEdit ? 'Редактировать оборудование' : 'Добавить оборудование' }}</h2>
         
         <form (ngSubmit)="onSubmit()" #equipmentForm="ngForm">
             <div class="form-group">
-                <label for="name">Название:</label>
-                <input type="text" id="name" name="name" [(ngModel)]="equipment.name" required>
+                <label for="name">Название</label>
+                <input type="text" id="name" [(ngModel)]="equipment.name" name="name" required>
             </div>
 
             <div class="form-group">
-                <label for="type">Тип:</label>
-                <input type="text" id="type" name="type" [(ngModel)]="equipment.type" required>
+                <label for="type">Тип</label>
+                <input type="text" id="type" [(ngModel)]="equipment.type" name="type" required>
             </div>
 
             <div class="form-group">
-                <label for="category">Категория:</label>
-                <select id="category" name="category" [(ngModel)]="equipment.category" required>
+                <label for="category">Категория</label>
+                <select id="category" [(ngModel)]="equipment.category" name="category" required>
                     <option value="">Выберите категорию</option>
                     <option *ngFor="let category of categories" [value]="category">
-                        {{category}}
+                        {{ category }}
                     </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="facility">Объект:</label>
-                <input type="text" id="facility" name="facility" [(ngModel)]="equipment.facility" required>
-            </div>
-
-            <div class="form-group">
-                <label for="status">Статус:</label>
-                <select id="status" name="status" [(ngModel)]="equipment.status" required>
+                <label for="status">Статус</label>
+                <select id="status" [(ngModel)]="equipment.status" name="status" required>
+                    <option value="">Выберите статус</option>
                     <option *ngFor="let status of statuses" [value]="status">
-                        {{status === 'active' ? 'Активно' : 
-                          status === 'inactive' ? 'Неактивно' : 'На обслуживании'}}
+                        {{ status === 'active' ? 'Активно' : status === 'inactive' ? 'Неактивно' : 'На обслуживании' }}
                     </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="lastMaintenance">Последнее обслуживание:</label>
-                <input type="date" id="lastMaintenance" name="lastMaintenance" 
-                       [(ngModel)]="equipment.lastMaintenance" required>
+                <label for="inventoryNumber">Инвентарный номер</label>
+                <input type="text" id="inventoryNumber" [(ngModel)]="equipment.inventoryNumber" name="inventoryNumber" required>
             </div>
 
             <div class="form-group">
-                <label for="nextMaintenance">Следующее обслуживание:</label>
-                <input type="date" id="nextMaintenance" name="nextMaintenance" 
-                       [(ngModel)]="equipment.nextMaintenance" required>
+                <label for="location">Местоположение</label>
+                <input type="text" id="location" [(ngModel)]="equipment.location" name="location" required>
             </div>
 
             <div class="form-group">
-                <label for="description">Описание:</label>
-                <textarea id="description" name="description" 
-                          [(ngModel)]="equipment.description" rows="3"></textarea>
+                <label for="responsiblePerson">Ответственное лицо</label>
+                <input type="text" id="responsiblePerson" [(ngModel)]="equipment.responsiblePerson" name="responsiblePerson" required>
             </div>
 
             <div class="form-group">
-                <label for="image">URL изображения:</label>
-                <input type="text" id="image" name="image" [(ngModel)]="equipment.image">
+                <label for="purchaseDate">Дата покупки</label>
+                <input type="date" id="purchaseDate" [(ngModel)]="equipment.purchaseDate" name="purchaseDate" required>
             </div>
 
             <div class="form-group">
-                <label for="price">Цена:</label>
-                <input type="number" id="price" name="price" [(ngModel)]="equipment.price">
+                <label for="lastMaintenance">Дата последнего обслуживания</label>
+                <input type="date" id="lastMaintenance" [(ngModel)]="equipment.lastMaintenance" name="lastMaintenance" required>
             </div>
 
             <div class="form-group">
-                <label>Характеристики:</label>
-                <div class="features-list">
-                    <div *ngFor="let feature of equipment.features; let i = index" class="feature-item">
-                        <span>{{feature}}</span>
-                        <button type="button" (click)="removeFeature(i)">Удалить</button>
-                    </div>
+                <label for="nextMaintenance">Дата следующего обслуживания</label>
+                <input type="date" id="nextMaintenance" [(ngModel)]="equipment.nextMaintenance" name="nextMaintenance" required>
+            </div>
+
+            <div class="form-group">
+                <label>Характеристики</label>
+                <div *ngFor="let feature of equipment.features; let i = index" class="feature-item">
+                    <input type="text" [(ngModel)]="feature.name" [name]="'featureName' + i" placeholder="Название" required>
+                    <input type="text" [(ngModel)]="feature.value" [name]="'featureValue' + i" placeholder="Значение" required>
+                    <button type="button" (click)="removeFeature(i)">Удалить</button>
                 </div>
                 <button type="button" (click)="addFeature()">Добавить характеристику</button>
             </div>
 
-            <div class="form-actions">
+            <div class="button-group">
                 <button type="button" (click)="onClose()">Отмена</button>
                 <button type="submit" [disabled]="!equipmentForm.form.valid">
                     {{ equipmentToEdit ? 'Сохранить' : 'Добавить' }}
                 </button>
             </div>
         </form>
-=======
-<div class="modal-overlay">
-    <div class="modal-content" [class.dark-theme]="isDarkTheme">
-        <div class="modal-header">
-            <h3>{{equipmentToEdit ? 'Редактировать оборудование' : 'Добавить оборудование'}}</h3>
-            <button class="close-btn" (click)="onClose()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form (ngSubmit)="onSubmit()">
-                <div class="form-group">
-                    <label for="name">Название</label>
-                    <input type="text" id="name" [(ngModel)]="equipment.name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="type">Тип</label>
-                    <input type="text" id="type" [(ngModel)]="equipment.type" name="type" required>
-                </div>
-                <div class="form-group">
-                    <label for="inventory_number">Инвентарный номер</label>
-                    <input type="text" id="inventory_number" [(ngModel)]="equipment.inventory_number" name="inventory_number" required>
-                </div>
-                <div class="form-group">
-                    <label for="status">Статус</label>
-                    <select id="status" [(ngModel)]="equipment.status" name="status" required>
-                        <option value="Исправно">Исправно</option>
-                        <option value="Требует обслуживания">Требует обслуживания</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="location">Местоположение</label>
-                    <input type="text" id="location" [(ngModel)]="equipment.location" name="location" required>
-                </div>
-                <div class="form-group">
-                    <label for="responsible_person">Ответственное лицо</label>
-                    <input type="text" id="responsible_person" [(ngModel)]="equipment.responsible_person" name="responsible_person" required>
-                </div>
-                <div class="form-group">
-                    <label for="purchase_date">Дата покупки</label>
-                    <input type="date" id="purchase_date" [(ngModel)]="equipment.purchase_date" name="purchase_date" required>
-                </div>
-                <div class="form-group">
-                    <label for="last_maintenance_date">Последнее обслуживание</label>
-                    <input type="date" id="last_maintenance_date" [(ngModel)]="equipment.last_maintenance_date" name="last_maintenance_date" required>
-                </div>
-                <div class="form-group">
-                    <label for="next_maintenance_date">Следующее обслуживание</label>
-                    <input type="date" id="next_maintenance_date" [(ngModel)]="equipment.next_maintenance_date" name="next_maintenance_date" required>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="onClose()">Отмена</button>
-                    <button type="submit" class="btn btn-primary">
-                        {{equipmentToEdit ? 'Сохранить' : 'Добавить'}}
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
 </div> 

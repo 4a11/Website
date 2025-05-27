@@ -336,7 +336,7 @@
                                    placeholder="Поиск по названию, типу или местоположению...">
                         </div>
                     </div>
-                    <button class="add-btn" (click)="onShowAddEquipmentModal()">
+                    <button class="add-btn" (click)="onAddEquipment()">
                         <i class="fas fa-plus"></i>
                         <span>Добавить оборудование</span>
                     </button>
@@ -364,13 +364,12 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.type }}</td>
                             <td>{{ item.location }}</td>
-                            <td>
-                                <span class="status" [class.active]="item.status === 'Исправно'">
-                                    {{item.status}}
-                                </span>
+                            <td class="status" [class.active]="item.status === 'active'">
+                                {{ item.status === 'active' ? 'Активно' : 
+                                   item.status === 'inactive' ? 'Неактивно' : 'На обслуживании' }}
                             </td>
-                            <td>{{item.last_maintenance_date | date:'dd.MM.yyyy'}}</td>
-                            <td>{{item.next_maintenance_date | date:'dd.MM.yyyy'}}</td>
+                            <td>{{ item.lastMaintenance | date:'dd.MM.yyyy' }}</td>
+                            <td>{{ item.nextMaintenance | date:'dd.MM.yyyy' }}</td>
                             <td>
                                 <div class="action-buttons">
                                     <button class="action-btn edit" (click)="onEditEquipment(item)">
@@ -809,11 +808,10 @@
         <!-- Модальное окно добавления/редактирования оборудования -->
         <app-add-equipment-modal
             *ngIf="showAddEquipmentModal"
-            [equipmentToEdit]="selectedEquipment"
-            [isDarkTheme]="isDarkTheme"
-            (close)="onCloseAddEquipmentModal()"
+            [equipmentToEdit]="selectedEquipment || undefined"
             (equipmentAdded)="onEquipmentAdded($any($event))"
-            (equipmentUpdated)="onEquipmentUpdated($any($event))">
+            (equipmentUpdated)="onEquipmentUpdated($any($event))"
+            (close)="onCloseAddEquipmentModal()">
         </app-add-equipment-modal>
     </main>
 </div>

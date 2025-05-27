@@ -3,12 +3,15 @@ export interface Equipment {
     name: string;
     type: string;
     category: string;
-    facility: string;
     status: 'active' | 'inactive' | 'maintenance';
+    inventoryNumber: string;
+    location: string;
+    responsiblePerson: string;
+    purchaseDate: Date;
     lastMaintenance: Date;
     nextMaintenance: Date;
-    description?: string;
-    features: string[];
-    image?: string;
-    price?: number;
+    features: Array<{
+        name: string;
+        value: string;
+    }>;
 }
