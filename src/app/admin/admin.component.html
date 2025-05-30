@@ -67,6 +67,14 @@
                     </a>
                 </li>
                 
+                <!-- Финансы (для ADMIN, MANAGER) -->
+                <li [class.active]="currentSection === 'finances'" *ngIf="hasAccessToSection('finances')">
+                    <a routerLink="/admin/finances" routerLinkActive="active" (click)="switchToSection('finances')">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Финансы</span>
+                    </a>
+                </li>
+                
                 <!-- Отзывы (для ADMIN, MANAGER, EMPLOYEE) -->
                 <li [class.active]="currentSection === 'reviews'" *ngIf="hasAccessToSection('reviews')">
                     <a routerLink="/admin/reviews" routerLinkActive="active" (click)="switchToSection('reviews')">
@@ -167,67 +175,663 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Основной контент дашборда - новая структура -->
+            <div class="dashboard-layout">
+                <!-- Верхняя секция: Финансы и Быстрые действия -->
+                <section class="dashboard-row top-section">
+                    <!-- Финансовая сводка -->
+                    <div class="dashboard-widget finance-widget large-widget">
+                        <div class="widget-header">
+                            <h4><i class="fas fa-chart-bar"></i> Финансовая сводка</h4>
+                        </div>
+                        <div class="widget-content">
+                            <div class="finance-stats horizontal">
+                                <div class="finance-item">
+                                    <div class="finance-icon income">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </div>
+                                    <div class="finance-info">
+                                        <span class="finance-amount">{{getTotalRevenue() | number:'1.0-0'}} ₽</span>
+                                        <span class="finance-label">Общая выручка</span>
+                                    </div>
+                                </div>
+                                <div class="finance-item">
+                                    <div class="finance-icon expenses">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </div>
+                                    <div class="finance-info">
+                                        <span class="finance-amount">{{getTotalExpenses() | number:'1.0-0'}} ₽</span>
+                                        <span class="finance-label">Общие расходы</span>
+                                    </div>
+                                </div>
+                                <div class="finance-item">
+                                    <div class="finance-icon profit">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="finance-info">
+                                        <span class="finance-amount">{{getProfit() | number:'1.0-0'}} ₽</span>
+                                        <span class="finance-label">Прибыль</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Быстрые действия -->
+                    <div class="dashboard-widget actions-widget compact-widget">
+                        <div class="widget-header">
+                            <h4><i class="fas fa-bolt"></i> Быстрые действия</h4>
+                        </div>
+                        <div class="widget-content">
+                            <div class="quick-actions compact">
+                                <button class="action-btn" (click)="onAddEmployee()">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Добавить сотрудника</span>
+                                </button>
+                                <button class="action-btn" (click)="onAddFacility()">
+                                    <i class="fas fa-building"></i>
+                                    <span>Добавить объект</span>
+                                </button>
+                                <button class="action-btn" (click)="onAddEquipment()">
+                                    <i class="fas fa-tools"></i>
+                                    <span>Добавить оборудование</span>
+                                </button>
+                                <button class="action-btn" (click)="onAddNews()">
+                                    <i class="fas fa-newspaper"></i>
+                                    <span>Создать новость</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Средняя секция: Активность и Персонал -->
+                <section class="dashboard-row middle-section">
+                    <!-- Последние новости -->
+                    <div class="dashboard-widget news-widget">
+                        <div class="widget-header">
+                            <h4><i class="fas fa-newspaper"></i> Последние новости</h4>
+                            <a routerLink="/admin/news" class="view-all">Все новости →</a>
+                        </div>
+                        <div class="widget-content">
+                            <div *ngIf="newsList && newsList.length > 0; else noNews" class="news-list">
+                                <div *ngFor="let news of newsList.slice(0, 3)" class="news-item">
+                                    <div class="news-date">{{news.date | date:'dd MMM'}}</div>
+                                    <div class="news-content">
+                                        <h5>{{news.title}}</h5>
+                                        <p>{{news.content.length > 80 ? (news.content | slice:0:80) + '...' : news.content}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #noNews>
+                                <div class="empty-state">
+                                    <i class="fas fa-newspaper"></i>
+                                    <p>Новости отсутствуют</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                    <!-- Новые сотрудники -->
+                    <div class="dashboard-widget employees-widget">
+                        <div class="widget-header">
+                            <h4><i class="fas fa-user-plus"></i> Новые сотрудники</h4>
+                            <a routerLink="/admin/employees" class="view-all">Все сотрудники →</a>
+                        </div>
+                        <div class="widget-content">
+                            <div *ngIf="employees && employees.length > 0; else noEmployees" class="employees-list">
+                                <div *ngFor="let employee of employees.slice(0, 4)" class="employee-item">
+                                    <div class="employee-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="employee-info">
+                                        <span class="employee-name">{{employee.name}}</span>
+                                        <span class="employee-position">{{employee.position}}</span>
+                                    </div>
+                                    <div class="employee-date">
+                                        <span>{{employee.created_at | date:'dd.MM'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #noEmployees>
+                                <div class="empty-state">
+                                    <i class="fas fa-users"></i>
+                                    <p>Сотрудники отсутствуют</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Нижняя секция: Техническая информация -->
+                <section class="dashboard-row bottom-section">
+                    <!-- Состояние оборудования -->
+                    <div class="dashboard-widget equipment-widget">
+                        <div class="widget-header">
+                            <h4><i class="fas fa-cogs"></i> Состояние оборудования</h4>
+                            <a routerLink="/admin/equipment" class="view-all">Все оборудование →</a>
+                        </div>
+                        <div class="widget-content">
+                            <div class="equipment-stats">
+                                <div class="equipment-stat active">
+                                    <div class="stat-number">{{getEquipmentByStatus('active').length}}</div>
+                                    <div class="stat-label">Активное</div>
+                                </div>
+                                <div class="equipment-stat maintenance">
+                                    <div class="stat-number">{{getEquipmentByStatus('maintenance').length}}</div>
+                                    <div class="stat-label">На обслуживании</div>
+                                </div>
+                                <div class="equipment-stat inactive">
+                                    <div class="stat-number">{{getEquipmentByStatus('inactive').length}}</div>
+                                    <div class="stat-label">Неактивное</div>
+                                </div>
+                            </div>
+                            <div *ngIf="equipments && equipments.length > 0" class="equipment-list">
+                                <div *ngFor="let equipment of equipments.slice(0, 3)" class="equipment-item">
+                                    <div class="equipment-status" [class]="equipment.status"></div>
+                                    <div class="equipment-info">
+                                        <span class="equipment-name">{{equipment.name}}</span>
+                                        <span class="equipment-location">{{equipment.location}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Последние расчеты -->
+                    <div class="dashboard-widget calculations-widget">
+                        <div class="widget-header">
+                            <h4><i class="fas fa-calculator"></i> Последние расчеты</h4>
+                            <a routerLink="/admin/calculations" class="view-all">Все расчеты →</a>
+                        </div>
+                        <div class="widget-content">
+                            <div *ngIf="calculations && calculations.length > 0; else noCalculations" class="calculations-list">
+                                <div *ngFor="let calculation of calculations.slice(0, 4)" class="calculation-item">
+                                    <div class="calculation-type" [ngClass]="calculation.type">
+                                        <i class="fas" [ngClass]="{
+                                            'fa-ruble-sign': calculation.type === 'cost',
+                                            'fa-chart-line': calculation.type === 'efficiency',
+                                            'fa-tools': calculation.type === 'maintenance',
+                                            'fa-video': calculation.type === 'technical'
+                                        }"></i>
+                                    </div>
+                                    <div class="calculation-info">
+                                        <span class="calculation-name">{{calculation.name}}</span>
+                                        <span class="calculation-result">
+                                            {{calculation.result | number:'1.0-0'}}
+                                            {{calculation.type === 'efficiency' ? '%' : '₽'}}
+                                        </span>
+                                    </div>
+                                    <div class="calculation-date">
+                                        {{calculation.date | date:'dd.MM'}}
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #noCalculations>
+                                <div class="empty-state">
+                                    <i class="fas fa-calculator"></i>
+                                    <p>Расчеты отсутствуют</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Финансы -->
+        <div *ngIf="currentSection === 'finances'">
+            <section class="finances-container">
+                <!-- Заголовок и статистика -->
+                <div class="finances-header">
+                    <h3><i class="fas fa-chart-pie"></i> Финансовая отчетность</h3>
+                    <div class="finance-period-selector">
+                        <select [(ngModel)]="selectedFinancePeriod" (change)="updateFinanceData()">
+                            <option value="today">Сегодня</option>
+                            <option value="week">Неделя</option>
+                            <option value="month">Месяц</option>
+                            <option value="quarter">Квартал</option>
+                            <option value="year">Год</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Основная статистика -->
+                <div class="finance-stats-grid">
+                    <div class="stat-card revenue">
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">{{getFinanceData('revenue') | number:'1.0-0'}} ₽</span>
+                            <span class="stat-label">Доходы</span>
+                            <span class="stat-change positive">+12.5%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card expenses">
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">{{getFinanceData('expenses') | number:'1.0-0'}} ₽</span>
+                            <span class="stat-label">Расходы</span>
+                            <span class="stat-change negative">+8.3%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card profit">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">{{getFinanceData('profit') | number:'1.0-0'}} ₽</span>
+                            <span class="stat-label">Прибыль</span>
+                            <span class="stat-change positive">+18.7%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card roi">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">{{getROI()}}%</span>
+                            <span class="stat-label">ROI</span>
+                            <span class="stat-change positive">+5.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- График и детализация -->
+                <div class="finance-charts-grid">
+                    <!-- График доходов/расходов -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4><i class="fas fa-chart-area"></i> Динамика доходов и расходов</h4>
+                            <div class="chart-controls">
+                                <button [class.active]="chartType === 'line'" (click)="setChartType('line')">
+                                    <i class="fas fa-chart-line"></i>
+                                </button>
+                                <button [class.active]="chartType === 'bar'" (click)="setChartType('bar')">
+                                    <i class="fas fa-chart-bar"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-placeholder">
+                            <div class="mock-chart">
+                                <div class="chart-legend">
+                                    <span class="legend-item revenue"><span class="legend-color"></span>Доходы</span>
+                                    <span class="legend-item expenses"><span class="legend-color"></span>Расходы</span>
+                                </div>
+                                <div class="chart-bars">
+                                    <div class="bar-group" *ngFor="let month of getChartData()">
+                                        <div class="revenue-bar" [style.height.%]="month.revenue"></div>
+                                        <div class="expenses-bar" [style.height.%]="month.expenses"></div>
+                                        <span class="bar-label">{{month.label}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Структура доходов -->
+                    <div class="revenue-breakdown">
+                        <div class="breakdown-header">
+                            <h4><i class="fas fa-pie-chart"></i> Структура доходов</h4>
+                        </div>
+                        <div class="breakdown-list">
+                            <div class="breakdown-item" *ngFor="let item of getRevenueBreakdown()">
+                                <div class="breakdown-info">
+                                    <span class="breakdown-category" [style.background]="item.color">{{item.category}}</span>
+                                    <span class="breakdown-amount">{{item.amount | number:'1.0-0'}} ₽</span>
+                                </div>
+                                <div class="breakdown-progress">
+                                    <div class="progress-bar" [style.width.%]="item.percentage" [style.background]="item.color"></div>
+                                </div>
+                                <span class="breakdown-percentage">{{item.percentage}}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Транзакции и управление -->
+                <div class="finance-management">
+                    <!-- Последние транзакции -->
+                    <div class="transactions-section">
+                        <div class="section-header">
+                            <h4><i class="fas fa-exchange-alt"></i> Последние транзакции</h4>
+                            <button class="add-btn" (click)="showAddTransactionModal = true">
+                                <i class="fas fa-plus"></i>
+                                Добавить транзакцию
+                            </button>
+                        </div>
+                        <div class="transactions-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Дата</th>
+                                        <th>Описание</th>
+                                        <th>Категория</th>
+                                        <th>Тип</th>
+                                        <th>Сумма</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let transaction of getRecentTransactions()">
+                                        <td>{{transaction.date | date:'dd.MM.yyyy'}}</td>
+                                        <td>{{transaction.description}}</td>
+                                        <td>
+                                            <span class="category-badge" [ngClass]="transaction.category.toLowerCase()">
+                                                {{transaction.category}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="transaction-type" [ngClass]="transaction.type">
+                                                <i [class]="transaction.type === 'income' ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+                                                {{transaction.type === 'income' ? 'Доход' : 'Расход'}}
+                                            </span>
+                                        </td>
+                                        <td class="amount" [ngClass]="transaction.type">
+                                            {{transaction.type === 'income' ? '+' : '-'}}{{transaction.amount | number:'1.0-0'}} ₽
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn edit" (click)="editTransaction(transaction)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="action-btn delete" (click)="deleteTransaction(transaction.id)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Бюджет и планирование -->
+                    <div class="budget-section">
+                        <div class="section-header">
+                            <h4><i class="fas fa-calendar-alt"></i> Бюджет</h4>
+                            <button class="add-btn" (click)="showBudgetModal = true">
+                                <i class="fas fa-plus"></i>
+                                Создать бюджет
+                            </button>
+                        </div>
+                        <div class="budget-cards">
+                            <div class="budget-card" *ngFor="let budget of getBudgets()">
+                                <div class="budget-header">
+                                    <h5>{{budget.name}}</h5>
+                                    <span class="budget-period">{{budget.period}}</span>
+                                </div>
+                                <div class="budget-progress">
+                                    <div class="progress-info">
+                                        <span>{{budget.spent | number:'1.0-0'}} ₽ из {{budget.limit | number:'1.0-0'}} ₽</span>
+                                        <span class="percentage">{{(budget.spent / budget.limit * 100) | number:'1.0-0'}}%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" 
+                                             [style.width.%]="budget.spent / budget.limit * 100"
+                                             [ngClass]="{'warning': budget.spent / budget.limit > 0.8, 'danger': budget.spent / budget.limit > 1}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="budget-actions">
+                                    <button class="edit-btn" (click)="editBudget(budget)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-btn" (click)="deleteBudget(budget.id)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <!-- Раздел сотрудников -->
         <div *ngIf="currentSection === 'employees'">
-            <section class="data-table">
-                <div class="table-header">
-                    <div class="header-left">
-                        <h3>Сотрудники</h3>
-                        <div class="search-box">
+            <section class="employees-container">
+                <!-- Заголовок и статистика -->
+                <div class="employees-header">
+                    <div class="header-info">
+                        <h3><i class="fas fa-users"></i> Управление сотрудниками</h3>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-number">{{employees.length}}</span>
+                                <span class="stat-label">Всего сотрудников</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{getActiveEmployeesCount()}}</span>
+                                <span class="stat-label">Активных</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{getDepartmentsCount()}}</span>
+                                <span class="stat-label">Отделов</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <div class="view-toggle">
+                            <button [class.active]="employeesView === 'cards'" (click)="setEmployeesView('cards')">
+                                <i class="fas fa-th-large"></i>
+                                Карточки
+                            </button>
+                            <button [class.active]="employeesView === 'list'" (click)="setEmployeesView('list')">
+                                <i class="fas fa-list"></i>
+                                Список
+                            </button>
+                        </div>
+                        <button class="add-employee-btn" (click)="onAddEmployee()">
+                            <i class="fas fa-user-plus"></i>
+                            Добавить сотрудника
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Фильтры и поиск -->
+                <div class="employees-filters">
+                    <div class="search-section">
+                        <div class="search-input">
                             <i class="fas fa-search"></i>
                             <input type="text" 
                                    [(ngModel)]="employeeSearchQuery" 
                                    (ngModelChange)="onEmployeeSearch($any($event))"
-                                   placeholder="Поиск по имени, должности или email...">
+                                   placeholder="Поиск сотрудников...">
                         </div>
                     </div>
-                    <button class="add-btn" (click)="onAddEmployee()">
-                        <i class="fas fa-plus"></i>
-                        <span>Добавить сотрудника</span>
-                    </button>
+                    <div class="filter-section">
+                        <select [(ngModel)]="selectedDepartment" (change)="filterEmployeesByDepartment()">
+                            <option value="">Все отделы</option>
+                            <option value="Администрация">Администрация</option>
+                            <option value="Техническая поддержка">Техническая поддержка</option>
+                            <option value="Продажи">Продажи</option>
+                            <option value="Маркетинг">Маркетинг</option>
+                        </select>
+                        <select [(ngModel)]="selectedEmployeeStatus" (change)="filterEmployeesByStatus()">
+                            <option value="">Все статусы</option>
+                            <option value="active">Активные</option>
+                            <option value="inactive">Неактивные</option>
+                            <option value="vacation">В отпуске</option>
+                        </select>
+                    </div>
                 </div>
-                <div *ngIf="!filteredEmployees || filteredEmployees.length === 0" class="no-data">
-                    <i class="fas fa-search"></i>
-                    <p>{{employeeSearchQuery ? 'Ничего не найдено' : 'Нет данных о сотрудниках'}}</p>
-                </div>
-                <table *ngIf="filteredEmployees && filteredEmployees.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Сотрудник</th>
-                            <th>Должность</th>
-                            <th>Email</th>
-                            <th>Телефон</th>
-                            <th>Дата добавления</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let employee of filteredEmployees">
-                            <td>
-                                <div class="employee-info">
+
+                <!-- Карточки сотрудников -->
+                <div *ngIf="employeesView === 'cards'" class="employees-cards-view">
+                    <div class="employees-grid">
+                        <div class="employee-card" *ngFor="let employee of getFilteredEmployees()">
+                            <div class="card-header">
+                                <div class="employee-avatar">
                                     <i class="fas fa-user"></i>
-                                    <span>{{employee.name}}</span>
+                                    <div class="status-indicator" [ngClass]="employee.status || 'active'"></div>
                                 </div>
-                            </td>
-                            <td>{{employee.position}}</td>
-                            <td>{{employee.email}}</td>
-                            <td>{{employee.phone}}</td>
-                            <td>{{employee.created_at | date:'dd.MM.yyyy HH:mm'}}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn edit" (click)="onEditEmployee(employee)">
+                                <div class="employee-info">
+                                    <h4>{{employee.name}}</h4>
+                                    <p class="position">{{employee.position}}</p>
+                                    <p class="department">{{employee.department || 'Не указан'}}</p>
+                                </div>
+                                <div class="card-menu">
+                                    <button class="menu-btn" (click)="toggleEmployeeMenu(employee)">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <div class="menu-dropdown" *ngIf="employee.showMenu">
+                                        <button (click)="onViewEmployee(employee)">
+                                            <i class="fas fa-eye"></i>Просмотр
+                                        </button>
+                                        <button (click)="onEditEmployee(employee)">
+                                            <i class="fas fa-edit"></i>Редактировать
+                                        </button>
+                                        <button (click)="onSendMessage(employee)">
+                                            <i class="fas fa-envelope"></i>Отправить сообщение
+                                        </button>
+                                        <button (click)="onDeleteEmployee(employee)" class="delete">
+                                            <i class="fas fa-trash"></i>Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="contact-info">
+                                    <div class="contact-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{employee.email}}</span>
+                                    </div>
+                                    <div class="contact-item">
+                                        <i class="fas fa-phone"></i>
+                                        <span>{{employee.phone}}</span>
+                                    </div>
+                                    <div class="contact-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>{{employee.created_at | date:'dd.MM.yyyy'}}</span>
+                                    </div>
+                                </div>
+                                <div class="card-stats">
+                                    <div class="stat">
+                                        <span class="value">{{employee.projectsCount || 0}}</span>
+                                        <span class="label">Проектов</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="value">{{employee.tasksCompleted || 0}}</span>
+                                        <span class="label">Задач</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="value">{{employee.rating || '—'}}</span>
+                                        <span class="label">Рейтинг</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="skills">
+                                    <span class="skill-tag" *ngFor="let skill of employee.skills?.slice(0, 3)">
+                                        {{skill}}
+                                    </span>
+                                    <span class="more-skills" *ngIf="employee.skills && employee.skills.length > 3">
+                                        +{{employee.skills!.length - 3}}
+                                    </span>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="action-btn primary" (click)="onViewEmployee(employee)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn secondary" (click)="onEditEmployee(employee)">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="action-btn delete" (click)="onDeleteEmployee(employee)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Список сотрудников -->
+                <div *ngIf="employeesView === 'list'" class="employees-list-view">
+                    <div class="employees-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Сотрудник</th>
+                                    <th>Должность</th>
+                                    <th>Отдел</th>
+                                    <th>Email</th>
+                                    <th>Телефон</th>
+                                    <th>Статус</th>
+                                    <th>Рейтинг</th>
+                                    <th>Дата приема</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let employee of getFilteredEmployees()">
+                                    <td>
+                                        <div class="employee-info">
+                                            <div class="avatar-small">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="info">
+                                                <span class="name">{{employee.name}}</span>
+                                                <span class="id">ID: {{employee.id}}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{employee.position}}</td>
+                                    <td>{{employee.department || '—'}}</td>
+                                    <td>{{employee.email}}</td>
+                                    <td>{{employee.phone}}</td>
+                                    <td>
+                                        <span class="employee-status" [ngClass]="employee.status || 'active'">
+                                            {{getEmployeeStatusName(employee.status || 'active')}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="rating">
+                                            <span class="rating-value">{{employee.rating || '—'}}</span>
+                                            <div class="stars" *ngIf="employee.rating">
+                                                <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]" 
+                                                   [class.filled]="star <= (employee.rating || 0)"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{employee.created_at | date:'dd.MM.yyyy'}}</td>
+                                    <td>
+                                        <div class="employee-actions">
+                                            <button class="action-btn view" (click)="onViewEmployee(employee)" title="Просмотр">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="action-btn edit" (click)="onEditEmployee(employee)" title="Редактировать">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="action-btn message" (click)="onSendMessage(employee)" title="Сообщение">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <button class="action-btn delete" (click)="onDeleteEmployee(employee)" title="Удалить">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Пустое состояние -->
+                <div *ngIf="getFilteredEmployees().length === 0" class="empty-employees">
+                    <div class="empty-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Сотрудники не найдены</h4>
+                    <p>{{employeeSearchQuery ? 'Попробуйте изменить поисковый запрос' : 'Добавьте первого сотрудника'}}</p>
+                    <button class="add-first-employee-btn" (click)="onAddEmployee()">
+                        <i class="fas fa-user-plus"></i>
+                        Добавить сотрудника
+                    </button>
+                </div>
             </section>
         </div>
 
@@ -324,198 +928,938 @@
 
         <!-- Раздел оборудования -->
         <div *ngIf="currentSection === 'equipment'">
-            <section class="data-table">
-                <div class="table-header">
-                    <div class="header-left">
-                        <h3>Оборудование</h3>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" 
-                                   [(ngModel)]="equipmentSearchQuery" 
-                                   (ngModelChange)="onEquipmentSearch($any($event))"
-                                   placeholder="Поиск по названию, типу или местоположению...">
+            <section class="equipment-container">
+                <!-- Заголовок с действиями -->
+                <div class="equipment-header">
+                    <div class="equipment-header-info">
+                        <h3><i class="fas fa-tools"></i> Управление оборудованием</h3>
+                        <p>Контроль состояния и обслуживания оборудования</p>
+                        <div class="equipment-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-microchip"></i>
+                                <span>Всего: {{equipments.length}}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Активно: {{getEquipmentByStatus('active').length}}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-wrench"></i>
+                                <span>На ТО: {{getEquipmentByStatus('maintenance').length}}</span>
+                            </div>
                         </div>
                     </div>
-                    <button class="add-btn" (click)="onAddEquipment()">
-                        <i class="fas fa-plus"></i>
-                        <span>Добавить оборудование</span>
-                    </button>
+                    <div class="equipment-header-actions">
+                        <div class="equipment-view-toggle">
+                            <button class="view-btn" [class.active]="equipmentView === 'cards'" (click)="setEquipmentView('cards')">
+                                <i class="fas fa-th-large"></i>
+                                Карточки
+                            </button>
+                            <button class="view-btn" [class.active]="equipmentView === 'list'" (click)="setEquipmentView('list')">
+                                <i class="fas fa-list"></i>
+                                Список
+                            </button>
+                        </div>
+                        <button class="add-equipment-btn" (click)="onAddEquipment()">
+                            <i class="fas fa-plus"></i>
+                            Добавить оборудование
+                        </button>
+                    </div>
                 </div>
-                <div *ngIf="!filteredEquipments || filteredEquipments.length === 0" class="no-data">
-                    <i class="fas fa-search"></i>
-                    <p>{{equipmentSearchQuery ? 'Ничего не найдено' : 'Нет данных об оборудовании'}}</p>
+
+                <!-- Фильтры и поиск -->
+                <div class="equipment-filters">
+                    <div class="equipment-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" 
+                               [(ngModel)]="equipmentSearchQuery" 
+                               (ngModelChange)="onEquipmentSearch($any($event))"
+                               placeholder="Поиск по названию, типу или местоположению...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Категория</label>
+                        <select [(ngModel)]="selectedEquipmentCategory" (change)="filterEquipmentByCategory()">
+                            <option value="">Все категории</option>
+                            <option value="Компьютеры">Компьютеры</option>
+                            <option value="Принтеры">Принтеры</option>
+                            <option value="Сетевое оборудование">Сетевое оборудование</option>
+                            <option value="Другое">Другое</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Статус</label>
+                        <select [(ngModel)]="selectedEquipmentStatus" (change)="filterEquipmentByStatus()">
+                            <option value="">Все статусы</option>
+                            <option value="active">Активно</option>
+                            <option value="inactive">Неактивно</option>
+                            <option value="maintenance">На обслуживании</option>
+                        </select>
+                    </div>
                 </div>
-                <table *ngIf="filteredEquipments && filteredEquipments.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Оборудование</th>
-                            <th>Тип</th>
-                            <th>Инв. номер</th>
-                            <th>Местоположение</th>
-                            <th>Статус</th>
-                            <th>Последнее ТО</th>
-                            <th>Следующее ТО</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of equipments">
-                            <td>{{ item.id }}</td>
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.type }}</td>
-                            <td>{{ item.location }}</td>
-                            <td class="status" [class.active]="item.status === 'active'">
-                                {{ item.status === 'active' ? 'Активно' : 
-                                   item.status === 'inactive' ? 'Неактивно' : 'На обслуживании' }}
-                            </td>
-                            <td>{{ item.lastMaintenance | date:'dd.MM.yyyy' }}</td>
-                            <td>{{ item.nextMaintenance | date:'dd.MM.yyyy' }}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn edit" (click)="onEditEquipment(item)">
-                                        <i class="fas fa-edit"></i>
+
+                <!-- Карточный вид оборудования -->
+                <div *ngIf="equipmentView === 'cards'" class="equipment-grid">
+                    <div *ngFor="let equipment of getFilteredEquipment()" class="equipment-card">
+                        <div class="equipment-status-badge" [class]="equipment.status">
+                            {{getEquipmentStatusName(equipment.status)}}
+                        </div>
+                        
+                        <div class="equipment-icon">
+                            <i class="fas" [class.fa-desktop]="equipment.category === 'Компьютеры'"
+                               [class.fa-print]="equipment.category === 'Принтеры'"
+                               [class.fa-network-wired]="equipment.category === 'Сетевое оборудование'"
+                               [class.fa-tools]="equipment.category === 'Другое'"></i>
+                        </div>
+
+                        <div class="equipment-info">
+                            <h4>{{equipment.name}}</h4>
+                            <p class="equipment-type">{{equipment.type}}</p>
+                        </div>
+
+                        <div class="equipment-details">
+                            <div class="detail-row">
+                                <i class="fas fa-barcode"></i>
+                                <span>{{equipment.inventoryNumber}}</span>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{equipment.location}}</span>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-user"></i>
+                                <span>{{equipment.responsiblePerson}}</span>
+                            </div>
+                        </div>
+
+                        <div class="equipment-maintenance">
+                            <div class="maintenance-info">
+                                <div class="maintenance-item">
+                                    <span class="label">Последнее ТО:</span>
+                                    <span class="date">{{equipment.lastMaintenance | date:'dd.MM.yyyy'}}</span>
+                                </div>
+                                <div class="maintenance-item">
+                                    <span class="label">Следующее ТО:</span>
+                                    <span class="date" [class.overdue]="isMaintenanceOverdue(equipment)">
+                                        {{equipment.nextMaintenance | date:'dd.MM.yyyy'}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="equipment-actions">
+                            <button class="action-btn primary" (click)="onViewEquipment(equipment)">
+                                <i class="fas fa-eye"></i>
+                                Просмотр
+                            </button>
+                            <button class="action-btn secondary" (click)="onEditEquipment(equipment)">
+                                <i class="fas fa-edit"></i>
+                                Изменить
+                            </button>
+                            <div class="more-actions">
+                                <button class="more-btn" (click)="toggleEquipmentMenu(equipment)">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <div class="actions-menu" [class.show]="equipment.showMenu">
+                                    <button class="menu-item" (click)="onScheduleMaintenance(equipment)">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        Запланировать ТО
                                     </button>
-                                    <button class="action-btn delete" (click)="onDeleteEquipment(item)">
+                                    <button class="menu-item" (click)="onDuplicateEquipment(equipment)">
+                                        <i class="fas fa-copy"></i>
+                                        Дублировать
+                                    </button>
+                                    <button class="menu-item" (click)="onExportEquipment(equipment)">
+                                        <i class="fas fa-download"></i>
+                                        Экспорт
+                                    </button>
+                                    <button class="menu-item delete" (click)="onDeleteEquipment(equipment)">
                                         <i class="fas fa-trash"></i>
+                                        Удалить
                                     </button>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Списочный вид оборудования -->
+                <div *ngIf="equipmentView === 'list'" class="equipment-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Оборудование</th>
+                                <th>Категория</th>
+                                <th>Инв. номер</th>
+                                <th>Местоположение</th>
+                                <th>Ответственный</th>
+                                <th>Статус</th>
+                                <th>Следующее ТО</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let equipment of getFilteredEquipment()">
+                                <td>
+                                    <div class="table-equipment-info">
+                                        <div class="table-equipment-icon">
+                                            <i class="fas" [class.fa-desktop]="equipment.category === 'Компьютеры'"
+                                               [class.fa-print]="equipment.category === 'Принтеры'"
+                                               [class.fa-network-wired]="equipment.category === 'Сетевое оборудование'"
+                                               [class.fa-tools]="equipment.category === 'Другое'"></i>
+                                        </div>
+                                        <div class="table-equipment-details">
+                                            <h5>{{equipment.name}}</h5>
+                                            <p>{{equipment.type}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{equipment.category}}</td>
+                                <td>{{equipment.inventoryNumber}}</td>
+                                <td>{{equipment.location}}</td>
+                                <td>{{equipment.responsiblePerson}}</td>
+                                <td>
+                                    <span class="equipment-status" [class]="equipment.status">
+                                        {{getEquipmentStatusName(equipment.status)}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span [class.overdue]="isMaintenanceOverdue(equipment)">
+                                        {{equipment.nextMaintenance | date:'dd.MM.yyyy'}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="table-action-btn view" (click)="onViewEquipment(equipment)" title="Просмотр">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn edit" (click)="onEditEquipment(equipment)" title="Редактировать">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="table-action-btn maintenance" (click)="onScheduleMaintenance(equipment)" title="Запланировать ТО">
+                                            <i class="fas fa-wrench"></i>
+                                        </button>
+                                        <button class="table-action-btn delete" (click)="onDeleteEquipment(equipment)" title="Удалить">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Пустое состояние -->
+                <div *ngIf="getFilteredEquipment().length === 0" class="empty-equipment">
+                    <div class="empty-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h4>Оборудование не найдено</h4>
+                    <p>{{equipmentSearchQuery || selectedEquipmentCategory || selectedEquipmentStatus ? 
+                        'Попробуйте изменить параметры поиска' : 
+                        'Добавьте первое оборудование для начала работы'}}</p>
+                    <button *ngIf="!equipmentSearchQuery && !selectedEquipmentCategory && !selectedEquipmentStatus" 
+                            class="create-first-equipment-btn" (click)="onAddEquipment()">
+                        <i class="fas fa-plus"></i>
+                        Добавить первое оборудование
+                    </button>
+                </div>
             </section>
         </div>
 
         <!-- Раздел новостей -->
         <div *ngIf="currentSection === 'news'">
-            <section class="data-table">
-                <div class="table-header">
-                    <div class="header-left">
-                        <h3>Новости</h3>
-                        <div class="search-box">
+            <section class="news-container">
+                <!-- Заголовок с действиями -->
+                <div class="news-header">
+                    <div class="news-header-info">
+                        <h3><i class="fas fa-newspaper"></i> Управление новостями</h3>
+                        <p>Создание и управление новостными публикациями</p>
+                        <div class="news-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-newspaper"></i>
+                                <span>Всего: {{newsList.length}}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Сегодня: {{getRecentNewsCount()}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="news-header-actions">
+                        <div class="news-view-toggle">
+                            <button class="view-btn" 
+                                    [class.active]="newsView === 'cards'"
+                                    (click)="setNewsView('cards')">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" 
+                                    [class.active]="newsView === 'list'"
+                                    (click)="setNewsView('list')">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        <button class="add-news-btn" (click)="onAddNews()">
+                            <i class="fas fa-plus"></i>
+                            Создать новость
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Фильтры и поиск -->
+                <div class="news-filters">
+                    <div class="news-search">
+                        <div class="search-input">
                             <i class="fas fa-search"></i>
                             <input type="text" 
                                    [(ngModel)]="newsSearchQuery" 
                                    (ngModelChange)="onNewsSearch($any($event))"
-                                   placeholder="Поиск по заголовку или содержанию...">
+                                   placeholder="Поиск новостей...">
                         </div>
                     </div>
-                    <button class="add-btn" (click)="onAddNews()">
-                        <i class="fas fa-plus"></i>
-                        <span>Добавить новость</span>
-                    </button>
+                    <div class="filter-group">
+                        <label>Автор:</label>
+                        <select [(ngModel)]="selectedNewsAuthor" (change)="filterNewsByAuthor()">
+                            <option value="">Все авторы</option>
+                            <option value="Администратор">Администратор</option>
+                            <option value="Редактор">Редактор</option>
+                            <option value="Модератор">Модератор</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Период:</label>
+                        <select [(ngModel)]="selectedNewsPeriod" (change)="filterNewsByPeriod()">
+                            <option value="">Все время</option>
+                            <option value="today">Сегодня</option>
+                            <option value="week">Неделя</option>
+                            <option value="month">Месяц</option>
+                        </select>
+                    </div>
                 </div>
-                <div *ngIf="!filteredNews || filteredNews.length === 0" class="no-data">
-                    <i class="fas fa-search"></i>
-                    <p>{{newsSearchQuery ? 'Ничего не найдено' : 'Нет данных о новостях'}}</p>
-                </div>
-                <table *ngIf="filteredNews && filteredNews.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Заголовок</th>
-                            <th>Содержание</th>
-                            <th>Дата</th>
-                            <th>Автор</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let news of filteredNews">
-                            <td>{{news.title}}</td>
-                            <td>{{news.content}}</td>
-                            <td>{{news.date | date:'d MMMM yyyy'}}</td>
-                            <td>{{news.author}}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn edit" (click)="onEditNews(news)">
-                                        <i class="fas fa-edit"></i>
+
+                <!-- Карточный вид новостей -->
+                <div *ngIf="newsView === 'cards'" class="news-grid">
+                    <div *ngFor="let news of getFilteredNews()" class="news-card">
+                        <div class="news-date-badge">
+                            {{news.date | date:'dd MMM'}}
+                        </div>
+                        
+                        <div class="news-content">
+                            <h4>{{news.title}}</h4>
+                            <p class="news-excerpt">
+                                {{news.content.length > 120 ? (news.content | slice:0:120) + '...' : news.content}}
+                            </p>
+                            
+                            <div class="news-meta">
+                                <div class="author-info">
+                                    <i class="fas fa-user"></i>
+                                    <span>{{news.author}}</span>
+                                </div>
+                                <div class="read-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>{{getReadTime(news.content)}} мин</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="news-actions">
+                            <button class="action-btn primary" (click)="onViewNews(news)">
+                                <i class="fas fa-eye"></i>
+                                Просмотр
+                            </button>
+                            <button class="action-btn secondary" (click)="onEditNews(news)">
+                                <i class="fas fa-edit"></i>
+                                Редактировать
+                            </button>
+                            <div class="more-actions">
+                                <button class="more-btn" (click)="toggleNewsMenu(news)">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <div class="actions-menu" *ngIf="news.showMenu">
+                                    <button class="menu-item" (click)="onDuplicateNews(news)">
+                                        <i class="fas fa-copy"></i>
+                                        Дублировать
                                     </button>
-                                    <button class="action-btn delete" (click)="onDeleteNews(news)">
+                                    <button class="menu-item" (click)="onPublishNews(news)">
+                                        <i class="fas fa-share"></i>
+                                        Опубликовать
+                                    </button>
+                                    <button class="menu-item delete" (click)="onDeleteNews(news)">
                                         <i class="fas fa-trash"></i>
+                                        Удалить
                                     </button>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Списочный вид новостей -->
+                <div *ngIf="newsView === 'list'" class="news-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Заголовок</th>
+                                <th>Автор</th>
+                                <th>Дата создания</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let news of getFilteredNews()">
+                                <td>
+                                    <div class="table-news-info">
+                                        <div class="news-icon">
+                                            <i class="fas fa-newspaper"></i>
+                                        </div>
+                                        <div class="table-news-details">
+                                            <h5>{{news.title}}</h5>
+                                            <p>{{news.content | slice:0:60}}...</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{news.author}}</td>
+                                <td>{{news.date | date:'dd.MM.yyyy HH:mm'}}</td>
+                                <td>
+                                    <span class="news-status published">
+                                        <i class="fas fa-check-circle"></i>
+                                        Опубликована
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="table-action-btn view" (click)="onViewNews(news)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn edit" (click)="onEditNews(news)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="table-action-btn delete" (click)="onDeleteNews(news)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Пустое состояние -->
+                <div *ngIf="getFilteredNews().length === 0" class="empty-news">
+                    <div class="empty-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h4>Новости не найдены</h4>
+                    <p>{{newsSearchQuery || selectedNewsAuthor || selectedNewsPeriod ? 
+                        'Попробуйте изменить параметры поиска' : 
+                        'Создайте первую новость для начала работы'}}</p>
+                    <button *ngIf="!newsSearchQuery && !selectedNewsAuthor && !selectedNewsPeriod" 
+                            class="create-first-news-btn" (click)="onAddNews()">
+                        <i class="fas fa-plus"></i>
+                        Создать первую новость
+                    </button>
+                </div>
             </section>
         </div>
 
         <!-- Раздел отчетов -->
         <div *ngIf="currentSection === 'reports'">
-            <section class="data-table">
-                <div class="table-header">
-                    <div class="header-left">
-                        <h3>Отчеты</h3>
-                        <div class="search-box">
+            <section class="reports-container">
+                <!-- Заголовок с действиями -->
+                <div class="reports-header">
+                    <div class="header-info">
+                        <h3><i class="fas fa-file-alt"></i> Управление отчетами</h3>
+                        <p>Создавайте, редактируйте и управляйте отчетами с помощью встроенного редактора</p>
+                    </div>
+                    <div class="header-actions">
+                        <div class="view-toggle">
+                            <button [class.active]="reportsView === 'list'" (click)="setReportsView('list')">
+                                <i class="fas fa-list"></i>
+                                Список
+                            </button>
+                            <button [class.active]="reportsView === 'cards'" (click)="setReportsView('cards')">
+                                <i class="fas fa-th-large"></i>
+                                Карточки
+                            </button>
+                            <button [class.active]="reportsView === 'editor'" (click)="setReportsView('editor')">
+                                <i class="fas fa-edit"></i>
+                                Редактор
+                            </button>
+                        </div>
+                        <button class="create-report-btn" (click)="onCreateNewReport()">
+                            <i class="fas fa-plus"></i>
+                            Создать отчет
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Фильтры и поиск -->
+                <div class="reports-filters" *ngIf="reportsView !== 'editor'">
+                    <div class="search-section">
+                        <div class="search-input">
                             <i class="fas fa-search"></i>
                             <input type="text" 
                                    [(ngModel)]="reportSearchQuery" 
                                    (ngModelChange)="onReportSearch($any($event))"
-                                   placeholder="Поиск по названию или типу...">
+                                   placeholder="Поиск отчетов...">
                         </div>
                     </div>
-                    <button class="add-btn" (click)="onAddReport()">
-                        <i class="fas fa-plus"></i>
-                        <span>Создать отчет</span>
-                    </button>
+                    <div class="filter-section">
+                        <select [(ngModel)]="selectedReportType" (change)="filterReportsByType()">
+                            <option value="">Все типы</option>
+                            <option value="financial">Финансовые</option>
+                            <option value="operational">Операционные</option>
+                            <option value="maintenance">Обслуживание</option>
+                            <option value="analytics">Аналитика</option>
+                        </select>
+                        <select [(ngModel)]="selectedReportStatus" (change)="filterReportsByStatus()">
+                            <option value="">Все статусы</option>
+                            <option value="draft">Черновик</option>
+                            <option value="published">Опубликован</option>
+                            <option value="archived">В архиве</option>
+                        </select>
+                    </div>
                 </div>
-                <div *ngIf="!filteredReports || filteredReports.length === 0" class="no-data">
-                    <i class="fas fa-search"></i>
-                    <p>{{reportSearchQuery ? 'Ничего не найдено' : 'Нет данных об отчетах'}}</p>
+
+                <!-- Список отчетов -->
+                <div *ngIf="reportsView === 'list'" class="reports-list-view">
+                    <div class="reports-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Название</th>
+                                    <th>Тип</th>
+                                    <th>Создан</th>
+                                    <th>Обновлен</th>
+                                    <th>Статус</th>
+                                    <th>Автор</th>
+                                    <th>Размер</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let report of getFilteredReports()">
+                                    <td>
+                                        <div class="report-title">
+                                            <i class="fas" [ngClass]="{
+                                                'fa-chart-line': report.type === 'financial',
+                                                'fa-cogs': report.type === 'operational',
+                                                'fa-tools': report.type === 'maintenance',
+                                                'fa-chart-bar': report.type === 'analytics'
+                                            }"></i>
+                                            <span>{{report.title}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="report-type-badge" [ngClass]="report.type">
+                                            {{getReportTypeName(report.type)}}
+                                        </span>
+                                    </td>
+                                    <td>{{report.createdDate | date:'dd.MM.yyyy HH:mm'}}</td>
+                                    <td>{{report.updatedDate | date:'dd.MM.yyyy HH:mm'}}</td>
+                                    <td>
+                                        <span class="report-status" [ngClass]="report.status">
+                                            {{getReportStatusName(report.status)}}
+                                        </span>
+                                    </td>
+                                    <td>{{report.author}}</td>
+                                    <td>{{report.size || '—'}}</td>
+                                    <td>
+                                        <div class="report-actions">
+                                            <button class="action-btn view" (click)="onViewReport(report)" title="Просмотр">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="action-btn edit" (click)="onEditReportInEditor(report)" title="Редактировать">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="action-btn download" (click)="onDownloadReport(report)" title="Скачать">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="action-btn duplicate" (click)="onDuplicateReport(report)" title="Дублировать">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                            <button class="action-btn delete" (click)="onDeleteReport(report)" title="Удалить">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <table *ngIf="filteredReports && filteredReports.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Название</th>
-                            <th>Тип</th>
-                            <th>Дата</th>
-                            <th>Статус</th>
-                            <th>Автор</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let report of filteredReports">
-                            <td>{{report.title}}</td>
-                            <td>
-                                <span class="badge" [ngClass]="report.type">
-                                    {{report.type === 'financial' ? 'Финансовый' : 
-                                      report.type === 'operational' ? 'Операционный' : 'Обслуживание'}}
-                                </span>
-                            </td>
-                            <td>{{report.date | date:'dd.MM.yyyy'}}</td>
-                            <td>
-                                <span class="status" [class.active]="report.status === 'published'">
-                                    {{report.status === 'published' ? 'Опубликован' : 'Черновик'}}
-                                </span>
-                            </td>
-                            <td>{{report.author}}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn view" (click)="onViewReport(report)">
+
+                <!-- Карточки отчетов -->
+                <div *ngIf="reportsView === 'cards'" class="reports-cards-view">
+                    <div class="reports-grid">
+                        <div class="report-card" *ngFor="let report of getFilteredReports()">
+                            <div class="card-header">
+                                <div class="report-icon" [ngClass]="report.type">
+                                    <i class="fas" [ngClass]="{
+                                        'fa-chart-line': report.type === 'financial',
+                                        'fa-cogs': report.type === 'operational',
+                                        'fa-tools': report.type === 'maintenance',
+                                        'fa-chart-bar': report.type === 'analytics'
+                                    }"></i>
+                                </div>
+                                <div class="card-menu">
+                                    <button class="menu-btn" (click)="toggleReportMenu(report)">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <div class="menu-dropdown" *ngIf="report.showMenu">
+                                        <button (click)="onEditReportInEditor(report)">
+                                            <i class="fas fa-edit"></i>Редактировать
+                                        </button>
+                                        <button (click)="onDuplicateReport(report)">
+                                            <i class="fas fa-copy"></i>Дублировать
+                                        </button>
+                                        <button (click)="onDownloadReport(report)">
+                                            <i class="fas fa-download"></i>Скачать
+                                        </button>
+                                        <button (click)="onDeleteReport(report)" class="delete">
+                                            <i class="fas fa-trash"></i>Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h4>{{report.title}}</h4>
+                                <p>{{report.description || 'Описание отсутствует'}}</p>
+                                <div class="card-meta">
+                                    <span class="report-type-badge" [ngClass]="report.type">
+                                        {{getReportTypeName(report.type)}}
+                                    </span>
+                                    <span class="report-status" [ngClass]="report.status">
+                                        {{getReportStatusName(report.status)}}
+                                    </span>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="author">{{report.author}}</span>
+                                    <span class="date">{{report.updatedDate | date:'dd.MM.yyyy'}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Редактор отчетов -->
+                <div *ngIf="reportsView === 'editor'" class="reports-editor-view">
+                    <div class="editor-container">
+                        <div class="editor-header">
+                            <div class="editor-title">
+                                <input type="text" 
+                                       [(ngModel)]="currentReport.title" 
+                                       placeholder="Название отчета..."
+                                       class="title-input">
+                            </div>
+                            <div class="editor-toolbar">
+                                <div class="toolbar-group">
+                                    <button class="toolbar-btn" (click)="saveReport()" title="Сохранить">
+                                        <i class="fas fa-save"></i>
+                                    </button>
+                                    <button class="toolbar-btn" (click)="previewReport()" title="Предварительный просмотр">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="action-btn edit" (click)="onEditReport(report)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete" (click)="onDeleteReport(report)">
-                                        <i class="fas fa-trash"></i>
+                                    <button class="toolbar-btn" (click)="exportReport()" title="Экспорт">
+                                        <i class="fas fa-file-export"></i>
                                     </button>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                <div class="toolbar-group">
+                                    <select [(ngModel)]="currentReport.type" class="type-select">
+                                        <option value="financial">Финансовый</option>
+                                        <option value="operational">Операционный</option>
+                                        <option value="maintenance">Обслуживание</option>
+                                        <option value="analytics">Аналитика</option>
+                                    </select>
+                                    <select [(ngModel)]="currentReport.status" class="status-select">
+                                        <option value="draft">Черновик</option>
+                                        <option value="published">Опубликован</option>
+                                        <option value="archived">В архиве</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="editor-workspace">
+                            <!-- Панель инструментов редактора -->
+                            <div class="editor-tools">
+                                <div class="tools-section">
+                                    <h5>Форматирование</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="formatText('bold')" title="Жирный">
+                                            <i class="fas fa-bold"></i>
+                                        </button>
+                                        <button (click)="formatText('italic')" title="Курсив">
+                                            <i class="fas fa-italic"></i>
+                                        </button>
+                                        <button (click)="formatText('underline')" title="Подчеркнутый">
+                                            <i class="fas fa-underline"></i>
+                                        </button>
+                                        <button (click)="formatText('strikethrough')" title="Зачеркнутый">
+                                            <i class="fas fa-strikethrough"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="tools-section">
+                                    <h5>Элементы</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="insertElement('table')" title="Таблица">
+                                            <i class="fas fa-table"></i>
+                                        </button>
+                                        <button (click)="insertElement('chart')" title="График">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </button>
+                                        <button (click)="insertElement('image')" title="Изображение">
+                                            <i class="fas fa-image"></i>
+                                        </button>
+                                        <button (click)="insertElement('list')" title="Список">
+                                            <i class="fas fa-list"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="tools-section">
+                                    <h5>Шаблоны</h5>
+                                    <div class="template-buttons">
+                                        <button (click)="loadTemplate('financial')" class="template-btn">
+                                            <i class="fas fa-chart-line"></i>
+                                            Финансовый
+                                        </button>
+                                        <button (click)="loadTemplate('operational')" class="template-btn">
+                                            <i class="fas fa-cogs"></i>
+                                            Операционный
+                                        </button>
+                                        <button (click)="loadTemplate('analytics')" class="template-btn">
+                                            <i class="fas fa-chart-bar"></i>
+                                            Аналитика
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Основная область редактора -->
+                            <div class="editor-main">
+                                <div class="editor-content" 
+                                     contenteditable="true" 
+                                     [(ngModel)]="currentReport.content"
+                                     (input)="onEditorContentChange($event)"
+                                     [innerHTML]="currentReport.content">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Пустое состояние -->
+                <div *ngIf="reportsView !== 'editor' && getFilteredReports().length === 0" class="empty-reports">
+                    <div class="empty-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h4>Отчеты не найдены</h4>
+                    <p>{{reportSearchQuery ? 'Попробуйте изменить поисковый запрос' : 'Создайте первый отчет'}}</p>
+                    <button class="create-first-report-btn" (click)="onCreateNewReport()">
+                        <i class="fas fa-plus"></i>
+                        Создать первый отчет
+                    </button>
+                </div>
             </section>
         </div>
 
         <!-- Раздел расчетов -->
         <div *ngIf="currentSection === 'calculations'">
+            <!-- Калькулятор -->
+            <section class="calculator-section" style="margin-bottom: 20px;">
+                <div class="table-header">
+                    <h3>Калькулятор</h3>
+                </div>
+                <div class="calculator-container">
+                    <div class="calculation-types">
+                        <button class="calc-type-btn" 
+                                [class.active]="selectedCalculationType === 'cost'"
+                                (click)="selectCalculationType('cost')">
+                            <i class="fas fa-ruble-sign"></i>
+                            <span>Расчет стоимости</span>
+                        </button>
+                        <button class="calc-type-btn" 
+                                [class.active]="selectedCalculationType === 'efficiency'"
+                                (click)="selectCalculationType('efficiency')">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Эффективность</span>
+                        </button>
+                        <button class="calc-type-btn" 
+                                [class.active]="selectedCalculationType === 'maintenance'"
+                                (click)="selectCalculationType('maintenance')">
+                            <i class="fas fa-tools"></i>
+                            <span>Обслуживание</span>
+                        </button>
+                        <button class="calc-type-btn" 
+                                [class.active]="selectedCalculationType === 'technical'"
+                                (click)="selectCalculationType('technical')">
+                            <i class="fas fa-video"></i>
+                            <span>Техническое оснащение</span>
+                        </button>
+                    </div>
+
+                    <div class="calculator-content" *ngIf="selectedCalculationType">
+                        <!-- Калькулятор стоимости -->
+                        <div *ngIf="selectedCalculationType === 'cost'" class="calculation-form">
+                            <div class="form-group">
+                                <label>Площадь (м²):</label>
+                                <input type="number" [(ngModel)]="calculatorData.cost.area" placeholder="Введите площадь">
+                            </div>
+                            <div class="form-group">
+                                <label>Стоимость за м² (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.cost.pricePerSquare" placeholder="Введите стоимость">
+                            </div>
+                            <div class="form-group">
+                                <label>Коэффициент сложности:</label>
+                                <select [(ngModel)]="calculatorData.cost.complexityFactor">
+                                    <option value="1">Простой (1.0)</option>
+                                    <option value="1.2">Средний (1.2)</option>
+                                    <option value="1.5">Сложный (1.5)</option>
+                                    <option value="2">Очень сложный (2.0)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>НДС (%):</label>
+                                <input type="number" [(ngModel)]="calculatorData.cost.vat" placeholder="20" value="20">
+                            </div>
+                            <button class="calc-btn" (click)="calculateCost()">
+                                <i class="fas fa-calculator"></i>
+                                Рассчитать стоимость
+                            </button>
+                        </div>
+
+                        <!-- Калькулятор эффективности -->
+                        <div *ngIf="selectedCalculationType === 'efficiency'" class="calculation-form">
+                            <div class="form-group">
+                                <label>Доходы (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.efficiency.income" placeholder="Введите доходы">
+                            </div>
+                            <div class="form-group">
+                                <label>Расходы (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.efficiency.expenses" placeholder="Введите расходы">
+                            </div>
+                            <div class="form-group">
+                                <label>Инвестиции (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.efficiency.investments" placeholder="Введите инвестиции">
+                            </div>
+                            <div class="form-group">
+                                <label>Период (месяцев):</label>
+                                <input type="number" [(ngModel)]="calculatorData.efficiency.period" placeholder="12" value="12">
+                            </div>
+                            <button class="calc-btn" (click)="calculateEfficiency()">
+                                <i class="fas fa-chart-line"></i>
+                                Рассчитать эффективность
+                            </button>
+                        </div>
+
+                        <!-- Калькулятор обслуживания -->
+                        <div *ngIf="selectedCalculationType === 'maintenance'" class="calculation-form">
+                            <div class="form-group">
+                                <label>Количество оборудования:</label>
+                                <input type="number" [(ngModel)]="calculatorData.maintenance.equipmentCount" placeholder="Введите количество">
+                            </div>
+                            <div class="form-group">
+                                <label>Стоимость обслуживания за единицу (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.maintenance.costPerUnit" placeholder="Введите стоимость">
+                            </div>
+                            <div class="form-group">
+                                <label>Периодичность (дней):</label>
+                                <input type="number" [(ngModel)]="calculatorData.maintenance.frequency" placeholder="30" value="30">
+                            </div>
+                            <div class="form-group">
+                                <label>Тип обслуживания:</label>
+                                <select [(ngModel)]="calculatorData.maintenance.maintenanceType">
+                                    <option value="preventive">Профилактическое</option>
+                                    <option value="corrective">Корректирующее</option>
+                                    <option value="emergency">Экстренное</option>
+                                </select>
+                            </div>
+                            <button class="calc-btn" (click)="calculateMaintenance()">
+                                <i class="fas fa-tools"></i>
+                                Рассчитать обслуживание
+                            </button>
+                        </div>
+
+                        <!-- Калькулятор технического оснащения -->
+                        <div *ngIf="selectedCalculationType === 'technical'" class="calculation-form">
+                            <div class="form-group">
+                                <label>Количество камер:</label>
+                                <input type="number" [(ngModel)]="calculatorData.technical.cameraCount" placeholder="Введите количество камер">
+                            </div>
+                            <div class="form-group">
+                                <label>Стоимость одной камеры (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.technical.cameraPrice" placeholder="Введите стоимость камеры">
+                            </div>
+                            <div class="form-group">
+                                <label>Количество серверов:</label>
+                                <input type="number" [(ngModel)]="calculatorData.technical.serverCount" placeholder="Введите количество серверов">
+                            </div>
+                            <div class="form-group">
+                                <label>Стоимость одного сервера (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.technical.serverPrice" placeholder="Введите стоимость сервера">
+                            </div>
+                            <div class="form-group">
+                                <label>Длина провода (м):</label>
+                                <input type="number" [(ngModel)]="calculatorData.technical.cableLength" placeholder="Введите длину провода">
+                            </div>
+                            <div class="form-group">
+                                <label>Стоимость провода за метр (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.technical.cablePricePerMeter" placeholder="Введите стоимость за метр">
+                            </div>
+                            <div class="form-group">
+                                <label>Тип инсталляции:</label>
+                                <select [(ngModel)]="calculatorData.technical.installationType">
+                                    <option value="basic">Базовая установка</option>
+                                    <option value="professional">Профессиональная установка</option>
+                                    <option value="premium">Премиум установка</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Стоимость работ (₽):</label>
+                                <input type="number" [(ngModel)]="calculatorData.technical.installationCost" placeholder="Введите стоимость работ">
+                            </div>
+                            <button class="calc-btn" (click)="calculateTechnical()">
+                                <i class="fas fa-video"></i>
+                                Рассчитать техническое оснащение
+                            </button>
+                        </div>
+
+                        <!-- Результаты расчетов -->
+                        <div class="calculation-result" *ngIf="calculationResult">
+                            <h4><i class="fas fa-chart-bar"></i> Результат расчета</h4>
+                            <div class="result-content">
+                                <div class="result-item" *ngFor="let item of calculationResult.details">
+                                    <span class="result-label">{{item.label}}:</span>
+                                    <span class="result-value">{{item.value}}</span>
+                                </div>
+                                <div class="result-total">
+                                    <span class="total-label">{{calculationResult.totalLabel}}:</span>
+                                    <span class="total-value">{{calculationResult.totalValue}}</span>
+                                </div>
+                            </div>
+                            <div class="result-actions">
+                                <button class="save-btn" (click)="saveCalculation()">
+                                    <i class="fas fa-save"></i>
+                                    Сохранить расчет
+                                </button>
+                                <button class="clear-btn" (click)="clearCalculation()">
+                                    <i class="fas fa-trash"></i>
+                                    Очистить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Таблица сохраненных расчетов -->
             <section class="data-table">
                 <div class="table-header">
                     <div class="header-left">
-                        <h3>Расчеты</h3>
+                        <h3>Сохраненные расчеты</h3>
                         <div class="search-box">
                             <i class="fas fa-search"></i>
                             <input type="text" 
@@ -524,10 +1868,6 @@
                                    placeholder="Поиск по названию или типу...">
                         </div>
                     </div>
-                    <button class="add-btn" (click)="onAddCalculation()">
-                        <i class="fas fa-plus"></i>
-                        <span>Новый расчет</span>
-                    </button>
                 </div>
                 <div *ngIf="!filteredCalculations || filteredCalculations.length === 0" class="no-data">
                     <i class="fas fa-search"></i>
@@ -549,7 +1889,9 @@
                             <td>
                                 <span class="badge" [ngClass]="calculation.type">
                                     {{calculation.type === 'cost' ? 'Стоимость' : 
-                                      calculation.type === 'efficiency' ? 'Эффективность' : 'Обслуживание'}}
+                                      calculation.type === 'efficiency' ? 'Эффективность' : 
+                                      calculation.type === 'maintenance' ? 'Обслуживание' : 
+                                      calculation.type === 'technical' ? 'Техническое оснащение' : calculation.type}}
                                 </span>
                             </td>
                             <td>{{calculation.date | date:'dd.MM.yyyy'}}</td>
@@ -579,81 +1921,7 @@
         </div>
 
         <!-- Раздел отзывов -->
-        <div *ngIf="currentSection === 'reviews'">
-            <section class="data-table">
-                <div class="table-header">
-                    <div class="header-left">
-                        <h3>Модерация отзывов</h3>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" 
-                                   [(ngModel)]="reviewSearchQuery" 
-                                   (ngModelChange)="onReviewSearch($any($event))"
-                                   placeholder="Поиск по автору или содержанию...">
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="!filteredReviews || filteredReviews.length === 0" class="no-data">
-                    <i class="fas fa-search"></i>
-                    <p>{{reviewSearchQuery ? 'Ничего не найдено' : 'Нет отзывов для модерации'}}</p>
-                </div>
-                <table *ngIf="filteredReviews && filteredReviews.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Автор</th>
-                            <th>Объект</th>
-                            <th>Оценка</th>
-                            <th>Содержание</th>
-                            <th>Дата</th>
-                            <th>Статус</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let review of filteredReviews">
-                            <td>{{review.author}}</td>
-                            <td>{{review.facility}}</td>
-                            <td>
-                                <div class="rating">
-                                    <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]" 
-                                       [class.active]="star <= review.rating"></i>
-                                </div>
-                            </td>
-                            <td>{{review.content}}</td>
-                            <td>{{review.date | date:'d MMMM yyyy'}}</td>
-                            <td>
-                                <span class="status" [ngClass]="review.status">
-                                    {{review.status === 'pending' ? 'На модерации' : 
-                                      review.status === 'approved' ? 'Одобрен' : 'Отклонен'}}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn approve" *ngIf="review.status === 'pending'"
-                                            (click)="onApproveReview(review)" title="Одобрить">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn reject" *ngIf="review.status === 'pending'"
-                                            (click)="onRejectReview(review)" title="Отклонить">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    <button class="action-btn response" *ngIf="review.status === 'approved'"
-                                            (click)="onAddResponse(review)" title="Ответить">
-                                        <i class="fas fa-reply"></i>
-                                    </button>
-                                    <button class="action-btn delete" (click)="onDeleteReview(review)" title="Удалить">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </div>
-
-        <!-- Раздел обратной связи -->
-        <div *ngIf="currentSection === 'feedback'" class="feedback-container">
+        <div *ngIf="currentSection === 'reviews'" class="feedback-container">
             <div class="feedback-list">
                 <div class="feedback-item" *ngFor="let feedback of feedbacks" 
                      [class.active]="selectedFeedback?.id === feedback.id"

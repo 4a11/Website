@@ -10,6 +10,14 @@ export interface Employee {
     email: string;
     phone: string;
     created_at: string | null;
+    // Дополнительные свойства для современного интерфейса
+    status?: 'active' | 'inactive' | 'vacation';
+    department?: string;
+    skills?: string[];
+    rating?: number;
+    projectsCount?: number;
+    tasksCompleted?: number;
+    showMenu?: boolean; // для интерфейса
 }
 
 @Injectable({

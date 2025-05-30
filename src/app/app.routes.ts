@@ -19,6 +19,7 @@ export const routes: Routes = [
     { path: 'admin', component: AdminComponent },
     { path: 'admin/employees', component: AdminComponent },
     { path: 'admin/facilities', component: AdminComponent },
+    { path: 'admin/finances', component: AdminComponent },
     { path: 'admin/reports', component: AdminComponent },
     { path: 'admin/settings', component: AdminComponent },
     { path: 'login', component: LoginComponent },
@@ -60,6 +61,11 @@ export const routes: Routes = [
                 path: 'calculations', 
                 component: AdminComponent,
                 data: { section: 'calculations' }
+            },
+            { 
+                path: 'finances', 
+                component: AdminComponent,
+                data: { section: 'finances' }
             },
             { 
                 path: 'reviews', 

@@ -1,7 +1,7 @@
 export interface Calculation {
     id: number;
     name: string;
-    type: 'cost' | 'efficiency' | 'maintenance';
+    type: 'cost' | 'efficiency' | 'maintenance' | 'technical';
     date: Date;
     result: number;
     parameters?: {

@@ -4,4 +4,5 @@ export interface News {
     content: string;
     date: Date;
     author: string;
+    showMenu?: boolean;
 }

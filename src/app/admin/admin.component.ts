@@ -1,7 +1,8 @@
-import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, Renderer2, OnDestroy, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { EmployeeService } from '../services/employee.service';
 import { FacilityService } from '../services/facility.service';
 import { Employee } from '../services/employee.service';
@@ -49,6 +50,7 @@ import { Subject } from 'rxjs';
         AddNewsModalComponent,
         AddEquipmentModalComponent
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     providers: [
         EmployeeService, 
         FacilityService, 
@@ -133,6 +135,66 @@ export class AdminComponent implements OnInit, OnDestroy {
     reviewSearchQuery: string = '';
     filteredReviews: Review[] = [];
 
+    // Финансовые свойства
+    selectedFinancePeriod: string = 'month';
+    chartType: string = 'bar';
+    showAddTransactionModal: boolean = false;
+    showBudgetModal: boolean = false;
+
+    // Отчеты - расширенные свойства
+    reportsView: 'list' | 'cards' | 'editor' = 'list';
+    selectedReportType: string = '';
+    selectedReportStatus: string = '';
+    currentReport: any = {
+        title: '',
+        content: '',
+        type: 'financial',
+        status: 'draft',
+        author: '',
+        createdDate: new Date(),
+        updatedDate: new Date()
+    };
+
+    // Калькулятор
+    selectedCalculationType: string = '';
+    calculatorData = {
+        cost: {
+            area: 0,
+            pricePerSquare: 0,
+            complexityFactor: 1,
+            vat: 20
+        },
+        efficiency: {
+            income: 0,
+            expenses: 0,
+            investments: 0,
+            period: 12
+        },
+        maintenance: {
+            equipmentCount: 0,
+            costPerUnit: 0,
+            frequency: 30,
+            maintenanceType: 'preventive'
+        },
+        technical: {
+            cameraCount: 0,
+            cameraPrice: 0,
+            serverCount: 0,
+            serverPrice: 0,
+            cableLength: 0,
+            cablePricePerMeter: 0,
+            installationType: 'basic',
+            installationCost: 0
+        }
+    };
+    
+    calculationResult: {
+        details: Array<{label: string, value: string}>,
+        totalLabel: string,
+        totalValue: string,
+        type: string
+    } | null = null;
+
     loading = {
         equipment: false
     };
@@ -143,11 +205,26 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     private destroy$ = new Subject<void>();
     private roleAccess = {
-        [UserRole.ADMIN]: ['dashboard', 'employees', 'facilities', 'equipment', 'news', 'reports', 'calculations', 'settings', 'reviews', 'feedback'],
-        [UserRole.MANAGER]: ['dashboard', 'employees', 'facilities', 'equipment', 'reports'],
+        [UserRole.ADMIN]: ['dashboard', 'employees', 'facilities', 'equipment', 'news', 'reports', 'calculations', 'finances', 'settings', 'reviews', 'feedback'],
+        [UserRole.MANAGER]: ['dashboard', 'employees', 'facilities', 'equipment', 'reports', 'finances'],
         [UserRole.EMPLOYEE]: ['dashboard', 'facilities', 'equipment'],
         [UserRole.GUEST]: ['dashboard']
     };
+
+    // Сотрудники - расширенные свойства
+    employeesView: 'cards' | 'list' = 'cards';
+    selectedDepartment: string = '';
+    selectedEmployeeStatus: string = '';
+
+    // Оборудование - расширенные свойства
+    equipmentView: 'cards' | 'list' = 'cards';
+    selectedEquipmentCategory: string = '';
+    selectedEquipmentStatus: string = '';
+
+    // Новости - расширенные свойства
+    newsView: 'cards' | 'list' = 'cards';
+    selectedNewsAuthor: string = '';
+    selectedNewsPeriod: string = '';
 
     constructor(
         private router: Router,
@@ -166,7 +243,21 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 const url = event.urlAfterRedirects;
-                const section = url.split('/').pop() || 'dashboard';
+                console.log('Навигация к URL:', url);
+                
+                // Правильно обрабатываем URL для определения секции
+                let section = 'dashboard';
+                if (url === '/admin' || url === '/admin/') {
+                    section = 'dashboard';
+                } else {
+                    const pathParts = url.split('/');
+                    const lastPart = pathParts[pathParts.length - 1];
+                    if (lastPart && lastPart !== 'admin') {
+                        section = lastPart;
+                    }
+                }
+                
+                console.log('Определена секция:', section);
                 this.switchToSection(section);
             }
         });
@@ -229,6 +320,14 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.authService.refreshCurrentUser();
 
         this.loadAllData();
+        
+        // Если URL уже /admin, убеждаемся что отображается дашборд
+        const currentUrl = this.router.url;
+        if (currentUrl === '/admin' || currentUrl === '/admin/') {
+            console.log('Инициализация дашборда при запуске');
+            this.currentSection = 'dashboard';
+            this.pageTitle = this.getPageTitle('dashboard');
+        }
     }
 
     // Добавляем метод для очистки подписок при уничтожении компонента
@@ -318,42 +417,19 @@ export class AdminComponent implements OnInit, OnDestroy {
             return;
         }
         
-        // Приводим роль к строковому представлению в нижнем регистре для стабильного сравнения
-        const roleStr = String(currentUser.role).toLowerCase();
-        console.log('Роль пользователя (строка):', roleStr);
-        
-        // Если пользователь админ, всегда разрешаем доступ
-        if (roleStr === 'admin') {
-            console.log('Пользователь - администратор, доступ разрешен');
-            this.currentSection = section;
-            this.pageTitle = this.getPageTitle(section);
-            
-            if (section === 'employees') {
-                console.log('Загружаем данные сотрудников...');
-                this.loadEmployees();
-            } else if (section === 'facilities') {
-                console.log('Загружаем данные объектов...');
-                this.loadFacilities();
-            } else if (section === 'feedback') {
-                console.log('Загружаем данные обратной связи...');
-                this.loadFeedbacks();
-            } else if (section === 'settings') {
-                console.log('Загружаем настройки...');
-                this.loadSettings();
-            }
-            return;
-        }
-        
-        // Проверяем доступ к секции для всех остальных ролей
+        // Проверяем доступ к секции
         if (!this.hasAccessToSection(section)) {
+            const roleStr = String(currentUser.role).toLowerCase();
             console.log(`Доступ к разделу ${section} запрещен для роли ${roleStr}`);
             this.router.navigate(['/forbidden']);
             return;
         }
 
+        // Устанавливаем текущую секцию и заголовок
         this.currentSection = section;
         this.pageTitle = this.getPageTitle(section);
         
+        // Загружаем данные для специфических секций
         if (section === 'employees') {
             console.log('Загружаем данные сотрудников...');
             this.loadEmployees();
@@ -366,6 +442,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         } else if (section === 'settings') {
             console.log('Загружаем настройки...');
             this.loadSettings();
+        } else if (section === 'dashboard') {
+            console.log('Обновляем данные дашборда...');
+            this.loadAllData();
         }
     }
 
@@ -378,6 +457,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             'news': 'Новости',
             'reports': 'Отчеты',
             'calculations': 'Расчеты',
+            'finances': 'Финансы',
             'reviews': 'Отзывы',
             'feedback': 'Обратная связь',
             'settings': 'Настройки'
@@ -968,5 +1048,805 @@ export class AdminComponent implements OnInit, OnDestroy {
             default:
                 return 'Неизвестная роль';
         }
+    }
+
+    // Методы калькулятора
+    selectCalculationType(type: string): void {
+        this.selectedCalculationType = type;
+        this.calculationResult = null;
+    }
+
+    calculateCost(): void {
+        const { area, pricePerSquare, complexityFactor, vat } = this.calculatorData.cost;
+        
+        if (!area || !pricePerSquare) {
+            alert('Пожалуйста, заполните все обязательные поля');
+            return;
+        }
+
+        const basePrice = area * pricePerSquare;
+        const complexityPrice = basePrice * Number(complexityFactor);
+        const vatAmount = complexityPrice * (vat / 100);
+        const totalPrice = complexityPrice + vatAmount;
+
+        this.calculationResult = {
+            details: [
+                { label: 'Площадь', value: `${area} м²` },
+                { label: 'Стоимость за м²', value: `${pricePerSquare.toLocaleString('ru-RU')} ₽` },
+                { label: 'Базовая стоимость', value: `${basePrice.toLocaleString('ru-RU')} ₽` },
+                { label: 'Коэффициент сложности', value: `×${complexityFactor}` },
+                { label: 'Стоимость с учетом сложности', value: `${complexityPrice.toLocaleString('ru-RU')} ₽` },
+                { label: 'НДС', value: `${vatAmount.toLocaleString('ru-RU')} ₽` }
+            ],
+            totalLabel: 'Итоговая стоимость',
+            totalValue: `${totalPrice.toLocaleString('ru-RU')} ₽`,
+            type: 'cost'
+        };
+    }
+
+    calculateEfficiency(): void {
+        const { income, expenses, investments, period } = this.calculatorData.efficiency;
+        
+        if (!income || !expenses || !investments || !period) {
+            alert('Пожалуйста, заполните все обязательные поля');
+            return;
+        }
+
+        const profit = income - expenses;
+        const roi = (profit / investments) * 100;
+        const monthlyProfit = profit / period;
+        const paybackPeriod = investments / monthlyProfit;
+
+        this.calculationResult = {
+            details: [
+                { label: 'Доходы', value: `${income.toLocaleString('ru-RU')} ₽` },
+                { label: 'Расходы', value: `${expenses.toLocaleString('ru-RU')} ₽` },
+                { label: 'Прибыль', value: `${profit.toLocaleString('ru-RU')} ₽` },
+                { label: 'Инвестиции', value: `${investments.toLocaleString('ru-RU')} ₽` },
+                { label: 'Период', value: `${period} мес.` },
+                { label: 'Месячная прибыль', value: `${monthlyProfit.toLocaleString('ru-RU')} ₽` },
+                { label: 'Срок окупаемости', value: `${paybackPeriod.toFixed(1)} мес.` }
+            ],
+            totalLabel: 'ROI (Рентабельность инвестиций)',
+            totalValue: `${roi.toFixed(2)}%`,
+            type: 'efficiency'
+        };
+    }
+
+    calculateMaintenance(): void {
+        const { equipmentCount, costPerUnit, frequency, maintenanceType } = this.calculatorData.maintenance;
+        
+        if (!equipmentCount || !costPerUnit || !frequency) {
+            alert('Пожалуйста, заполните все обязательные поля');
+            return;
+        }
+
+        const maintenanceMultiplier = {
+            'preventive': 1,
+            'corrective': 1.3,
+            'emergency': 2
+        };
+
+        const multiplier = maintenanceMultiplier[maintenanceType as keyof typeof maintenanceMultiplier] || 1;
+        const totalCostPerMaintenance = equipmentCount * costPerUnit * multiplier;
+        const monthlyMaintenanceCost = totalCostPerMaintenance * (30 / frequency);
+        const yearlyMaintenanceCost = monthlyMaintenanceCost * 12;
+
+        const maintenanceTypeRus = {
+            'preventive': 'Профилактическое',
+            'corrective': 'Корректирующее',
+            'emergency': 'Экстренное'
+        };
+
+        this.calculationResult = {
+            details: [
+                { label: 'Количество оборудования', value: `${equipmentCount} ед.` },
+                { label: 'Стоимость за единицу', value: `${costPerUnit.toLocaleString('ru-RU')} ₽` },
+                { label: 'Тип обслуживания', value: maintenanceTypeRus[maintenanceType as keyof typeof maintenanceTypeRus] },
+                { label: 'Периодичность', value: `${frequency} дней` },
+                { label: 'Коэффициент сложности', value: `×${multiplier}` },
+                { label: 'Стоимость за одно ТО', value: `${totalCostPerMaintenance.toLocaleString('ru-RU')} ₽` },
+                { label: 'Месячные расходы', value: `${monthlyMaintenanceCost.toLocaleString('ru-RU')} ₽` }
+            ],
+            totalLabel: 'Годовые расходы на ТО',
+            totalValue: `${yearlyMaintenanceCost.toLocaleString('ru-RU')} ₽`,
+            type: 'maintenance'
+        };
+    }
+
+    calculateTechnical(): void {
+        const { cameraCount, cameraPrice, serverCount, serverPrice, cableLength, cablePricePerMeter, installationType, installationCost } = this.calculatorData.technical;
+        
+        if (!cameraCount || !cameraPrice || !serverCount || !serverPrice || !cableLength || !cablePricePerMeter) {
+            alert('Пожалуйста, заполните все обязательные поля');
+            return;
+        }
+
+        const installationMultiplier = {
+            'basic': 1,
+            'professional': 1.5,
+            'premium': 2
+        };
+
+        const multiplier = installationMultiplier[installationType as keyof typeof installationMultiplier] || 1;
+        const camerasCost = cameraCount * cameraPrice;
+        const serversCost = serverCount * serverPrice;
+        const cableCost = cableLength * cablePricePerMeter;
+        const totalInstallationCost = installationCost * multiplier;
+        const equipmentCost = camerasCost + serversCost + cableCost;
+        const totalCost = equipmentCost + totalInstallationCost;
+
+        const installationTypeRus = {
+            'basic': 'Базовая установка',
+            'professional': 'Профессиональная установка',
+            'premium': 'Премиум установка'
+        };
+
+        this.calculationResult = {
+            details: [
+                { label: 'Количество камер', value: `${cameraCount} шт.` },
+                { label: 'Стоимость камер', value: `${camerasCost.toLocaleString('ru-RU')} ₽` },
+                { label: 'Количество серверов', value: `${serverCount} шт.` },
+                { label: 'Стоимость серверов', value: `${serversCost.toLocaleString('ru-RU')} ₽` },
+                { label: 'Длина провода', value: `${cableLength} м` },
+                { label: 'Стоимость провода', value: `${cableCost.toLocaleString('ru-RU')} ₽` },
+                { label: 'Стоимость оборудования', value: `${equipmentCost.toLocaleString('ru-RU')} ₽` },
+                { label: 'Тип установки', value: installationTypeRus[installationType as keyof typeof installationTypeRus] },
+                { label: 'Стоимость работ', value: `${totalInstallationCost.toLocaleString('ru-RU')} ₽` }
+            ],
+            totalLabel: 'Общая стоимость проекта',
+            totalValue: `${totalCost.toLocaleString('ru-RU')} ₽`,
+            type: 'technical'
+        };
+    }
+
+    saveCalculation(): void {
+        if (!this.calculationResult) return;
+
+        const calculationName = prompt('Введите название для сохранения расчета:');
+        if (!calculationName) return;
+
+        const newCalculation: Calculation = {
+            id: Date.now(),
+            name: calculationName,
+            type: this.calculationResult.type as 'cost' | 'efficiency' | 'maintenance' | 'technical',
+            date: new Date(),
+            result: parseFloat(this.calculationResult.totalValue.replace(/[^\d.-]/g, ''))
+        };
+
+        this.calculations.unshift(newCalculation);
+        this.filteredCalculations = [...this.calculations];
+        
+        alert('Расчет успешно сохранен!');
+    }
+
+    // Методы для дашборда
+    getEquipmentByStatus(status: string): Equipment[] {
+        return this.equipments.filter(equipment => equipment.status === status);
+    }
+
+    getTotalRevenue(): number {
+        // Примерный расчет выручки на основе стоимости объектов
+        return this.facilities.reduce((total, facility) => total + (facility.cost || 0), 0);
+    }
+
+    getTotalExpenses(): number {
+        // Примерный расчет расходов на основе обслуживания оборудования
+        const maintenanceCosts = this.equipments.length * 50000; // 50к за единицу в год
+        const employeeCosts = this.employees.length * 600000; // 600к зарплата в год
+        return maintenanceCosts + employeeCosts;
+    }
+
+    getProfit(): number {
+        return this.getTotalRevenue() - this.getTotalExpenses();
+    }
+
+    // Финансовые методы
+    updateFinanceData(): void {
+        // Обновление финансовых данных в зависимости от выбранного периода
+        console.log('Обновление финансовых данных для периода:', this.selectedFinancePeriod);
+    }
+
+    getFinanceData(type: string): number {
+        switch (type) {
+            case 'revenue':
+                return this.getTotalRevenue();
+            case 'expenses':
+                return this.getTotalExpenses();
+            case 'profit':
+                return this.getProfit();
+            default:
+                return 0;
+        }
+    }
+
+    getROI(): number {
+        const revenue = this.getTotalRevenue();
+        const expenses = this.getTotalExpenses();
+        if (expenses === 0) return 0;
+        return Math.round((revenue - expenses) / expenses * 100);
+    }
+
+    setChartType(type: string): void {
+        this.chartType = type;
+    }
+
+    getChartData(): any[] {
+        return [
+            { label: 'Янв', revenue: 85, expenses: 65 },
+            { label: 'Фев', revenue: 75, expenses: 70 },
+            { label: 'Мар', revenue: 90, expenses: 60 },
+            { label: 'Апр', revenue: 95, expenses: 75 },
+            { label: 'Май', revenue: 80, expenses: 55 },
+            { label: 'Июн', revenue: 100, expenses: 80 }
+        ];
+    }
+
+    getRevenueBreakdown(): any[] {
+        return [
+            { category: 'Аренда', amount: 2500000, percentage: 45, color: '#7c3aed' },
+            { category: 'Услуги', amount: 1800000, percentage: 32, color: '#a855f7' },
+            { category: 'Продажи', amount: 900000, percentage: 16, color: '#c084fc' },
+            { category: 'Прочее', amount: 400000, percentage: 7, color: '#ddd6fe' }
+        ];
+    }
+
+    getRecentTransactions(): any[] {
+        return [
+            {
+                id: 1,
+                date: new Date('2024-01-15'),
+                description: 'Аренда офиса',
+                category: 'Аренда',
+                type: 'income',
+                amount: 150000
+            },
+            {
+                id: 2,
+                date: new Date('2024-01-14'),
+                description: 'Закупка оборудования',
+                category: 'Оборудование',
+                type: 'expense',
+                amount: 85000
+            },
+            {
+                id: 3,
+                date: new Date('2024-01-13'),
+                description: 'Консультационные услуги',
+                category: 'Услуги',
+                type: 'income',
+                amount: 75000
+            }
+        ];
+    }
+
+    editTransaction(transaction: any): void {
+        console.log('Редактирование транзакции:', transaction);
+    }
+
+    deleteTransaction(id: number): void {
+        console.log('Удаление транзакции:', id);
+    }
+
+    getBudgets(): any[] {
+        return [
+            {
+                id: 1,
+                name: 'Операционные расходы',
+                period: 'Месяц',
+                limit: 500000,
+                spent: 380000
+            },
+            {
+                id: 2,
+                name: 'Маркетинг',
+                period: 'Квартал',
+                limit: 300000,
+                spent: 245000
+            },
+            {
+                id: 3,
+                name: 'Развитие',
+                period: 'Год',
+                limit: 1000000,
+                spent: 1050000
+            }
+        ];
+    }
+
+    editBudget(budget: any): void {
+        console.log('Редактирование бюджета:', budget);
+    }
+
+    deleteBudget(id: number): void {
+        console.log('Удаление бюджета:', id);
+    }
+
+    clearCalculation(): void {
+        this.calculationResult = null;
+        this.calculatorData = {
+            cost: {
+                area: 0,
+                pricePerSquare: 0,
+                complexityFactor: 1,
+                vat: 20
+            },
+            efficiency: {
+                income: 0,
+                expenses: 0,
+                investments: 0,
+                period: 12
+            },
+            maintenance: {
+                equipmentCount: 0,
+                costPerUnit: 0,
+                frequency: 30,
+                maintenanceType: 'preventive'
+            },
+            technical: {
+                cameraCount: 0,
+                cameraPrice: 0,
+                serverCount: 0,
+                serverPrice: 0,
+                cableLength: 0,
+                cablePricePerMeter: 0,
+                installationType: 'basic',
+                installationCost: 0
+            }
+        };
+    }
+
+    // Методы для работы с отчетами
+    setReportsView(view: 'list' | 'cards' | 'editor'): void {
+        this.reportsView = view;
+        if (view === 'editor' && !this.currentReport.title) {
+            this.currentReport = {
+                title: 'Новый отчет',
+                content: '<h1>Новый отчет</h1><p>Начните вводить содержание отчета...</p>',
+                type: 'financial',
+                status: 'draft',
+                author: this.userName || 'Администратор',
+                createdDate: new Date(),
+                updatedDate: new Date()
+            };
+        }
+    }
+
+    onCreateNewReport(): void {
+        this.currentReport = {
+            title: 'Новый отчет',
+            content: '<h1>Новый отчет</h1><p>Начните вводить содержание отчета...</p>',
+            type: 'financial',
+            status: 'draft',
+            author: this.userName || 'Администратор',
+            createdDate: new Date(),
+            updatedDate: new Date()
+        };
+        this.setReportsView('editor');
+    }
+
+    getFilteredReports(): Report[] {
+        let filtered = this.filteredReports;
+        
+        if (this.selectedReportType) {
+            filtered = filtered.filter(report => report.type === this.selectedReportType);
+        }
+        
+        if (this.selectedReportStatus) {
+            filtered = filtered.filter(report => report.status === this.selectedReportStatus);
+        }
+        
+        return filtered;
+    }
+
+    filterReportsByType(): void {
+        // Фильтрация уже выполняется в getFilteredReports()
+    }
+
+    filterReportsByStatus(): void {
+        // Фильтрация уже выполняется в getFilteredReports()
+    }
+
+    getReportTypeName(type: string): string {
+        const typeNames: { [key: string]: string } = {
+            'financial': 'Финансовый',
+            'operational': 'Операционный',
+            'maintenance': 'Обслуживание',
+            'analytics': 'Аналитика'
+        };
+        return typeNames[type] || type;
+    }
+
+    getReportStatusName(status: string): string {
+        const statusNames: { [key: string]: string } = {
+            'draft': 'Черновик',
+            'published': 'Опубликован',
+            'archived': 'В архиве'
+        };
+        return statusNames[status] || status;
+    }
+
+    onEditReportInEditor(report: Report): void {
+        this.currentReport = {
+            ...report,
+            content: report.content || '<h1>' + report.title + '</h1><p>Содержание отчета...</p>'
+        };
+        this.setReportsView('editor');
+    }
+
+    onDownloadReport(report: Report): void {
+        console.log('Скачивание отчета:', report.title);
+        // Здесь можно добавить логику скачивания
+    }
+
+    onDuplicateReport(report: Report): void {
+        const duplicatedReport = {
+            ...report,
+            title: report.title + ' (копия)',
+            createdDate: new Date(),
+            updatedDate: new Date()
+        };
+        this.reports.unshift(duplicatedReport as Report);
+        this.filteredReports = [...this.reports];
+        console.log('Отчет дублирован:', duplicatedReport.title);
+    }
+
+    toggleReportMenu(report: any): void {
+        report.showMenu = !report.showMenu;
+        // Закрываем другие меню
+        this.reports.forEach(r => {
+            if (r !== report) {
+                (r as any).showMenu = false;
+            }
+        });
+    }
+
+    // Методы редактора отчетов
+    saveReport(): void {
+        this.currentReport.updatedDate = new Date();
+        console.log('Отчет сохранен:', this.currentReport.title);
+        
+        // Добавляем или обновляем отчет в списке
+        const existingIndex = this.reports.findIndex(r => r.title === this.currentReport.title);
+        if (existingIndex >= 0) {
+            this.reports[existingIndex] = { ...this.currentReport } as Report;
+        } else {
+            this.reports.unshift({ ...this.currentReport } as Report);
+        }
+        this.filteredReports = [...this.reports];
+    }
+
+    previewReport(): void {
+        console.log('Предварительный просмотр отчета');
+        // Здесь можно открыть модальное окно с превью
+    }
+
+    exportReport(): void {
+        console.log('Экспорт отчета:', this.currentReport.title);
+        // Здесь можно добавить логику экспорта в PDF, Word и т.д.
+    }
+
+    formatText(command: string): void {
+        document.execCommand(command, false, '');
+    }
+
+    insertElement(elementType: string): void {
+        let content = '';
+        switch (elementType) {
+            case 'table':
+                content = '<table border="1"><tr><td>Ячейка 1</td><td>Ячейка 2</td></tr><tr><td>Ячейка 3</td><td>Ячейка 4</td></tr></table>';
+                break;
+            case 'chart':
+                content = '<div class="chart-placeholder">[График - будет добавлен позже]</div>';
+                break;
+            case 'image':
+                content = '<img src="https://via.placeholder.com/300x200" alt="Изображение">';
+                break;
+            case 'list':
+                content = '<ul><li>Элемент списка 1</li><li>Элемент списка 2</li><li>Элемент списка 3</li></ul>';
+                break;
+        }
+        document.execCommand('insertHTML', false, content);
+    }
+
+    loadTemplate(templateType: string): void {
+        let content = '';
+        switch (templateType) {
+            case 'financial':
+                content = `
+                    <h1>Финансовый отчет</h1>
+                    <h2>Общая информация</h2>
+                    <p>Период: ${new Date().toLocaleDateString()}</p>
+                    <h2>Доходы</h2>
+                    <table border="1">
+                        <tr><th>Источник</th><th>Сумма</th></tr>
+                        <tr><td>Основная деятельность</td><td>0 ₽</td></tr>
+                        <tr><td>Дополнительные услуги</td><td>0 ₽</td></tr>
+                    </table>
+                    <h2>Расходы</h2>
+                    <table border="1">
+                        <tr><th>Категория</th><th>Сумма</th></tr>
+                        <tr><td>Операционные расходы</td><td>0 ₽</td></tr>
+                        <tr><td>Административные расходы</td><td>0 ₽</td></tr>
+                    </table>
+                    <h2>Итого</h2>
+                    <p><strong>Прибыль: 0 ₽</strong></p>
+                `;
+                break;
+            case 'operational':
+                content = `
+                    <h1>Операционный отчет</h1>
+                    <h2>Производительность</h2>
+                    <p>Период: ${new Date().toLocaleDateString()}</p>
+                    <h2>Ключевые показатели</h2>
+                    <ul>
+                        <li>Количество обработанных заявок: 0</li>
+                        <li>Среднее время обработки: 0 часов</li>
+                        <li>Коэффициент качества: 0%</li>
+                    </ul>
+                    <h2>Проблемы и решения</h2>
+                    <p>Описание выявленных проблем и принятых мер...</p>
+                `;
+                break;
+            case 'analytics':
+                content = `
+                    <h1>Аналитический отчет</h1>
+                    <h2>Анализ данных</h2>
+                    <p>Период: ${new Date().toLocaleDateString()}</p>
+                    <h2>Тренды</h2>
+                    <div class="chart-placeholder">[График трендов]</div>
+                    <h2>Выводы</h2>
+                    <p>Основные выводы по результатам анализа...</p>
+                    <h2>Рекомендации</h2>
+                    <ul>
+                        <li>Рекомендация 1</li>
+                        <li>Рекомендация 2</li>
+                        <li>Рекомендация 3</li>
+                    </ul>
+                `;
+                break;
+        }
+        this.currentReport.content = content;
+    }
+
+    onEditorContentChange(event: any): void {
+        this.currentReport.content = event.target.innerHTML;
+        this.currentReport.updatedDate = new Date();
+    }
+
+    // Методы для работы с сотрудниками
+    getActiveEmployeesCount(): number {
+        return this.employees.filter(emp => (emp as any).status !== 'inactive').length;
+    }
+
+    getDepartmentsCount(): number {
+        const departments = new Set(this.employees.map(emp => (emp as any).department).filter(dept => dept));
+        return departments.size;
+    }
+
+    setEmployeesView(view: 'cards' | 'list'): void {
+        this.employeesView = view;
+    }
+
+    getFilteredEmployees(): Employee[] {
+        let filtered = this.filteredEmployees;
+        
+        // Фильтр по отделу
+        if (this.selectedDepartment) {
+            filtered = filtered.filter(emp => (emp as any).department === this.selectedDepartment);
+        }
+        
+        // Фильтр по статусу
+        if (this.selectedEmployeeStatus) {
+            filtered = filtered.filter(emp => ((emp as any).status || 'active') === this.selectedEmployeeStatus);
+        }
+        
+        return filtered;
+    }
+
+    filterEmployeesByDepartment(): void {
+        // Фильтрация происходит в getFilteredEmployees()
+    }
+
+    filterEmployeesByStatus(): void {
+        // Фильтрация происходит в getFilteredEmployees()
+    }
+
+    toggleEmployeeMenu(employee: any): void {
+        employee.showMenu = !employee.showMenu;
+        // Закрываем другие меню
+        this.employees.forEach(emp => {
+            if (emp !== employee) {
+                (emp as any).showMenu = false;
+            }
+        });
+    }
+
+    onViewEmployee(employee: Employee): void {
+        console.log('Просмотр сотрудника:', employee.name);
+        // Здесь можно открыть модальное окно с детальной информацией
+    }
+
+    onSendMessage(employee: Employee): void {
+        console.log('Отправка сообщения сотруднику:', employee.name);
+        // Здесь можно открыть модальное окно для отправки сообщения
+    }
+
+    getEmployeeStatusName(status: string): string {
+        const statusNames: { [key: string]: string } = {
+            'active': 'Активен',
+            'inactive': 'Неактивен',
+            'vacation': 'В отпуске'
+        };
+        return statusNames[status] || 'Неизвестно';
+    }
+
+    // Методы для работы с оборудованием
+    setEquipmentView(view: 'cards' | 'list'): void {
+        this.equipmentView = view;
+    }
+
+    getFilteredEquipment(): Equipment[] {
+        let filtered = this.filteredEquipments;
+        
+        // Фильтр по категории
+        if (this.selectedEquipmentCategory) {
+            filtered = filtered.filter(eq => (eq as any).category === this.selectedEquipmentCategory);
+        }
+        
+        // Фильтр по статусу
+        if (this.selectedEquipmentStatus) {
+            filtered = filtered.filter(eq => eq.status === this.selectedEquipmentStatus);
+        }
+        
+        return filtered;
+    }
+
+    filterEquipmentByCategory(): void {
+        // Фильтрация происходит в getFilteredEquipment()
+    }
+
+    filterEquipmentByStatus(): void {
+        // Фильтрация происходит в getFilteredEquipment()
+    }
+
+    getEquipmentStatusName(status: string): string {
+        const statusNames: { [key: string]: string } = {
+            'active': 'Активно',
+            'inactive': 'Неактивно',
+            'maintenance': 'На обслуживании'
+        };
+        return statusNames[status] || 'Неизвестно';
+    }
+
+    isMaintenanceOverdue(equipment: Equipment): boolean {
+        const today = new Date();
+        const nextMaintenance = new Date(equipment.nextMaintenance);
+        return nextMaintenance < today;
+    }
+
+    onViewEquipment(equipment: Equipment): void {
+        console.log('Просмотр оборудования:', equipment.name);
+        // Здесь можно открыть модальное окно с детальной информацией
+    }
+
+    onScheduleMaintenance(equipment: Equipment): void {
+        console.log('Планирование ТО для:', equipment.name);
+        // Здесь можно открыть модальное окно для планирования ТО
+    }
+
+    onDuplicateEquipment(equipment: Equipment): void {
+        const duplicatedEquipment = {
+            ...equipment,
+            name: equipment.name + ' (копия)',
+            inventoryNumber: equipment.inventoryNumber + '_copy'
+        };
+        this.equipments.unshift(duplicatedEquipment as Equipment);
+        this.filteredEquipments = [...this.equipments];
+        console.log('Оборудование дублировано:', duplicatedEquipment.name);
+    }
+
+    onExportEquipment(equipment: Equipment): void {
+        console.log('Экспорт данных оборудования:', equipment.name);
+        // Здесь можно добавить логику экспорта
+    }
+
+    toggleEquipmentMenu(equipment: any): void {
+        equipment.showMenu = !equipment.showMenu;
+        // Закрываем другие меню
+        this.equipments.forEach(eq => {
+            if (eq !== equipment) {
+                (eq as any).showMenu = false;
+            }
+        });
+    }
+
+    // Методы для работы с новостями
+    setNewsView(view: 'cards' | 'list'): void {
+        this.newsView = view;
+    }
+
+    getFilteredNews(): News[] {
+        let filtered = this.filteredNews;
+        
+        // Фильтр по автору
+        if (this.selectedNewsAuthor) {
+            filtered = filtered.filter(news => news.author === this.selectedNewsAuthor);
+        }
+        
+        // Фильтр по периоду
+        if (this.selectedNewsPeriod) {
+            const today = new Date();
+            filtered = filtered.filter(news => {
+                const newsDate = new Date(news.date);
+                switch (this.selectedNewsPeriod) {
+                    case 'today':
+                        return newsDate.toDateString() === today.toDateString();
+                    case 'week':
+                        const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        return newsDate >= weekAgo;
+                    case 'month':
+                        const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                        return newsDate >= monthAgo;
+                    default:
+                        return true;
+                }
+            });
+        }
+        
+        return filtered;
+    }
+
+    filterNewsByAuthor(): void {
+        // Фильтрация происходит в getFilteredNews()
+    }
+
+    filterNewsByPeriod(): void {
+        // Фильтрация происходит в getFilteredNews()
+    }
+
+    getRecentNewsCount(): number {
+        const today = new Date();
+        return this.newsList.filter(news => {
+            const newsDate = new Date(news.date);
+            return newsDate.toDateString() === today.toDateString();
+        }).length;
+    }
+
+    getReadTime(content: string): number {
+        // Примерный расчет времени чтения (200 слов в минуту)
+        const words = content.split(' ').length;
+        return Math.max(1, Math.ceil(words / 200));
+    }
+
+    onViewNews(news: News): void {
+        console.log('Просмотр новости:', news.title);
+        // Здесь можно открыть модальное окно с детальной информацией
+    }
+
+    onDuplicateNews(news: News): void {
+        const duplicatedNews = {
+            ...news,
+            title: news.title + ' (копия)',
+            date: new Date()
+        };
+        this.newsList.unshift(duplicatedNews as News);
+        this.filteredNews = [...this.newsList];
+        console.log('Новость дублирована:', duplicatedNews.title);
+    }
+
+    onPublishNews(news: News): void {
+        console.log('Публикация новости:', news.title);
+        // Здесь можно добавить логику публикации
+    }
+
+    toggleNewsMenu(news: any): void {
+        news.showMenu = !news.showMenu;
+        // Закрываем другие меню
+        this.newsList.forEach(n => {
+            if (n !== news) {
+                (n as any).showMenu = false;
+            }
+        });
     }
 }

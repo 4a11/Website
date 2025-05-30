@@ -14,4 +14,5 @@ export interface Equipment {
         name: string;
         value: string;
     }>;
+    showMenu?: boolean;
 }
