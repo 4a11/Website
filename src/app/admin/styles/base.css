@@ -1,0 +1,271 @@
+/* ===== ОСНОВНЫЕ СТИЛИ И ПЕРЕМЕННЫЕ ===== */
+
+/* Глобальные стили для устранения отступов */
+:root, html, body, app-root, app-admin {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border: none !important;
+}
+
+/* Основные стили */
+:host {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Roboto', sans-serif;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    box-sizing: border-box;
+    max-width: 100vw;
+    max-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Глобальные стили для всего документа */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Основной контейнер с переменными */
+.admin-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: all 0.3s ease;
+    
+    /* Переменные светлой темы */
+    --primary-bg: #f7f9fc;
+    --secondary-bg: #ffffff;
+    --primary-text: #344767;
+    --secondary-text: #677897;
+    --border-color: #e9ecef;
+    --sidemenu-bg: #ffffff;
+    --sidemenu-text: #344767;
+    --sidemenu-active: #4caf50;
+    --header-bg: #ffffff;
+    --card-bg: #ffffff;
+    --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --table-header-bg: #f7f9fc;
+    --table-row-bg: #ffffff;
+    --table-row-hover: #f7f9fc;
+    --btn-primary-bg: #4caf50;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #f1f5f9;
+    --btn-secondary-text: #344767;
+    --status-active-bg: #e3fcef;
+    --status-active-text: #10b981;
+    --status-inactive-bg: #fee2e2;
+    --status-inactive-text: #ef4444;
+    --status-maintenance-bg: #fff8e1;
+    --status-maintenance-text: #f59e0b;
+    --status-ready-bg: #fff8cc;
+    --status-ready-text: #b8860b;
+    --status-ready-border: #ffd700;
+    
+    /* Применение переменных */
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+}
+
+/* Переменные для темной темы */
+.admin-container.dark-theme {
+    --primary-bg: #0f0f23;
+    --secondary-bg: #1a1a2e;
+    --primary-text: #eee6ff;
+    --secondary-text: #b3a7ff;
+    --border-color: #16213e;
+    --sidemenu-bg: #16213e;
+    --sidemenu-text: #eee6ff;
+    --sidemenu-active: #7c3aed;
+    --header-bg: #1a1a2e;
+    --card-bg: #1a1a2e;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --table-header-bg: #16213e;
+    --table-row-bg: #0f0f23;
+    --table-row-hover: #1a1a2e;
+    --btn-primary-bg: #7c3aed;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #16213e;
+    --btn-secondary-text: #eee6ff;
+    --status-active-bg: rgba(34, 197, 94, 0.2);
+    --status-active-text: #22c55e;
+    --status-inactive-bg: rgba(239, 68, 68, 0.2);
+    --status-inactive-text: #ef4444;
+    --status-maintenance-bg: rgba(251, 146, 60, 0.2);
+    --status-maintenance-text: #fb923c;
+    --status-ready-bg: rgba(250, 204, 21, 0.2);
+    --status-ready-text: #facc15;
+    --status-ready-border: #facc15;
+}
+
+/* Глобальные переходы для всех элементов */
+*, *::before, *::after {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease;
+}
+
+/* Основной контент */
+.content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+    box-sizing: border-box;
+    max-width: calc(100vw - 280px);
+    transition: all 0.3s ease;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.header h2 {
+    font-size: 1.75rem;
+    color: var(--primary-text);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.notification-btn, .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--primary-text);
+    cursor: pointer;
+    position: relative;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-bg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.notification-btn:hover, .theme-toggle:hover {
+    color: var(--sidemenu-active);
+    background-color: var(--btn-secondary-bg);
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+.notification-btn i, .theme-toggle i {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.15rem;
+    border-radius: 50%;
+    font-weight: bold;
+    min-width: 1rem;
+    min-height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--secondary-bg);
+}
+
+/* Общие элементы */
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: var(--secondary-text);
+    transition: color 0.3s ease;
+}
+
+.no-data i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--border-color);
+    transition: color 0.3s ease;
+}
+
+.development-notice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    background-color: var(--table-header-bg);
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.development-notice i {
+    font-size: 3rem;
+    color: var(--sidemenu-active);
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.development-notice h4 {
+    font-size: 1.25rem;
+    color: var(--primary-text);
+    margin: 0 0 1rem 0;
+    transition: color 0.3s ease;
+}
+
+.development-notice p {
+    color: var(--secondary-text);
+    max-width: 500px;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+/* Таблицы */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+} 

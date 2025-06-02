@@ -1,0 +1,706 @@
+/* ===== СТИЛИ ДЛЯ РАЗДЕЛА ФИНАНСОВ ===== */
+
+.finances-container {
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.finances-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.1);
+}
+
+.finances-header h3 {
+    color: #1f2937;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.finance-period-selector select {
+    padding: 8px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    background: white;
+    color: #374151;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+.finance-period-selector select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Основная статистика */
+.finance-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.finance-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.finance-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.finance-card.revenue::before {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.finance-card.expenses::before {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.finance-card.profit::before {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.finance-card.roi::before {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.finance-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.finance-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.finance-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.finance-card.revenue .finance-card-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.finance-card.expenses .finance-card-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.finance-card.profit .finance-card-icon {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.finance-card.roi .finance-card-icon {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.finance-card-info h4 {
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.finance-card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.finance-card-change {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.finance-card-change.positive {
+    color: #10b981;
+}
+
+.finance-card-change.negative {
+    color: #ef4444;
+}
+
+.finance-card-change i {
+    font-size: 0.75rem;
+}
+
+/* Графики и диаграммы */
+.finance-charts {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-header h4 {
+    color: #1f2937;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.chart-toggle {
+    padding: 6px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.chart-toggle.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.chart-toggle:hover:not(.active) {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.chart-placeholder {
+    height: 300px;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 1.1rem;
+    border: 2px dashed #d1d5db;
+}
+
+.pie-chart-container {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.pie-chart-placeholder {
+    height: 250px;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 1rem;
+    border: 2px dashed #d1d5db;
+    margin-bottom: 16px;
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-color.revenue {
+    background: #10b981;
+}
+
+.legend-color.expenses {
+    background: #ef4444;
+}
+
+.legend-color.profit {
+    background: #3b82f6;
+}
+
+/* Транзакции */
+.finance-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h4 {
+    color: #1f2937;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-transaction-btn {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.add-transaction-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactions-table th {
+    background: #f8fafc;
+    color: #374151;
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+}
+
+.transactions-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+}
+
+.transactions-table tr:hover {
+    background: #f8fafc;
+}
+
+.transaction-type {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transaction-type.income {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.transaction-type.expense {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.transaction-amount {
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.transaction-amount.positive {
+    color: #10b981;
+}
+
+.transaction-amount.negative {
+    color: #ef4444;
+}
+
+/* Бюджеты */
+.budgets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.budget-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.budget-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.budget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.budget-info h5 {
+    color: #1f2937;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.budget-period {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.budget-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.budget-actions button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.edit-btn {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.delete-btn {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.budget-actions button:hover {
+    transform: scale(1.1);
+}
+
+.budget-progress {
+    margin-bottom: 12px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-fill.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.progress-fill.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.budget-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.budget-spent {
+    color: #374151;
+    font-weight: 500;
+}
+
+.budget-limit {
+    color: #6b7280;
+}
+
+.budget-percentage {
+    font-weight: 600;
+}
+
+.budget-percentage.normal {
+    color: #10b981;
+}
+
+.budget-percentage.warning {
+    color: #f59e0b;
+}
+
+.budget-percentage.danger {
+    color: #ef4444;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ ФИНАНСОВ ===== */
+
+.dark-theme .finances-container {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    color: #eee6ff;
+}
+
+.dark-theme .finances-header {
+    border-bottom-color: rgba(59, 130, 246, 0.3);
+}
+
+.dark-theme .finances-header h3 {
+    color: #eee6ff;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.dark-theme .finance-period-selector select {
+    background: #1a1a2e;
+    border-color: #374151;
+    color: #eee6ff;
+}
+
+.dark-theme .finance-period-selector select:focus {
+    border-color: #60a5fa;
+    background: #0f0f23;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.dark-theme .finance-card,
+.dark-theme .chart-container,
+.dark-theme .pie-chart-container,
+.dark-theme .finance-section,
+.dark-theme .budget-card {
+    background: #1a1a2e;
+    border-color: #16213e;
+    color: #eee6ff;
+}
+
+.dark-theme .finance-card.revenue::before {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.dark-theme .finance-card.expenses::before {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.dark-theme .finance-card.profit::before {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.dark-theme .finance-card.roi::before {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+}
+
+.dark-theme .finance-card.revenue .finance-card-icon {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.dark-theme .finance-card.expenses .finance-card-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.dark-theme .finance-card.profit .finance-card-icon {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.dark-theme .finance-card.roi .finance-card-icon {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+}
+
+.dark-theme .finance-card-info h4,
+.dark-theme .chart-header h4,
+.dark-theme .section-header h4,
+.dark-theme .budget-info h5 {
+    color: #eee6ff;
+}
+
+.dark-theme .finance-card-value {
+    color: #eee6ff;
+}
+
+.dark-theme .chart-toggle {
+    background: #16213e;
+    border-color: #374151;
+    color: #b3a7ff;
+}
+
+.dark-theme .chart-toggle.active {
+    background: #60a5fa;
+    border-color: #60a5fa;
+    color: white;
+}
+
+.dark-theme .chart-toggle:hover:not(.active) {
+    background: #374151;
+    border-color: #4b5563;
+}
+
+.dark-theme .chart-placeholder,
+.dark-theme .pie-chart-placeholder {
+    background: linear-gradient(135deg, #16213e, #374151);
+    border-color: #4b5563;
+    color: #b3a7ff;
+}
+
+.dark-theme .add-transaction-btn {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.dark-theme .add-transaction-btn:hover {
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
+}
+
+.dark-theme .transactions-table th {
+    background: #16213e;
+    color: #eee6ff;
+    border-bottom-color: #374151;
+}
+
+.dark-theme .transactions-table td {
+    border-bottom-color: rgba(55, 65, 81, 0.5);
+    color: #eee6ff;
+}
+
+.dark-theme .transactions-table tr:hover {
+    background: #16213e;
+}
+
+.dark-theme .transaction-type.income {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.dark-theme .transaction-type.expense {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.dark-theme .budget-period {
+    color: #b3a7ff;
+}
+
+.dark-theme .edit-btn {
+    background: rgba(14, 165, 233, 0.2);
+    color: #0ea5e9;
+}
+
+.dark-theme .delete-btn {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.dark-theme .progress-bar {
+    background: #16213e;
+}
+
+.dark-theme .progress-fill {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.dark-theme .progress-fill.warning {
+    background: linear-gradient(135deg, #fb923c, #ea580c);
+}
+
+.dark-theme .progress-fill.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.dark-theme .budget-spent {
+    color: #eee6ff;
+}
+
+.dark-theme .budget-limit {
+    color: #b3a7ff;
+} 
