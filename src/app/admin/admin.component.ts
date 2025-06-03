@@ -226,6 +226,11 @@ export class AdminComponent implements OnInit, OnDestroy {
     selectedNewsAuthor: string = '';
     selectedNewsPeriod: string = '';
 
+    // Объекты - расширенные свойства  
+    facilitiesView: 'cards' | 'list' = 'cards';
+    selectedFacilityType: string = '';
+    selectedFacilityStatus: string = '';
+
     constructor(
         private router: Router,
         private renderer: Renderer2,
@@ -631,17 +636,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     onFacilitySearch(query: string): void {
         this.facilitySearchQuery = query;
-        if (!query) {
-            this.filteredFacilities = this.facilities;
-            return;
-        }
-        
-        const searchQuery = query.toLowerCase();
-        this.filteredFacilities = this.facilities.filter(facility => 
-            facility.name.toLowerCase().includes(searchQuery) ||
-            facility.address.toLowerCase().includes(searchQuery) ||
-            facility.type.toLowerCase().includes(searchQuery)
-        );
+        this.applyFacilityFilters();
     }
 
     // Методы для работы с оборудованием
@@ -1841,12 +1836,110 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     toggleNewsMenu(news: any): void {
-        news.showMenu = !news.showMenu;
-        // Закрываем другие меню
+        // Закрываем все другие меню
         this.newsList.forEach(n => {
-            if (n !== news) {
-                (n as any).showMenu = false;
+            if (n.id !== news.id) {
+                n.showMenu = false;
             }
         });
+        
+        // Переключаем текущее меню
+        news.showMenu = !news.showMenu;
+    }
+
+    // ===== МЕТОДЫ ДЛЯ РАБОТЫ С ОБЪЕКТАМИ =====
+
+    getFacilitiesByStatus(status: string): Facility[] {
+        return this.facilities.filter(facility => facility.status === status);
+    }
+
+    setFacilitiesView(view: 'cards' | 'list'): void {
+        this.facilitiesView = view;
+    }
+
+    filterFacilitiesByType(): void {
+        this.applyFacilityFilters();
+    }
+
+    filterFacilitiesByStatus(): void {
+        this.applyFacilityFilters();
+    }
+
+    private applyFacilityFilters(): void {
+        let filtered = [...this.facilities];
+
+        // Фильтр по типу
+        if (this.selectedFacilityType) {
+            filtered = filtered.filter(facility => facility.type === this.selectedFacilityType);
+        }
+
+        // Фильтр по статусу
+        if (this.selectedFacilityStatus) {
+            filtered = filtered.filter(facility => facility.status === this.selectedFacilityStatus);
+        }
+
+        // Фильтр по поисковому запросу
+        if (this.facilitySearchQuery) {
+            const query = this.facilitySearchQuery.toLowerCase();
+            filtered = filtered.filter(facility => 
+                facility.name.toLowerCase().includes(query) ||
+                facility.address.toLowerCase().includes(query) ||
+                facility.type.toLowerCase().includes(query)
+            );
+        }
+
+        this.filteredFacilities = filtered;
+    }
+
+    toggleFacilityMenu(facility: any): void {
+        // Закрываем все другие меню
+        this.facilities.forEach(f => {
+            if (f.id !== facility.id) {
+                f.showMenu = false;
+            }
+        });
+        
+        // Переключаем текущее меню
+        facility.showMenu = !facility.showMenu;
+    }
+
+    onDuplicateFacility(facility: Facility): void {
+        const duplicatedFacility: Facility = {
+            ...facility,
+            id: 0, // Новый ID будет присвоен сервером
+            name: `${facility.name} (копия)`,
+            status: 'inactive' // Копия создается в неактивном состоянии
+        };
+
+        this.facilityService.addFacility(duplicatedFacility).subscribe({
+            next: (newFacility) => {
+                this.facilities.push(newFacility);
+                this.applyFacilityFilters();
+                console.log('Объект дублирован:', newFacility);
+            },
+            error: (error) => {
+                console.error('Ошибка при дублировании объекта:', error);
+            }
+        });
+
+        // Закрываем меню
+        facility.showMenu = false;
+    }
+
+    onExportFacility(facility: Facility): void {
+        // Здесь будет логика экспорта объекта в JSON/CSV
+        const dataStr = JSON.stringify(facility, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `facility_${facility.name.replace(/\s+/g, '_')}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+
+        // Закрываем меню
+        facility.showMenu = false;
+        console.log('Объект экспортирован:', facility);
     }
 }

@@ -52,69 +52,87 @@ body {
     bottom: 0;
     transition: all 0.3s ease;
     
-    /* Переменные светлой темы */
-    --primary-bg: #f7f9fc;
+    /* Переменные светлой темы - обновленная цветовая схема */
+    --primary-bg: #f8faff;
     --secondary-bg: #ffffff;
-    --primary-text: #344767;
-    --secondary-text: #677897;
-    --border-color: #e9ecef;
-    --sidemenu-bg: #ffffff;
-    --sidemenu-text: #344767;
-    --sidemenu-active: #4caf50;
+    --primary-text: #2d3748;
+    --secondary-text: #718096;
+    --border-color: #e2e8f0;
+    --sidemenu-bg: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    --sidemenu-text: #ffffff;
+    --sidemenu-active: rgba(255, 255, 255, 0.15);
+    --sidemenu-hover: rgba(255, 255, 255, 0.1);
     --header-bg: #ffffff;
     --card-bg: #ffffff;
-    --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    --table-header-bg: #f7f9fc;
+    --card-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
+    --card-shadow-medium: 0 8px 25px rgba(102, 126, 234, 0.12);
+    --card-shadow-light: 0 2px 10px rgba(102, 126, 234, 0.06);
+    --card-shadow-hover: 0 10px 40px rgba(102, 126, 234, 0.15);
+    --table-header-bg: #f7fafc;
     --table-row-bg: #ffffff;
-    --table-row-hover: #f7f9fc;
-    --btn-primary-bg: #4caf50;
+    --table-row-hover: #f7fafc;
+    --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --btn-primary-text: #ffffff;
-    --btn-secondary-bg: #f1f5f9;
-    --btn-secondary-text: #344767;
-    --status-active-bg: #e3fcef;
-    --status-active-text: #10b981;
+    --btn-secondary-bg: #edf2f7;
+    --btn-secondary-text: #4a5568;
+    --accent-color: #667eea;
+    --accent-color-light: #a78bfa;
+    --primary-color: #667eea;
+    --primary-color-light: #a78bfa;
+    --border-color-light: #e2e8f0;
+    --status-active-bg: #dcfce7;
+    --status-active-text: #16a34a;
     --status-inactive-bg: #fee2e2;
-    --status-inactive-text: #ef4444;
-    --status-maintenance-bg: #fff8e1;
-    --status-maintenance-text: #f59e0b;
-    --status-ready-bg: #fff8cc;
-    --status-ready-text: #b8860b;
-    --status-ready-border: #ffd700;
+    --status-inactive-text: #dc2626;
+    --status-maintenance-bg: #fef3c7;
+    --status-maintenance-text: #d97706;
+    --status-ready-bg: #dbeafe;
+    --status-ready-text: #2563eb;
+    --status-ready-border: #3b82f6;
     
     /* Применение переменных */
     background-color: var(--primary-bg);
     color: var(--primary-text);
 }
 
-/* Переменные для темной темы */
+/* Переменные для темной темы - обновленная цветовая схема */
 .admin-container.dark-theme {
-    --primary-bg: #0f0f23;
-    --secondary-bg: #1a1a2e;
-    --primary-text: #eee6ff;
-    --secondary-text: #b3a7ff;
-    --border-color: #16213e;
-    --sidemenu-bg: #16213e;
-    --sidemenu-text: #eee6ff;
-    --sidemenu-active: #7c3aed;
-    --header-bg: #1a1a2e;
-    --card-bg: #1a1a2e;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --table-header-bg: #16213e;
-    --table-row-bg: #0f0f23;
-    --table-row-hover: #1a1a2e;
-    --btn-primary-bg: #7c3aed;
+    --primary-bg: #0a0e1a;
+    --secondary-bg: #111827;
+    --primary-text: #f9fafb;
+    --secondary-text: #9ca3af;
+    --border-color: #1f2937;
+    --sidemenu-bg: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    --sidemenu-text: #f1f5f9;
+    --sidemenu-active: rgba(139, 92, 246, 0.2);
+    --sidemenu-hover: rgba(139, 92, 246, 0.1);
+    --header-bg: #111827;
+    --card-bg: #111827;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --card-shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.4);
+    --card-shadow-light: 0 2px 10px rgba(0, 0, 0, 0.2);
+    --card-shadow-hover: 0 10px 40px rgba(139, 92, 246, 0.2);
+    --table-header-bg: #0f172a;
+    --table-row-bg: #111827;
+    --table-row-hover: #1f2937;
+    --btn-primary-bg: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
     --btn-primary-text: #ffffff;
-    --btn-secondary-bg: #16213e;
-    --btn-secondary-text: #eee6ff;
+    --btn-secondary-bg: #374151;
+    --btn-secondary-text: #f9fafb;
+    --accent-color: #8b5cf6;
+    --accent-color-light: #c4b5fd;
+    --primary-color: #8b5cf6;
+    --primary-color-light: #c4b5fd;
+    --border-color-light: #374151;
     --status-active-bg: rgba(34, 197, 94, 0.2);
     --status-active-text: #22c55e;
     --status-inactive-bg: rgba(239, 68, 68, 0.2);
     --status-inactive-text: #ef4444;
     --status-maintenance-bg: rgba(251, 146, 60, 0.2);
     --status-maintenance-text: #fb923c;
-    --status-ready-bg: rgba(250, 204, 21, 0.2);
-    --status-ready-text: #facc15;
-    --status-ready-border: #facc15;
+    --status-ready-bg: rgba(59, 130, 246, 0.2);
+    --status-ready-text: #3b82f6;
+    --status-ready-border: #3b82f6;
 }
 
 /* Глобальные переходы для всех элементов */

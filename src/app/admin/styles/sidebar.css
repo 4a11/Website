@@ -3,7 +3,7 @@
 /* Боковое меню */
 .sidemenu {
     width: 280px;
-    background-color: var(--sidemenu-bg);
+    background: var(--sidemenu-bg);
     color: var(--sidemenu-text);
     display: flex;
     flex-direction: column;
@@ -14,6 +14,18 @@
     overflow-y: auto;
     overflow-x: hidden;
     flex-shrink: 0;
+    position: relative;
+}
+
+.sidemenu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--sidemenu-bg);
+    z-index: -1;
 }
 
 .logo-section {
@@ -22,42 +34,62 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    background: linear-gradient(to right, var(--sidemenu-active), var(--sidemenu-active) 5px, transparent 5px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     position: relative;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.logo-section::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.5));
+    border-radius: 0 2px 2px 0;
+    transition: all 0.3s ease;
 }
 
 .logo-section:hover {
-    background: linear-gradient(to right, var(--sidemenu-active), var(--sidemenu-active) 8px, transparent 8px);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(2px);
+}
+
+.logo-section:hover::before {
+    width: 6px;
+    background: linear-gradient(to bottom, #ffffff, #a78bfa);
 }
 
 .logo-section:hover i {
     transform: rotate(10deg) scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
 .logo-section i {
     font-size: 2rem;
-    color: var(--sidemenu-active);
+    color: #ffffff;
     width: 40px;
     height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(76, 175, 80, 0.1);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
     padding: 0.5rem;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .logo-section span {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-text);
+    color: var(--sidemenu-text);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -70,17 +102,20 @@
 .logo-title {
     font-size: 1.4rem;
     font-weight: 700;
-    color: var(--primary-text);
+    color: #ffffff;
     letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo-title .accent {
-    color: var(--sidemenu-active);
+    color: #a78bfa;
+    font-weight: 800;
+    text-shadow: 0 0 10px rgba(167, 139, 250, 0.3);
 }
 
 .logo-subtitle {
     font-size: 0.8rem;
-    color: var(--secondary-text);
+    color: rgba(255, 255, 255, 0.7);
     margin-top: -2px;
 }
 
@@ -91,40 +126,79 @@ nav ul {
 }
 
 nav li {
-    margin: 0.5rem 0;
+    margin: 0.3rem 0.75rem;
 }
 
 nav a {
     display: flex;
     align-items: center;
-    padding: 0.75rem 1.5rem;
+    padding: 0.9rem 1.25rem;
     color: var(--sidemenu-text);
     text-decoration: none;
     transition: all 0.3s ease;
     gap: 1rem;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
+    transition: width 0.3s ease;
+    border-radius: 12px 0 0 12px;
 }
 
 nav a:hover {
-    background-color: var(--sidemenu-active);
-    transition: all 0.3s ease;
+    background: var(--sidemenu-hover);
+    transform: translateX(4px);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+nav a:hover::before {
+    width: 4px;
 }
 
 nav li.active a {
-    background-color: var(--sidemenu-active);
-    transition: all 0.3s ease;
+    background: var(--sidemenu-active);
+    color: #ffffff;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transform: translateX(2px);
+}
+
+nav li.active a::before {
+    width: 4px;
+    background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.5));
 }
 
 nav i {
     width: 20px;
     text-align: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+nav a:hover i {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.2));
 }
 
 /* Секция пользователя */
 .user-section {
     margin-top: auto;
     padding: 1.5rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
 }
 
 .user-info {
@@ -132,6 +206,21 @@ nav i {
     align-items: center;
     gap: 1rem;
     margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
+}
+
+.user-info i {
+    font-size: 2rem;
+    color: #a78bfa;
+    filter: drop-shadow(0 2px 4px rgba(167, 139, 250, 0.3));
 }
 
 .user-details {
@@ -140,32 +229,423 @@ nav i {
 }
 
 .user-name {
-    font-weight: 500;
+    font-weight: 600;
+    color: #ffffff;
     transition: color 0.3s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user-role {
     font-size: 0.875rem;
-    color: var(--secondary-text);
+    color: rgba(255, 255, 255, 0.7);
     transition: color 0.3s ease;
 }
 
 .logout-btn {
     width: 100%;
-    padding: 0.75rem;
-    background-color: #ef4444;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .logout-btn:hover {
-    background-color: #dc2626;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* ===== СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ ВКЛАДКИ "ОБЪЕКТЫ" ===== */
+
+/* Стили для элемента списка с объектами */
+nav li:has(a[href*="facilities"]) {
+    position: relative;
+    overflow: visible;
+    margin: 0.5rem 0.75rem;
+}
+
+/* Специальный фон для вкладки Объекты */
+nav li:has(a[href*="facilities"]) a {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 134, 222, 0.05));
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Анимированный градиентный бордер */
+nav li:has(a[href*="facilities"]) a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 12px;
+}
+
+/* Специальная иконка для объектов */
+nav li:has(a[href*="facilities"]) i {
+    color: #3498db;
+    font-size: 1.2rem;
+    text-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+    filter: drop-shadow(0 2px 4px rgba(52, 152, 219, 0.3));
+}
+
+/* Hover эффекты для вкладки Объекты */
+nav li:has(a[href*="facilities"]) a:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(46, 134, 222, 0.1));
+    border-color: rgba(52, 152, 219, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.25);
+}
+
+nav li:has(a[href*="facilities"]) a:hover::after {
+    opacity: 1;
+}
+
+nav li:has(a[href*="facilities"]) a:hover i {
+    color: #2980b9;
+    transform: scale(1.15) rotate(5deg);
+    text-shadow: 0 0 12px rgba(52, 152, 219, 0.6);
+}
+
+nav li:has(a[href*="facilities"]) a:hover span {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+}
+
+/* Активное состояние для вкладки Объекты */
+nav li.active:has(a[href*="facilities"]) a {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.25), rgba(46, 134, 222, 0.15));
+    border-color: rgba(52, 152, 219, 0.5);
+    transform: translateX(4px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+nav li.active:has(a[href*="facilities"]) a::before {
+    width: 5px;
+    background: linear-gradient(90deg, #3498db, rgba(52, 152, 219, 0.7));
+}
+
+nav li.active:has(a[href*="facilities"]) i {
+    color: #2980b9;
+    transform: scale(1.1);
+    text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+nav li.active:has(a[href*="facilities"]) span {
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Пульсирующий эффект для активной вкладки Объекты */
+nav li.active:has(a[href*="facilities"]) a::after {
+    opacity: 0.6;
+    animation: facilities-pulse 2s ease-in-out infinite;
+}
+
+@keyframes facilities-pulse {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+}
+
+/* Специальный индикатор для вкладки Объекты */
+nav li:has(a[href*="facilities"])::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: linear-gradient(to bottom, #3498db, #2980b9);
+    border-radius: 0 2px 2px 0;
+    opacity: 0;
     transition: all 0.3s ease;
+}
+
+nav li:has(a[href*="facilities"]):hover::before,
+nav li.active:has(a[href*="facilities"])::before {
+    opacity: 1;
+    left: -5px;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+/* Темная тема для вкладки Объекты */
+.admin-container.dark-theme nav li:has(a[href*="facilities"]) a {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(46, 134, 222, 0.08));
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="facilities"]) a:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.25), rgba(46, 134, 222, 0.15));
+    border-color: rgba(52, 152, 219, 0.5);
+}
+
+.admin-container.dark-theme nav li.active:has(a[href*="facilities"]) a {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(46, 134, 222, 0.2));
+    border-color: rgba(52, 152, 219, 0.6);
+}
+
+/* ===== УНИФИЦИРОВАННЫЕ СТИЛИ ДЛЯ ОСТАЛЬНЫХ ВКЛАДОК ===== */
+
+/* Вкладка "Сотрудники" - фиолетовая тема */
+nav li:has(a[href*="employees"]) a {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(139, 92, 246, 0.05));
+    border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+nav li:has(a[href*="employees"]) i {
+    color: #7c3aed;
+    text-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+    filter: drop-shadow(0 2px 4px rgba(124, 58, 237, 0.3));
+}
+
+nav li:has(a[href*="employees"]) a:hover {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(139, 92, 246, 0.1));
+    border-color: rgba(124, 58, 237, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.25);
+}
+
+nav li:has(a[href*="employees"]) a:hover i {
+    color: #6d28d9;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="employees"]) a {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(139, 92, 246, 0.15));
+    border-color: rgba(124, 58, 237, 0.5);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+}
+
+nav li.active:has(a[href*="employees"]) a::before {
+    background: linear-gradient(90deg, #7c3aed, rgba(124, 58, 237, 0.7));
+}
+
+nav li:has(a[href*="employees"])::before {
+    background: linear-gradient(to bottom, #7c3aed, #6d28d9);
+}
+
+/* Вкладка "Оборудование" - зеленая тема */
+nav li:has(a[href*="equipment"]) a {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(69, 160, 73, 0.05));
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+nav li:has(a[href*="equipment"]) i {
+    color: #4caf50;
+    text-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+    filter: drop-shadow(0 2px 4px rgba(76, 175, 80, 0.3));
+}
+
+nav li:has(a[href*="equipment"]) a:hover {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(69, 160, 73, 0.1));
+    border-color: rgba(76, 175, 80, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.25);
+}
+
+nav li:has(a[href*="equipment"]) a:hover i {
+    color: #388e3c;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="equipment"]) a {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(69, 160, 73, 0.15));
+    border-color: rgba(76, 175, 80, 0.5);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+}
+
+nav li:has(a[href*="equipment"])::before {
+    background: linear-gradient(to bottom, #4caf50, #388e3c);
+}
+
+/* Вкладка "Новости" - оранжевая тема */
+nav li:has(a[href*="news"]) a {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 143, 0, 0.05));
+    border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+nav li:has(a[href*="news"]) i {
+    color: #ff9800;
+    text-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
+    filter: drop-shadow(0 2px 4px rgba(255, 152, 0, 0.3));
+}
+
+nav li:has(a[href*="news"]) a:hover {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 143, 0, 0.1));
+    border-color: rgba(255, 152, 0, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.25);
+}
+
+nav li:has(a[href*="news"]) a:hover i {
+    color: #f57c00;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="news"]) a {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.25), rgba(255, 143, 0, 0.15));
+    border-color: rgba(255, 152, 0, 0.5);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+}
+
+nav li:has(a[href*="news"])::before {
+    background: linear-gradient(to bottom, #ff9800, #f57c00);
+}
+
+/* Вкладка "Отчеты" - бирюзовая тема */
+nav li:has(a[href*="reports"]) a {
+    background: linear-gradient(135deg, rgba(0, 188, 212, 0.1), rgba(0, 172, 193, 0.05));
+    border: 1px solid rgba(0, 188, 212, 0.2);
+}
+
+nav li:has(a[href*="reports"]) i {
+    color: #00bcd4;
+    text-shadow: 0 0 8px rgba(0, 188, 212, 0.4);
+    filter: drop-shadow(0 2px 4px rgba(0, 188, 212, 0.3));
+}
+
+nav li:has(a[href*="reports"]) a:hover {
+    background: linear-gradient(135deg, rgba(0, 188, 212, 0.2), rgba(0, 172, 193, 0.1));
+    border-color: rgba(0, 188, 212, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 188, 212, 0.25);
+}
+
+nav li:has(a[href*="reports"]) a:hover i {
+    color: #0097a7;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="reports"]) a {
+    background: linear-gradient(135deg, rgba(0, 188, 212, 0.25), rgba(0, 172, 193, 0.15));
+    border-color: rgba(0, 188, 212, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 188, 212, 0.3);
+}
+
+nav li:has(a[href*="reports"])::before {
+    background: linear-gradient(to bottom, #00bcd4, #0097a7);
+}
+
+/* Вкладка "Расчеты" - индиго тема */
+nav li:has(a[href*="calculations"]) a {
+    background: linear-gradient(135deg, rgba(63, 81, 181, 0.1), rgba(57, 73, 171, 0.05));
+    border: 1px solid rgba(63, 81, 181, 0.2);
+}
+
+nav li:has(a[href*="calculations"]) i {
+    color: #3f51b5;
+    text-shadow: 0 0 8px rgba(63, 81, 181, 0.4);
+    filter: drop-shadow(0 2px 4px rgba(63, 81, 181, 0.3));
+}
+
+nav li:has(a[href*="calculations"]) a:hover {
+    background: linear-gradient(135deg, rgba(63, 81, 181, 0.2), rgba(57, 73, 171, 0.1));
+    border-color: rgba(63, 81, 181, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(63, 81, 181, 0.25);
+}
+
+nav li:has(a[href*="calculations"]) a:hover i {
+    color: #303f9f;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="calculations"]) a {
+    background: linear-gradient(135deg, rgba(63, 81, 181, 0.25), rgba(57, 73, 171, 0.15));
+    border-color: rgba(63, 81, 181, 0.5);
+    box-shadow: 0 8px 25px rgba(63, 81, 181, 0.3);
+}
+
+nav li:has(a[href*="calculations"])::before {
+    background: linear-gradient(to bottom, #3f51b5, #303f9f);
+}
+
+/* Вкладка "Финансы" - розовая тема */
+nav li:has(a[href*="finances"]) a {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(216, 27, 96, 0.05));
+    border: 1px solid rgba(233, 30, 99, 0.2);
+}
+
+nav li:has(a[href*="finances"]) i {
+    color: #e91e63;
+    text-shadow: 0 0 8px rgba(233, 30, 99, 0.4);
+    filter: drop-shadow(0 2px 4px rgba(233, 30, 99, 0.3));
+}
+
+nav li:has(a[href*="finances"]) a:hover {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.2), rgba(216, 27, 96, 0.1));
+    border-color: rgba(233, 30, 99, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.25);
+}
+
+nav li:has(a[href*="finances"]) a:hover i {
+    color: #c2185b;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="finances"]) a {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.25), rgba(216, 27, 96, 0.15));
+    border-color: rgba(233, 30, 99, 0.5);
+    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.3);
+}
+
+nav li:has(a[href*="finances"])::before {
+    background: linear-gradient(to bottom, #e91e63, #c2185b);
+}
+
+/* Темная тема для всех вкладок */
+.admin-container.dark-theme nav li:has(a[href*="employees"]) a {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.08));
+    border-color: rgba(124, 58, 237, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="equipment"]) a {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(69, 160, 73, 0.08));
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="news"]) a {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(255, 143, 0, 0.08));
+    border-color: rgba(255, 152, 0, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="reports"]) a {
+    background: linear-gradient(135deg, rgba(0, 188, 212, 0.15), rgba(0, 172, 193, 0.08));
+    border-color: rgba(0, 188, 212, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="calculations"]) a {
+    background: linear-gradient(135deg, rgba(63, 81, 181, 0.15), rgba(57, 73, 171, 0.08));
+    border-color: rgba(63, 81, 181, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="finances"]) a {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.15), rgba(216, 27, 96, 0.08));
+    border-color: rgba(233, 30, 99, 0.3);
 } 

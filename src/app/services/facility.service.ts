@@ -13,6 +13,7 @@ export interface Facility {
   type: FacilityType;
   status: FacilityStatus;
   cost: number;
+  showMenu?: boolean;
 }
 
 @Injectable({

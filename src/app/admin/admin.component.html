@@ -837,92 +837,264 @@
 
         <!-- Раздел объектов -->
         <div *ngIf="currentSection === 'facilities'">
-            <section class="data-table">
-                <div class="table-header">
-                    <div class="header-left">
-                        <h3>Объекты</h3>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" 
-                                   [(ngModel)]="facilitySearchQuery" 
-                                   (ngModelChange)="onFacilitySearch($any($event))"
-                                   placeholder="Поиск по названию, адресу или типу...">
+            <section class="facilities-container">
+                <!-- Заголовок с действиями -->
+                <div class="facilities-header">
+                    <div class="facilities-header-info">
+                        <h3>Управление объектами</h3>
+                        <p>Контроль состояния и управление недвижимостью компании</p>
+                        <div class="facilities-stats">
+                            <div class="facilities-stat-item">
+                                <i class="fas fa-building"></i>
+                                <span class="stat-number">{{facilities?.length || 0}}</span>
+                                <span class="stat-label">Всего</span>
+                            </div>
+                            <div class="facilities-stat-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span class="stat-number">{{getFacilitiesByStatus('active').length}}</span>
+                                <span class="stat-label">Активных</span>
+                            </div>
+                            <div class="facilities-stat-item">
+                                <i class="fas fa-key"></i>
+                                <span class="stat-number">{{getFacilitiesByStatus('ready_to_rent').length}}</span>
+                                <span class="stat-label">К сдаче</span>
+                            </div>
                         </div>
                     </div>
-                    <button class="add-btn" (click)="onAddFacility()">
-                        <i class="fas fa-plus"></i>
-                        <span>Добавить объект</span>
-                    </button>
+                    <div class="facilities-header-actions">
+                        <div class="facilities-view-toggle">
+                            <button class="facilities-view-btn" [class.active]="facilitiesView === 'cards'" (click)="setFacilitiesView('cards')">
+                                <i class="fas fa-th-large"></i>
+                                Карточки
+                            </button>
+                            <button class="facilities-view-btn" [class.active]="facilitiesView === 'list'" (click)="setFacilitiesView('list')">
+                                <i class="fas fa-list"></i>
+                                Список
+                            </button>
+                        </div>
+                        <button class="add-facility-btn" (click)="onAddFacility()">
+                            <i class="fas fa-plus"></i>
+                            Добавить объект
+                        </button>
+                    </div>
                 </div>
 
-                <div *ngIf="!filteredFacilities || filteredFacilities.length === 0" class="no-data">
-                    <i class="fas fa-search"></i>
-                    <p>{{facilitySearchQuery ? 'Ничего не найдено' : 'Нет данных об объектах'}}</p>
+                <!-- Фильтры и поиск -->
+                <div class="facilities-filters">
+                    <div class="facilities-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" 
+                               [(ngModel)]="facilitySearchQuery" 
+                               (ngModelChange)="onFacilitySearch($any($event))"
+                               placeholder="Поиск по названию, адресу или типу...">
+                    </div>
+                    <div class="facilities-filter-group">
+                        <label>Тип</label>
+                        <select [(ngModel)]="selectedFacilityType" (change)="filterFacilitiesByType()">
+                            <option value="">Все типы</option>
+                            <option value="Офис">Офис</option>
+                            <option value="Склад">Склад</option>
+                            <option value="Производство">Производство</option>
+                            <option value="Торговля">Торговля</option>
+                        </select>
+                    </div>
+                    <div class="facilities-filter-group">
+                        <label>Статус</label>
+                        <select [(ngModel)]="selectedFacilityStatus" (change)="filterFacilitiesByStatus()">
+                            <option value="">Все статусы</option>
+                            <option value="active">Активен</option>
+                            <option value="inactive">Неактивен</option>
+                            <option value="ready">Готов</option>
+                            <option value="ready_to_rent">Готов к сдаче</option>
+                            <option value="rented">Сдан</option>
+                        </select>
+                    </div>
                 </div>
 
-                <table *ngIf="filteredFacilities && filteredFacilities.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Объект</th>
-                            <th>Адрес</th>
-                            <th>Тип</th>
-                            <th>Стоимость</th>
-                            <th>Статус</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let facility of filteredFacilities">
-                            <td>
-                                <div class="facility-info">
-                                    <i class="fas" [ngClass]="{
-                                        'fa-building': facility.type === 'Офис',
-                                        'fa-warehouse': facility.type === 'Склад',
-                                        'fa-industry': facility.type === 'Производство',
-                                        'fa-store': facility.type === 'Торговля'
-                                    }"></i>
-                                    <span>{{facility.name}}</span>
+                <!-- Карточный вид объектов -->
+                <div *ngIf="facilitiesView === 'cards'" class="facilities-cards-view">
+                    <div *ngIf="!filteredFacilities || filteredFacilities.length === 0" class="empty-facilities">
+                        <div class="empty-facilities-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h4>{{facilitySearchQuery ? 'Ничего не найдено' : 'Нет объектов'}}</h4>
+                        <p>{{facilitySearchQuery ? 'Попробуйте изменить критерии поиска' : 'Начните с добавления первого объекта'}}</p>
+                        <button *ngIf="!facilitySearchQuery" class="add-first-facility-btn" (click)="onAddFacility()">
+                            <i class="fas fa-plus"></i>
+                            Добавить первый объект
+                        </button>
+                    </div>
+
+                    <div class="facilities-grid" *ngIf="filteredFacilities && filteredFacilities.length > 0">
+                        <div *ngFor="let facility of filteredFacilities" class="facility-card">
+                            <div class="facility-card-header">
+                                <div>
+                                    <div class="facility-avatar" 
+                                         [class.office]="facility.type === 'Офис'"
+                                         [class.warehouse]="facility.type === 'Склад'"
+                                         [class.production]="facility.type === 'Производство'"
+                                         [class.retail]="facility.type === 'Торговля'">
+                                        <i class="fas" [ngClass]="{
+                                            'fa-building': facility.type === 'Офис',
+                                            'fa-warehouse': facility.type === 'Склад',
+                                            'fa-industry': facility.type === 'Производство',
+                                            'fa-store': facility.type === 'Торговля'
+                                        }"></i>
+                                    </div>
+                                    <div class="facility-info">
+                                        <h4>{{facility.name}}</h4>
+                                        <p class="facility-address">{{facility.address}}</p>
+                                        <span class="facility-type-badge" 
+                                              [class.office]="facility.type === 'Офис'"
+                                              [class.warehouse]="facility.type === 'Склад'"
+                                              [class.production]="facility.type === 'Производство'"
+                                              [class.retail]="facility.type === 'Торговля'">
+                                            {{facility.type}}
+                                        </span>
+                                    </div>
                                 </div>
-                            </td>
-                            <td>{{facility.address}}</td>
-                            <td>
-                                <span class="facility-type" [ngClass]="facility.type.toLowerCase()">
-                                    {{facility.type}}
-                                </span>
-                            </td>
-                            <td>{{facility.cost | currency:'RUB':'₽':'1.0-0'}}</td>
-                            <td>
-                                <span class="status" 
-                                    [class.active]="facility.status === 'active'"
-                                    [class.inactive]="facility.status === 'inactive'"
-                                    [class.ready]="facility.status === 'ready'"
-                                    [class.ready-to-rent]="facility.status === 'ready_to_rent'"
-                                    [class.rented]="facility.status === 'rented'">
-                                    <ng-container [ngSwitch]="facility.status">
-                                        <ng-container *ngSwitchCase="'active'">Активен</ng-container>
-                                        <ng-container *ngSwitchCase="'inactive'">Неактивен</ng-container>
-                                        <ng-container *ngSwitchCase="'ready'">Готов</ng-container>
-                                        <ng-container *ngSwitchCase="'ready_to_rent'">Готов к сдаче</ng-container>
-                                        <ng-container *ngSwitchCase="'rented'">Сдан</ng-container>
-                                    </ng-container>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn view" (click)="onViewFacility(facility)" title="Просмотр">
+                                <div class="facility-card-menu">
+                                    <button class="facility-menu-btn" (click)="toggleFacilityMenu(facility)">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <div class="facility-menu-dropdown" [class.show]="facility.showMenu">
+                                        <button (click)="onDuplicateFacility(facility)">
+                                            <i class="fas fa-copy"></i>
+                                            Дублировать
+                                        </button>
+                                        <button (click)="onExportFacility(facility)">
+                                            <i class="fas fa-download"></i>
+                                            Экспорт
+                                        </button>
+                                        <button class="delete" (click)="onDeleteFacility(facility)">
+                                            <i class="fas fa-trash"></i>
+                                            Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="facility-card-content">
+                                <div class="facility-details">
+                                    <div class="facility-detail-row">
+                                        <i class="fas fa-ruble-sign"></i>
+                                        <span class="facility-cost">{{facility.cost | currency:'RUB':'₽':'1.0-0'}}</span>
+                                    </div>
+                                    <div class="facility-detail-row">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span class="facility-status" [class]="facility.status">
+                                            <ng-container [ngSwitch]="facility.status">
+                                                <ng-container *ngSwitchCase="'active'">Активен</ng-container>
+                                                <ng-container *ngSwitchCase="'inactive'">Неактивен</ng-container>
+                                                <ng-container *ngSwitchCase="'ready'">Готов</ng-container>
+                                                <ng-container *ngSwitchCase="'ready_to_rent'">Готов к сдаче</ng-container>
+                                                <ng-container *ngSwitchCase="'rented'">Сдан</ng-container>
+                                            </ng-container>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="facility-card-footer">
+                                <div class="facility-actions">
+                                    <button class="facility-action-btn primary" (click)="onViewFacility(facility)">
                                         <i class="fas fa-eye"></i>
+                                        Просмотр
                                     </button>
-                                    <button class="action-btn edit" (click)="onEditFacility(facility)" title="Редактировать">
+                                    <button class="facility-action-btn secondary" (click)="onEditFacility(facility)">
                                         <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete" (click)="onDeleteFacility(facility)" title="Удалить">
-                                        <i class="fas fa-trash"></i>
+                                        Редактировать
                                     </button>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Табличный вид объектов -->
+                <div *ngIf="facilitiesView === 'list'" class="facilities-list-view">
+                    <div *ngIf="!filteredFacilities || filteredFacilities.length === 0" class="empty-facilities">
+                        <div class="empty-facilities-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h4>{{facilitySearchQuery ? 'Ничего не найдено' : 'Нет объектов'}}</h4>
+                        <p>{{facilitySearchQuery ? 'Попробуйте изменить критерии поиска' : 'Начните с добавления первого объекта'}}</p>
+                    </div>
+
+                    <div class="facilities-table" *ngIf="filteredFacilities && filteredFacilities.length > 0">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Объект</th>
+                                    <th>Адрес</th>
+                                    <th>Тип</th>
+                                    <th>Стоимость</th>
+                                    <th>Статус</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let facility of filteredFacilities">
+                                    <td>
+                                        <div class="table-facility-info">
+                                            <div class="table-facility-avatar" 
+                                                 [class.office]="facility.type === 'Офис'"
+                                                 [class.warehouse]="facility.type === 'Склад'"
+                                                 [class.production]="facility.type === 'Производство'"
+                                                 [class.retail]="facility.type === 'Торговля'">
+                                                <i class="fas" [ngClass]="{
+                                                    'fa-building': facility.type === 'Офис',
+                                                    'fa-warehouse': facility.type === 'Склад',
+                                                    'fa-industry': facility.type === 'Производство',
+                                                    'fa-store': facility.type === 'Торговля'
+                                                }"></i>
+                                            </div>
+                                            <div class="table-facility-details">
+                                                <h5>{{facility.name}}</h5>
+                                                <p>{{facility.type}}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{facility.address}}</td>
+                                    <td>
+                                        <span class="facility-type-badge" 
+                                              [class.office]="facility.type === 'Офис'"
+                                              [class.warehouse]="facility.type === 'Склад'"
+                                              [class.production]="facility.type === 'Производство'"
+                                              [class.retail]="facility.type === 'Торговля'">
+                                            {{facility.type}}
+                                        </span>
+                                    </td>
+                                    <td class="facility-cost">{{facility.cost | currency:'RUB':'₽':'1.0-0'}}</td>
+                                    <td>
+                                        <span class="facility-status" [class]="facility.status">
+                                            <ng-container [ngSwitch]="facility.status">
+                                                <ng-container *ngSwitchCase="'active'">Активен</ng-container>
+                                                <ng-container *ngSwitchCase="'inactive'">Неактивен</ng-container>
+                                                <ng-container *ngSwitchCase="'ready'">Готов</ng-container>
+                                                <ng-container *ngSwitchCase="'ready_to_rent'">Готов к сдаче</ng-container>
+                                                <ng-container *ngSwitchCase="'rented'">Сдан</ng-container>
+                                            </ng-container>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="facility-actions">
+                                            <button class="facility-action-btn primary" (click)="onViewFacility(facility)" title="Просмотр">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="facility-action-btn secondary" (click)="onEditFacility(facility)" title="Редактировать">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="facility-action-btn secondary" (click)="onDeleteFacility(facility)" title="Удалить">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
         </div>
 

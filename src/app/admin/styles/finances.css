@@ -1,8 +1,8 @@
 /* ===== СТИЛИ ДЛЯ РАЗДЕЛА ФИНАНСОВ ===== */
 
 .finances-container {
-    padding: 20px;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 24px;
+    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
     min-height: 100vh;
     overflow-y: auto;
 }
@@ -10,175 +10,500 @@
 .finances-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(59, 130, 246, 0.1);
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(233, 30, 99, 0.15);
+    position: relative;
+}
+
+.finances-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, #e91e63, #ad1457);
+    border-radius: 1px;
 }
 
 .finances-header h3 {
-    color: #1f2937;
-    font-size: 2rem;
+    color: #be185d;
+    font-size: 2.2rem;
     font-weight: 700;
-    margin: 0;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
-.finance-period-selector select {
+.finances-header h3::before {
+    content: '💰';
+    font-size: 1.8rem;
+    filter: drop-shadow(0 2px 4px rgba(233, 30, 99, 0.3));
+}
+
+.finances-header-info p {
+    color: #64748b;
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.finances-stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.finance-stat-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
-    background: white;
-    color: #374151;
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(233, 30, 99, 0.05));
+    border-radius: 25px;
+    border: 2px solid rgba(233, 30, 99, 0.2);
     font-size: 0.9rem;
-    cursor: pointer;
+    font-weight: 600;
+    color: #be185d;
     transition: all 0.3s ease;
-    min-width: 140px;
 }
 
-.finance-period-selector select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.finance-stat-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+    border-color: rgba(233, 30, 99, 0.3);
 }
 
-/* Основная статистика */
-.finance-overview {
+.finance-stat-badge i {
+    color: #e91e63;
+    font-size: 1rem;
+}
+
+.finances-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.add-transaction-btn {
+    background: linear-gradient(135deg, #e91e63, #ad1457);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.3);
+    font-size: 0.95rem;
+}
+
+.add-transaction-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+    background: linear-gradient(135deg, #ad1457, #880e4f);
+}
+
+/* Обзор финансов */
+.finances-overview {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
     margin-bottom: 30px;
 }
 
-.finance-card {
+.finance-overview-card {
     background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(233, 30, 99, 0.1);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
-.finance-card::before {
+.finance-overview-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.finance-card.revenue::before {
+.finance-overview-card.income::before {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.finance-overview-card.expenses::before {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.finance-overview-card.balance::before {
+    background: linear-gradient(90deg, #e91e63, #ad1457);
+}
+
+.finance-overview-card.profit::before {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.finance-overview-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15);
+    border-color: rgba(233, 30, 99, 0.2);
+}
+
+.finance-overview-card:hover::before {
+    opacity: 1;
+}
+
+.overview-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.finance-overview-card.income .overview-icon {
     background: linear-gradient(135deg, #10b981, #059669);
 }
 
-.finance-card.expenses::before {
+.finance-overview-card.expenses .overview-icon {
     background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
-.finance-card.profit::before {
+.finance-overview-card.balance .overview-icon {
+    background: linear-gradient(135deg, #e91e63, #ad1457);
+}
+
+.finance-overview-card.profit .overview-icon {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
-.finance-card.roi::before {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+.finance-overview-card:hover .overview-icon {
+    transform: scale(1.1) rotate(5deg);
 }
 
-.finance-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+.overview-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+    line-height: 1;
+    font-family: 'Courier New', monospace;
 }
 
-.finance-card-header {
+.overview-value.income {
+    color: #10b981;
+}
+
+.overview-value.expenses {
+    color: #ef4444;
+}
+
+.overview-value.balance {
+    color: #e91e63;
+}
+
+.overview-value.profit {
+    color: #3b82f6;
+}
+
+.overview-label {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+}
+
+.overview-change {
+    font-size: 0.85rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: 4px;
 }
 
-.finance-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+.overview-change.positive {
+    color: #10b981;
+}
+
+.overview-change.negative {
+    color: #ef4444;
+}
+
+.overview-change i {
+    font-size: 0.8rem;
+}
+
+/* Транзакции */
+.transactions-section {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(233, 30, 99, 0.1);
+    margin-bottom: 30px;
+}
+
+.transactions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(233, 30, 99, 0.1);
+}
+
+.transactions-header h4 {
+    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.transactions-header h4::before {
+    content: '📊';
+    font-size: 1.3rem;
+}
+
+.transactions-filters {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.transaction-filter {
+    padding: 8px 16px;
+    border: 2px solid rgba(233, 30, 99, 0.2);
+    border-radius: 20px;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transaction-filter:hover,
+.transaction-filter.active {
+    background: linear-gradient(135deg, #e91e63, #ad1457);
+    color: white;
+    border-color: #e91e63;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+/* Список транзакций */
+.transactions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.transaction-item {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.02), rgba(233, 30, 99, 0.01));
+    border: 2px solid rgba(233, 30, 99, 0.1);
+    border-radius: 16px;
+    padding: 20px 24px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.transaction-item:hover {
+    border-color: rgba(233, 30, 99, 0.2);
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(233, 30, 99, 0.02));
+    transform: translateX(4px);
+    box-shadow: 0 8px 20px rgba(233, 30, 99, 0.1);
+}
+
+.transaction-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 1.2rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
 }
 
-.finance-card.revenue .finance-card-icon {
+.transaction-icon.income {
     background: linear-gradient(135deg, #10b981, #059669);
 }
 
-.finance-card.expenses .finance-card-icon {
+.transaction-icon.expense {
     background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
-.finance-card.profit .finance-card-icon {
+.transaction-icon.transfer {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
-.finance-card.roi .finance-card-icon {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+.transaction-details {
+    flex: 1;
+    min-width: 0;
 }
 
-.finance-card-info h4 {
-    color: #374151;
-    font-size: 0.9rem;
-    font-weight: 500;
+.transaction-title {
+    color: #1e293b;
+    font-size: 1.1rem;
+    font-weight: 700;
     margin: 0 0 4px 0;
+}
+
+.transaction-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.transaction-category {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.finance-card-value {
-    font-size: 2rem;
+.transaction-category.income {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.transaction-category.expense {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.1));
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.transaction-category.transfer {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.1));
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.transaction-amount {
+    font-size: 1.3rem;
     font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+    text-align: right;
+    flex-shrink: 0;
 }
 
-.finance-card-change {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.finance-card-change.positive {
+.transaction-amount.income {
     color: #10b981;
 }
 
-.finance-card-change.negative {
+.transaction-amount.expense {
     color: #ef4444;
 }
 
-.finance-card-change i {
-    font-size: 0.75rem;
+.transaction-amount.transfer {
+    color: #3b82f6;
 }
 
-/* Графики и диаграммы */
-.finance-charts {
+.transaction-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.transaction-action-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.transaction-action-btn.edit {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.15), rgba(233, 30, 99, 0.1));
+    color: #e91e63;
+    border: 1px solid rgba(233, 30, 99, 0.3);
+}
+
+.transaction-action-btn.delete {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.1));
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.transaction-action-btn:hover {
+    transform: scale(1.1);
+}
+
+.transaction-action-btn.edit:hover {
+    background: linear-gradient(135deg, #e91e63, #ad1457);
+    color: white;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.transaction-action-btn.delete:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Графики финансов */
+.finances-charts {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
     margin-bottom: 30px;
 }
 
-.chart-container {
+.chart-card {
     background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(233, 30, 99, 0.1);
+    transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(233, 30, 99, 0.12);
+    border-color: rgba(233, 30, 99, 0.2);
 }
 
 .chart-header {
@@ -186,521 +511,446 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(233, 30, 99, 0.1);
 }
 
-.chart-header h4 {
-    color: #1f2937;
-    font-size: 1.2rem;
-    font-weight: 600;
+.chart-title {
+    color: #1e293b;
+    font-size: 1.3rem;
+    font-weight: 700;
     margin: 0;
-}
-
-.chart-controls {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.chart-toggle {
+.chart-title::before {
+    content: '📈';
+    font-size: 1.2rem;
+}
+
+.chart-period {
     padding: 6px 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+    border: 2px solid rgba(233, 30, 99, 0.2);
+    border-radius: 12px;
     background: white;
-    color: #6b7280;
+    color: #64748b;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 0.85rem;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
-.chart-toggle.active {
-    background: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
-}
-
-.chart-toggle:hover:not(.active) {
-    background: #f3f4f6;
-    border-color: #d1d5db;
+.chart-period:hover {
+    border-color: #e91e63;
+    color: #e91e63;
 }
 
 .chart-placeholder {
     height: 300px;
-    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(233, 30, 99, 0.02));
+    border: 2px dashed rgba(233, 30, 99, 0.2);
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: #64748b;
     font-size: 1.1rem;
-    border: 2px dashed #d1d5db;
-}
-
-.pie-chart-container {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-}
-
-.pie-chart-placeholder {
-    height: 250px;
-    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    font-size: 1rem;
-    border: 2px dashed #d1d5db;
-    margin-bottom: 16px;
-}
-
-.chart-legend {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-}
-
-.legend-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-}
-
-.legend-color.revenue {
-    background: #10b981;
-}
-
-.legend-color.expenses {
-    background: #ef4444;
-}
-
-.legend-color.profit {
-    background: #3b82f6;
-}
-
-/* Транзакции */
-.finance-section {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-    margin-bottom: 20px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.section-header h4 {
-    color: #1f2937;
-    font-size: 1.3rem;
     font-weight: 600;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.add-transaction-btn {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 16px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-}
-
-.add-transaction-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.transactions-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.transactions-table th {
-    background: #f8fafc;
-    color: #374151;
-    font-weight: 600;
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid #e5e7eb;
-    font-size: 0.9rem;
-}
-
-.transactions-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 0.9rem;
-}
-
-.transactions-table tr:hover {
-    background: #f8fafc;
-}
-
-.transaction-type {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.transaction-type.income {
-    background: #dcfce7;
-    color: #16a34a;
-    border: 1px solid #bbf7d0;
-}
-
-.transaction-type.expense {
-    background: #fee2e2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-}
-
-.transaction-amount {
-    font-weight: 600;
-    font-family: monospace;
-}
-
-.transaction-amount.positive {
-    color: #10b981;
-}
-
-.transaction-amount.negative {
-    color: #ef4444;
 }
 
 /* Бюджеты */
+.budgets-section {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(233, 30, 99, 0.1);
+    margin-bottom: 30px;
+}
+
+.budgets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(233, 30, 99, 0.1);
+}
+
+.budgets-header h4 {
+    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.budgets-header h4::before {
+    content: '🎯';
+    font-size: 1.3rem;
+}
+
+.add-budget-btn {
+    background: linear-gradient(135deg, #e91e63, #ad1457);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+    font-size: 0.9rem;
+}
+
+.add-budget-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(233, 30, 99, 0.4);
+}
+
 .budgets-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 20px;
 }
 
-.budget-card {
-    background: white;
+.budget-item {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.02), rgba(233, 30, 99, 0.01));
+    border: 2px solid rgba(233, 30, 99, 0.1);
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
     transition: all 0.3s ease;
 }
 
-.budget-card:hover {
+.budget-item:hover {
+    border-color: rgba(233, 30, 99, 0.2);
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(233, 30, 99, 0.02));
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(233, 30, 99, 0.1);
 }
 
 .budget-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 16px;
 }
 
-.budget-info h5 {
-    color: #1f2937;
+.budget-title {
+    color: #1e293b;
+    font-weight: 700;
     font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0 0 4px 0;
 }
 
 .budget-period {
-    color: #6b7280;
+    color: #64748b;
     font-size: 0.85rem;
-}
-
-.budget-actions {
-    display: flex;
-    gap: 4px;
-}
-
-.budget-actions button {
-    width: 28px;
-    height: 28px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    font-size: 0.8rem;
-}
-
-.edit-btn {
-    background: #e0f2fe;
-    color: #0284c7;
-}
-
-.delete-btn {
-    background: #fef2f2;
-    color: #dc2626;
-}
-
-.budget-actions button:hover {
-    transform: scale(1.1);
+    font-weight: 500;
 }
 
 .budget-progress {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.budget-amounts {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.budget-spent {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.budget-limit {
+    color: #64748b;
+    font-weight: 600;
 }
 
 .progress-bar {
     width: 100%;
     height: 8px;
-    background: #f1f5f9;
+    background: #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
-    margin-bottom: 8px;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(135deg, #10b981, #059669);
     border-radius: 4px;
-    transition: width 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.progress-fill.good {
+    background: linear-gradient(90deg, #10b981, #059669);
 }
 
 .progress-fill.warning {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(90deg, #f59e0b, #d97706);
 }
 
 .progress-fill.danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: linear-gradient(90deg, #ef4444, #dc2626);
 }
 
-.budget-stats {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.budget-status {
     font-size: 0.85rem;
-}
-
-.budget-spent {
-    color: #374151;
-    font-weight: 500;
-}
-
-.budget-limit {
-    color: #6b7280;
-}
-
-.budget-percentage {
     font-weight: 600;
+    text-align: center;
+    margin-top: 8px;
 }
 
-.budget-percentage.normal {
+.budget-status.good {
     color: #10b981;
 }
 
-.budget-percentage.warning {
+.budget-status.warning {
     color: #f59e0b;
 }
 
-.budget-percentage.danger {
+.budget-status.danger {
     color: #ef4444;
 }
 
-/* ===== ТЕМНАЯ ТЕМА ДЛЯ ФИНАНСОВ ===== */
+/* Пустое состояние */
+.empty-finances {
+    text-align: center;
+    padding: 60px 30px;
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(233, 30, 99, 0.02));
+    border: 2px dashed rgba(233, 30, 99, 0.2);
+    border-radius: 20px;
+    margin: 30px 0;
+}
 
+.empty-finances .empty-icon {
+    font-size: 4rem;
+    color: #e91e63;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 8px rgba(233, 30, 99, 0.2));
+}
+
+.empty-finances h4 {
+    color: #1e293b;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+}
+
+.empty-finances p {
+    color: #64748b;
+    font-size: 1rem;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Темная тема */
 .dark-theme .finances-container {
-    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
-    color: #eee6ff;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 .dark-theme .finances-header {
-    border-bottom-color: rgba(59, 130, 246, 0.3);
+    border-bottom-color: rgba(233, 30, 99, 0.2);
 }
 
 .dark-theme .finances-header h3 {
-    color: #eee6ff;
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #f472b6;
 }
 
-.dark-theme .finance-period-selector select {
-    background: #1a1a2e;
-    border-color: #374151;
-    color: #eee6ff;
+.dark-theme .finances-header-info p {
+    color: #94a3b8;
 }
 
-.dark-theme .finance-period-selector select:focus {
-    border-color: #60a5fa;
-    background: #0f0f23;
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+.dark-theme .finance-stat-badge {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.15), rgba(233, 30, 99, 0.1));
+    border-color: rgba(233, 30, 99, 0.3);
+    color: #f472b6;
 }
 
-.dark-theme .finance-card,
-.dark-theme .chart-container,
-.dark-theme .pie-chart-container,
-.dark-theme .finance-section,
-.dark-theme .budget-card {
-    background: #1a1a2e;
-    border-color: #16213e;
-    color: #eee6ff;
+.dark-theme .finance-overview-card,
+.dark-theme .transactions-section,
+.dark-theme .chart-card,
+.dark-theme .budgets-section {
+    background: #1e293b;
+    border-color: rgba(233, 30, 99, 0.2);
 }
 
-.dark-theme .finance-card.revenue::before {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+.dark-theme .overview-value,
+.dark-theme .transactions-header h4,
+.dark-theme .chart-title,
+.dark-theme .budgets-header h4,
+.dark-theme .transaction-title,
+.dark-theme .budget-title {
+    color: #e2e8f0;
 }
 
-.dark-theme .finance-card.expenses::before {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+.dark-theme .overview-label,
+.dark-theme .transaction-meta,
+.dark-theme .budget-period {
+    color: #94a3b8;
 }
 
-.dark-theme .finance-card.profit::before {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+.dark-theme .overview-value.income {
+    color: #22c55e;
 }
 
-.dark-theme .finance-card.roi::before {
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
+.dark-theme .overview-value.expenses {
+    color: #f87171;
 }
 
-.dark-theme .finance-card.revenue .finance-card-icon {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+.dark-theme .overview-value.balance {
+    color: #f472b6;
 }
 
-.dark-theme .finance-card.expenses .finance-card-icon {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+.dark-theme .overview-value.profit {
+    color: #60a5fa;
 }
 
-.dark-theme .finance-card.profit .finance-card-icon {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+.dark-theme .overview-change.positive {
+    color: #22c55e;
 }
 
-.dark-theme .finance-card.roi .finance-card-icon {
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
+.dark-theme .overview-change.negative {
+    color: #f87171;
 }
 
-.dark-theme .finance-card-info h4,
-.dark-theme .chart-header h4,
-.dark-theme .section-header h4,
-.dark-theme .budget-info h5 {
-    color: #eee6ff;
+.dark-theme .transaction-filter {
+    background: #1e293b;
+    border-color: rgba(233, 30, 99, 0.3);
+    color: #94a3b8;
 }
 
-.dark-theme .finance-card-value {
-    color: #eee6ff;
-}
-
-.dark-theme .chart-toggle {
-    background: #16213e;
-    border-color: #374151;
-    color: #b3a7ff;
-}
-
-.dark-theme .chart-toggle.active {
-    background: #60a5fa;
-    border-color: #60a5fa;
+.dark-theme .transaction-filter:hover,
+.dark-theme .transaction-filter.active {
+    background: linear-gradient(135deg, #e91e63, #ad1457);
     color: white;
 }
 
-.dark-theme .chart-toggle:hover:not(.active) {
-    background: #374151;
-    border-color: #4b5563;
+.dark-theme .transaction-item {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(233, 30, 99, 0.02));
+    border-color: rgba(233, 30, 99, 0.2);
 }
 
-.dark-theme .chart-placeholder,
-.dark-theme .pie-chart-placeholder {
-    background: linear-gradient(135deg, #16213e, #374151);
-    border-color: #4b5563;
-    color: #b3a7ff;
+.dark-theme .transaction-item:hover {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.08), rgba(233, 30, 99, 0.04));
+    border-color: rgba(233, 30, 99, 0.3);
 }
 
-.dark-theme .add-transaction-btn {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+.dark-theme .transaction-amount.income {
+    color: #34d399;
 }
 
-.dark-theme .add-transaction-btn:hover {
-    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
+.dark-theme .transaction-amount.expense {
+    color: #f87171;
 }
 
-.dark-theme .transactions-table th {
-    background: #16213e;
-    color: #eee6ff;
-    border-bottom-color: #374151;
+.dark-theme .transaction-amount.transfer {
+    color: #60a5fa;
 }
 
-.dark-theme .transactions-table td {
-    border-bottom-color: rgba(55, 65, 81, 0.5);
-    color: #eee6ff;
+.dark-theme .transaction-category.income {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.15));
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.4);
 }
 
-.dark-theme .transactions-table tr:hover {
-    background: #16213e;
+.dark-theme .transaction-category.expense {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.15));
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.4);
 }
 
-.dark-theme .transaction-type.income {
-    background: rgba(34, 197, 94, 0.2);
-    color: #22c55e;
-    border-color: rgba(34, 197, 94, 0.3);
+.dark-theme .transaction-category.transfer {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.15));
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.4);
 }
 
-.dark-theme .transaction-type.expense {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.3);
+.dark-theme .transaction-action-btn.edit {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.2), rgba(233, 30, 99, 0.15));
+    color: #f472b6;
+    border-color: rgba(233, 30, 99, 0.4);
 }
 
-.dark-theme .budget-period {
-    color: #b3a7ff;
+.dark-theme .transaction-action-btn.delete {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.15));
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.4);
 }
 
-.dark-theme .edit-btn {
-    background: rgba(14, 165, 233, 0.2);
-    color: #0ea5e9;
+.dark-theme .chart-period {
+    background: #1e293b;
+    border-color: rgba(233, 30, 99, 0.3);
+    color: #94a3b8;
 }
 
-.dark-theme .delete-btn {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
+.dark-theme .chart-period:hover {
+    border-color: #f472b6;
+    color: #f472b6;
 }
 
-.dark-theme .progress-bar {
-    background: #16213e;
+.dark-theme .chart-placeholder {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.08), rgba(233, 30, 99, 0.04));
+    border-color: rgba(233, 30, 99, 0.3);
+    color: #94a3b8;
 }
 
-.dark-theme .progress-fill {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+.dark-theme .budget-item {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(233, 30, 99, 0.02));
+    border-color: rgba(233, 30, 99, 0.2);
 }
 
-.dark-theme .progress-fill.warning {
-    background: linear-gradient(135deg, #fb923c, #ea580c);
-}
-
-.dark-theme .progress-fill.danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+.dark-theme .budget-item:hover {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.08), rgba(233, 30, 99, 0.04));
+    border-color: rgba(233, 30, 99, 0.3);
 }
 
 .dark-theme .budget-spent {
-    color: #eee6ff;
+    color: #f87171;
 }
 
 .dark-theme .budget-limit {
-    color: #b3a7ff;
+    color: #94a3b8;
+}
+
+.dark-theme .progress-bar {
+    background: #374151;
+}
+
+.dark-theme .budget-status.good {
+    color: #34d399;
+}
+
+.dark-theme .budget-status.warning {
+    color: #fbbf24;
+}
+
+.dark-theme .budget-status.danger {
+    color: #f87171;
+}
+
+.dark-theme .empty-finances {
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.08), rgba(233, 30, 99, 0.04));
+    border-color: rgba(233, 30, 99, 0.3);
+}
+
+.dark-theme .empty-finances .empty-icon {
+    color: #f472b6;
+}
+
+.dark-theme .empty-finances h4 {
+    color: #e2e8f0;
+}
+
+.dark-theme .empty-finances p {
+    color: #94a3b8;
 } 

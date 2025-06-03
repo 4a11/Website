@@ -1,4 +1,4 @@
- /* ===== МОДУЛЬНАЯ СТРУКТУРА CSS ДЛЯ АДМИН ПАНЕЛИ ===== */
+/* ===== МОДУЛЬНАЯ СТРУКТУРА CSS ДЛЯ АДМИН ПАНЕЛИ ===== */
 
 /* Импорт основных стилей и переменных */
 @import './styles/base.css';
@@ -11,6 +11,9 @@
 
 /* Импорт стилей сотрудников */
 @import './styles/employees.css';
+
+/* Импорт стилей объектов */
+@import './styles/facilities.css';
 
 /* Импорт стилей оборудования и новостей */
 @import './styles/equipment-news.css';
@@ -64,4 +67,308 @@ td:nth-child(5) {
 .dark-theme .badge.technical {
     background-color: rgba(99, 102, 241, 0.2);
     color: #6366f1;
+}
+
+/* ===== СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ СТРАНИЦЫ ОБЪЕКТОВ ===== */
+
+/* Заголовок секции объектов */
+.data-table .table-header h3 {
+    color: #3498db;
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.data-table .table-header h3::before {
+    content: '🏢';
+    font-size: 1.5rem;
+    filter: drop-shadow(0 2px 4px rgba(52, 152, 219, 0.3));
+}
+
+/* Поисковая строка для объектов */
+.data-table .search-box {
+    position: relative;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(46, 134, 222, 0.02));
+    border: 2px solid rgba(52, 152, 219, 0.2);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.data-table .search-box:focus-within {
+    border-color: rgba(52, 152, 219, 0.5);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(46, 134, 222, 0.04));
+}
+
+.data-table .search-box i {
+    color: #3498db;
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+}
+
+.data-table .search-box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--primary-text);
+    font-size: 1rem;
+    flex: 1;
+}
+
+.data-table .search-box input::placeholder {
+    color: rgba(52, 152, 219, 0.6);
+    font-style: italic;
+}
+
+/* Кнопка добавления объекта */
+.data-table .add-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.9rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.data-table .add-btn:hover {
+    background: linear-gradient(135deg, #2980b9, #1f618d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.data-table .add-btn i {
+    font-size: 1.1rem;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* Стили таблицы объектов */
+table thead th {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 134, 222, 0.05));
+    color: var(--primary-text);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+    border-bottom: 2px solid rgba(52, 152, 219, 0.2);
+}
+
+/* Информация об объекте */
+.facility-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.facility-info i {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+/* Иконки для разных типов объектов */
+.facility-info i.fa-building {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.facility-info i.fa-warehouse {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    color: white;
+    box-shadow: 0 2px 8px rgba(230, 126, 34, 0.3);
+}
+
+.facility-info i.fa-industry {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: white;
+    box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
+}
+
+.facility-info i.fa-store {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: white;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.facility-info span {
+    font-weight: 600;
+    color: var(--primary-text);
+    font-size: 1rem;
+}
+
+/* Типы объектов с цветовой индикацией */
+.facility-type {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid;
+    transition: all 0.3s ease;
+}
+
+.facility-type.офис {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(46, 134, 222, 0.05));
+    color: #2980b9;
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.facility-type.склад {
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.15), rgba(211, 84, 0, 0.05));
+    color: #d35400;
+    border-color: rgba(230, 126, 34, 0.3);
+}
+
+.facility-type.производство {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(142, 68, 173, 0.05));
+    color: #8e44ad;
+    border-color: rgba(155, 89, 182, 0.3);
+}
+
+.facility-type.торговля {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.15), rgba(34, 153, 84, 0.05));
+    color: #229954;
+    border-color: rgba(39, 174, 96, 0.3);
+}
+
+/* Hover эффекты для типов объектов */
+.facility-type:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Строки таблицы объектов */
+table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(52, 152, 219, 0.1);
+}
+
+table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(46, 134, 222, 0.02));
+    transform: translateX(2px);
+    box-shadow: 0 2px 10px rgba(52, 152, 219, 0.1);
+}
+
+table tbody tr:hover .facility-info i {
+    transform: scale(1.1);
+}
+
+table tbody tr:hover .facility-type {
+    transform: scale(1.05);
+}
+
+/* Кнопки действий для объектов */
+.action-buttons .action-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0.25rem;
+}
+
+.action-buttons .action-btn.primary {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.25);
+}
+
+.action-buttons .action-btn.primary:hover {
+    background: linear-gradient(135deg, #2980b9, #1f618d);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.35);
+}
+
+.action-buttons .action-btn.secondary {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+    box-shadow: 0 2px 8px rgba(149, 165, 166, 0.25);
+}
+
+.action-buttons .action-btn.secondary:hover {
+    background: linear-gradient(135deg, #7f8c8d, #6c7b7d);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.35);
+}
+
+.action-buttons .action-btn.danger {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.25);
+}
+
+.action-buttons .action-btn.danger:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.35);
+}
+
+/* Состояние "Нет данных" для объектов */
+.no-data {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(46, 134, 222, 0.02));
+    border: 2px dashed rgba(52, 152, 219, 0.2);
+    border-radius: 12px;
+    margin: 2rem 0;
+}
+
+.no-data i {
+    font-size: 3rem;
+    color: #3498db;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 2px 4px rgba(52, 152, 219, 0.2));
+}
+
+.no-data p {
+    font-size: 1.1rem;
+    color: var(--secondary-text);
+    margin: 0;
+    font-style: italic;
+}
+
+/* Темная тема для объектов */
+.admin-container.dark-theme .data-table .table-header h3 {
+    color: #5dade2;
+}
+
+.admin-container.dark-theme .data-table .search-box {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 134, 222, 0.05));
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.admin-container.dark-theme .data-table .search-box:focus-within {
+    border-color: rgba(52, 152, 219, 0.6);
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(46, 134, 222, 0.08));
+}
+
+.admin-container.dark-theme .no-data {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 134, 222, 0.05));
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.admin-container.dark-theme .no-data i {
+    color: #5dade2;
 }

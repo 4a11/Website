@@ -5,4 +5,11 @@ export interface Employee {
     email: string;
     phone: string;
     created_at: Date;
+    department?: string;
+    status?: 'active' | 'inactive' | 'vacation';
+    skills?: string[];
+    rating?: number;
+    projectsCount?: number;
+    tasksCompleted?: number;
+    showMenu?: boolean;
 } 

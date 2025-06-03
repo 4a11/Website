@@ -1,0 +1,771 @@
+/* ===== СТИЛИ ДЛЯ РАЗДЕЛА ОБЪЕКТОВ ===== */
+
+.facilities-container {
+    padding: 24px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.facilities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(52, 152, 219, 0.15);
+    position: relative;
+}
+
+.facilities-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    border-radius: 1px;
+}
+
+.facilities-header-info h3 {
+    color: #1e40af;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.facilities-header-info h3::before {
+    content: '🏢';
+    font-size: 1.8rem;
+    filter: drop-shadow(0 2px 4px rgba(52, 152, 219, 0.3));
+}
+
+.facilities-header-info p {
+    color: #64748b;
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.facilities-stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.stat-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.05));
+    border-radius: 25px;
+    border: 2px solid rgba(52, 152, 219, 0.2);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2563eb;
+    transition: all 0.3s ease;
+}
+
+.stat-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.stat-badge i {
+    color: #3498db;
+    font-size: 1rem;
+}
+
+.facilities-header-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.facilities-view-toggle {
+    display: flex;
+    background: white;
+    border-radius: 14px;
+    padding: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(52, 152, 219, 0.1);
+}
+
+.view-btn {
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.view-btn.active {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    transform: translateY(-1px);
+}
+
+.view-btn:hover:not(.active) {
+    background: rgba(52, 152, 219, 0.05);
+    color: #3498db;
+}
+
+.add-facility-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+    font-size: 0.95rem;
+}
+
+.add-facility-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9, #1f618d);
+}
+
+/* Фильтры объектов */
+.facilities-filters {
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(52, 152, 219, 0.1);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.facilities-search {
+    flex: 1;
+    min-width: 280px;
+    position: relative;
+}
+
+.facilities-search input {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    border: 2px solid rgba(52, 152, 219, 0.2);
+    border-radius: 14px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.02), rgba(52, 152, 219, 0.01));
+    color: #1e293b;
+}
+
+.facilities-search i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #3498db;
+    font-size: 1.1rem;
+}
+
+.facilities-search input:focus {
+    outline: none;
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+}
+
+.facilities-search input::placeholder {
+    color: rgba(52, 152, 219, 0.6);
+    font-style: italic;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-group label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.filter-group select {
+    padding: 12px 16px;
+    border: 2px solid rgba(52, 152, 219, 0.2);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.02), rgba(52, 152, 219, 0.01));
+    color: #475569;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    font-weight: 500;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+}
+
+/* Карточный вид объектов */
+.facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.facility-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(52, 152, 219, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.facility-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.facility-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(52, 152, 219, 0.15);
+    border-color: rgba(52, 152, 219, 0.2);
+}
+
+.facility-card:hover::before {
+    opacity: 1;
+}
+
+.facility-status-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.facility-status-badge.active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.facility-status-badge.inactive {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.facility-status-badge.ready {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.facility-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+    transition: all 0.3s ease;
+}
+
+.facility-icon.офис {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+.facility-icon.склад {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    color: white;
+}
+
+.facility-icon.производство {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: white;
+}
+
+.facility-icon.торговля {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: white;
+}
+
+.facility-card:hover .facility-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.facility-info h4 {
+    color: #1e293b;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.facility-type {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    border: 2px solid;
+    transition: all 0.3s ease;
+}
+
+.facility-type.офис {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.05));
+    color: #2980b9;
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.facility-type.склад {
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.1), rgba(230, 126, 34, 0.05));
+    color: #d35400;
+    border-color: rgba(230, 126, 34, 0.3);
+}
+
+.facility-type.производство {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(155, 89, 182, 0.05));
+    color: #8e44ad;
+    border-color: rgba(155, 89, 182, 0.3);
+}
+
+.facility-type.торговля {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
+    color: #229954;
+    border-color: rgba(39, 174, 96, 0.3);
+}
+
+.facility-type:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.facility-details {
+    margin-bottom: 20px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 8px 0;
+}
+
+.detail-row i {
+    width: 24px;
+    color: #3498db;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.detail-row span {
+    color: #64748b;
+    font-size: 0.95rem;
+    flex: 1;
+}
+
+.facility-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.action-btn.secondary {
+    background: linear-gradient(135deg, #64748b, #475569);
+    color: white;
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+}
+
+.action-btn.primary:hover {
+    box-shadow: 0 6px 18px rgba(52, 152, 219, 0.4);
+}
+
+.action-btn.secondary:hover {
+    box-shadow: 0 6px 18px rgba(100, 116, 139, 0.4);
+}
+
+.more-actions {
+    position: relative;
+}
+
+.more-btn {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    border: 2px solid rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.more-btn:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    transform: scale(1.1);
+}
+
+.facility-menu {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.1);
+    z-index: 10;
+    min-width: 180px;
+}
+
+.facility-menu button {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    color: #475569;
+    cursor: pointer;
+    border-radius: 8px;
+    text-align: left;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.facility-menu button:hover {
+    background: rgba(52, 152, 219, 0.05);
+    color: #3498db;
+}
+
+.facility-menu button.delete:hover {
+    background: rgba(239, 68, 68, 0.05);
+    color: #ef4444;
+}
+
+/* Табличный вид объектов */
+.facilities-table {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(52, 152, 219, 0.1);
+}
+
+.facilities-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.facilities-table th {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.05));
+    color: #1e293b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 18px 20px;
+    text-align: left;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(52, 152, 219, 0.1);
+}
+
+.facilities-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+}
+
+.facilities-table tr:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.02), rgba(52, 152, 219, 0.01));
+}
+
+.table-facility-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.table-facility-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.table-facility-details h5 {
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+}
+
+.table-facility-details p {
+    color: #64748b;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.facility-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.facility-status.active {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
+    color: #059669;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.facility-status.inactive {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.1));
+    color: #dc2626;
+    border: 2px solid rgba(239, 68, 68, 0.3);
+}
+
+.facility-status.ready {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.1));
+    color: #d97706;
+    border: 2px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Пустое состояние */
+.empty-facilities {
+    text-align: center;
+    padding: 60px 30px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(52, 152, 219, 0.02));
+    border: 2px dashed rgba(52, 152, 219, 0.2);
+    border-radius: 20px;
+    margin: 30px 0;
+}
+
+.empty-facilities .empty-icon {
+    font-size: 4rem;
+    color: #3498db;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 8px rgba(52, 152, 219, 0.2));
+}
+
+.empty-facilities h4 {
+    color: #1e293b;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+}
+
+.empty-facilities p {
+    color: #64748b;
+    font-size: 1rem;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Темная тема */
+.dark-theme .facilities-container {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.dark-theme .facilities-header {
+    border-bottom-color: rgba(52, 152, 219, 0.2);
+}
+
+.dark-theme .facilities-header-info h3 {
+    color: #60a5fa;
+}
+
+.dark-theme .facilities-header-info p {
+    color: #94a3b8;
+}
+
+.dark-theme .stat-badge {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.1));
+    border-color: rgba(52, 152, 219, 0.3);
+    color: #60a5fa;
+}
+
+.dark-theme .facilities-view-toggle {
+    background: #1e293b;
+    border-color: rgba(52, 152, 219, 0.2);
+}
+
+.dark-theme .view-btn {
+    color: #94a3b8;
+}
+
+.dark-theme .view-btn.active {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+.dark-theme .view-btn:hover:not(.active) {
+    background: rgba(52, 152, 219, 0.1);
+    color: #60a5fa;
+}
+
+.dark-theme .facilities-filters,
+.dark-theme .facility-card,
+.dark-theme .facilities-table {
+    background: #1e293b;
+    border-color: rgba(52, 152, 219, 0.2);
+}
+
+.dark-theme .facilities-search input,
+.dark-theme .filter-group select {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(52, 152, 219, 0.02));
+    border-color: rgba(52, 152, 219, 0.3);
+    color: #e2e8f0;
+}
+
+.dark-theme .facilities-search input:focus,
+.dark-theme .filter-group select:focus {
+    background: #0f172a;
+    border-color: #3498db;
+}
+
+.dark-theme .facility-info h4,
+.dark-theme .table-facility-details h5 {
+    color: #e2e8f0;
+}
+
+.dark-theme .detail-row span,
+.dark-theme .table-facility-details p {
+    color: #94a3b8;
+}
+
+.dark-theme .facilities-table th {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.1));
+    color: #e2e8f0;
+}
+
+.dark-theme .facilities-table td {
+    border-bottom-color: rgba(52, 152, 219, 0.1);
+}
+
+.dark-theme .facilities-table tr:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(52, 152, 219, 0.02));
+}
+
+.dark-theme .more-btn {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-color: rgba(52, 152, 219, 0.3);
+    color: #60a5fa;
+}
+
+.dark-theme .facility-menu {
+    background: #1e293b;
+    border-color: rgba(52, 152, 219, 0.2);
+}
+
+.dark-theme .facility-menu button {
+    color: #94a3b8;
+}
+
+.dark-theme .facility-menu button:hover {
+    background: rgba(52, 152, 219, 0.1);
+    color: #60a5fa;
+}
+
+.dark-theme .empty-facilities {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(52, 152, 219, 0.04));
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.dark-theme .empty-facilities .empty-icon {
+    color: #60a5fa;
+}
+
+.dark-theme .empty-facilities h4 {
+    color: #e2e8f0;
+}
+
+.dark-theme .empty-facilities p {
+    color: #94a3b8;
+} 
