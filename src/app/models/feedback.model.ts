@@ -2,6 +2,7 @@ export interface Feedback {
     id: number;
     author: string;
     email: string;
+    phone: string;
     subject: string;
     message: string;
     date: Date;

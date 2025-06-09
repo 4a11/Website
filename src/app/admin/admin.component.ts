@@ -155,6 +155,37 @@ export class AdminComponent implements OnInit, OnDestroy {
         updatedDate: new Date()
     };
 
+    // Редактор - дополнительные свойства
+    editorState = {
+        isSaving: false,
+        lastSaved: null as Date | null,
+        autoSaveInterval: null as any,
+        isEditorFocused: false,
+        selectedText: '',
+        clipboardContent: '',
+        undoStack: [] as string[],
+        redoStack: [] as string[],
+        currentFontSize: 14,
+        currentFontFamily: 'Arial'
+    };
+
+    // Таблицы в редакторе
+    tableEditor = {
+        showTableDialog: false,
+        rows: 3,
+        cols: 3,
+        hasHeaders: true
+    };
+
+    // Изображения в редакторе
+    imageUpload = {
+        showImageDialog: false,
+        imageUrl: '',
+        imageAlt: '',
+        imageWidth: 300,
+        imageHeight: 200
+    };
+
     // Калькулятор
     selectedCalculationType: string = '';
     calculatorData = {
@@ -230,6 +261,15 @@ export class AdminComponent implements OnInit, OnDestroy {
     facilitiesView: 'cards' | 'list' = 'cards';
     selectedFacilityType: string = '';
     selectedFacilityStatus: string = '';
+
+    // Фильтры для отзывов
+    selectedReviewRating: string = '';
+    selectedReviewPeriod: string = '';
+    selectedReviewStatus: string = '';
+
+    // Фильтры для обратной связи
+    selectedFeedbackStatus: string = '';
+    selectedFeedbackPriority: string = '';
 
     constructor(
         private router: Router,
@@ -407,6 +447,11 @@ export class AdminComponent implements OnInit, OnDestroy {
     toggleTheme(): void {
         this.isDarkTheme = !this.isDarkTheme;
         localStorage.setItem('adminTheme', this.isDarkTheme ? 'dark' : 'light');
+        
+        // Обновляем стили таблиц в редакторе при смене темы
+        setTimeout(() => {
+            this.updateEditorTableStyles();
+        }, 100);
     }
 
     switchToSection(section: string): void {
@@ -1394,16 +1439,37 @@ export class AdminComponent implements OnInit, OnDestroy {
     // Методы для работы с отчетами
     setReportsView(view: 'list' | 'cards' | 'editor'): void {
         this.reportsView = view;
-        if (view === 'editor' && !this.currentReport.title) {
-            this.currentReport = {
-                title: 'Новый отчет',
-                content: '<h1>Новый отчет</h1><p>Начните вводить содержание отчета...</p>',
-                type: 'financial',
-                status: 'draft',
-                author: this.userName || 'Администратор',
-                createdDate: new Date(),
-                updatedDate: new Date()
-            };
+        if (view === 'editor') {
+            if (!this.currentReport.title) {
+                this.currentReport = {
+                    title: 'Новый отчет',
+                    content: '<h1>Новый отчет</h1><p>Начните вводить содержание отчета...</p>',
+                    type: 'financial',
+                    status: 'draft',
+                    author: this.userName || 'Администратор',
+                    createdDate: new Date(),
+                    updatedDate: new Date()
+                };
+            }
+            
+            // Устанавливаем содержимое в редактор после инициализации DOM
+            setTimeout(() => {
+                this.initializeEditor();
+            }, 0);
+        }
+    }
+
+    initializeEditor(): void {
+        const editorElement = document.querySelector('.editor-content') as HTMLElement;
+        if (editorElement && this.currentReport.content) {
+            editorElement.innerHTML = this.currentReport.content;
+            // Устанавливаем курсор в конец
+            this.setCaretToEnd(editorElement);
+            
+            // Применяем стили темы
+            setTimeout(() => {
+                this.updateEditorTableStyles();
+            }, 100);
         }
     }
 
@@ -1498,113 +1564,674 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     // Методы редактора отчетов
     saveReport(): void {
-        this.currentReport.updatedDate = new Date();
-        console.log('Отчет сохранен:', this.currentReport.title);
-        
-        // Добавляем или обновляем отчет в списке
-        const existingIndex = this.reports.findIndex(r => r.title === this.currentReport.title);
-        if (existingIndex >= 0) {
-            this.reports[existingIndex] = { ...this.currentReport } as Report;
-        } else {
-            this.reports.unshift({ ...this.currentReport } as Report);
+        if (!this.currentReport.title.trim()) {
+            alert('Введите название отчета');
+            return;
         }
-        this.filteredReports = [...this.reports];
+
+        this.editorState.isSaving = true;
+        
+        // Обновляем данные отчета
+        this.currentReport.author = this.userName || 'Неизвестен';
+        this.currentReport.updatedDate = new Date();
+
+        // Симуляция сохранения
+        setTimeout(() => {
+            console.log('Отчет сохранен:', this.currentReport);
+            this.editorState.isSaving = false;
+            this.editorState.lastSaved = new Date();
+            
+            // Добавляем в список отчетов если это новый отчет
+            if (!this.reports.find(r => r.id === this.currentReport.id)) {
+                this.currentReport.id = this.reports.length + 1;
+                this.reports.unshift(this.currentReport);
+                this.filteredReports = [...this.reports];
+            }
+            
+            // Показываем уведомление об успешном сохранении
+            this.showSaveNotification('Отчет успешно сохранен');
+        }, 1000);
+    }
+
+    autoSaveReport(): void {
+        if (this.currentReport.content.trim() && !this.editorState.isSaving) {
+            this.currentReport.updatedDate = new Date();
+            console.log('Автосохранение отчета');
+            this.editorState.lastSaved = new Date();
+        }
+    }
+
+    startAutoSave(): void {
+        this.stopAutoSave();
+        this.editorState.autoSaveInterval = setInterval(() => {
+            this.autoSaveReport();
+        }, 30000); // Автосохранение каждые 30 секунд
+    }
+
+    stopAutoSave(): void {
+        if (this.editorState.autoSaveInterval) {
+            clearInterval(this.editorState.autoSaveInterval);
+            this.editorState.autoSaveInterval = null;
+        }
+    }
+
+    showSaveNotification(message: string): void {
+        // Создаем временное уведомление
+        const notification = document.createElement('div');
+        notification.className = 'save-notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
     }
 
     previewReport(): void {
-        console.log('Предварительный просмотр отчета');
-        // Здесь можно открыть модальное окно с превью
+        if (!this.currentReport.content.trim()) {
+            alert('Отчет пуст');
+            return;
+        }
+
+        // Открываем предварительный просмотр в новом окне
+        const previewWindow = window.open('', '_blank', 'width=800,height=600');
+        if (previewWindow) {
+            previewWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Предварительный просмотр: ${this.currentReport.title}</title>
+                    <style>
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            max-width: 800px; 
+                            margin: 0 auto; 
+                            padding: 20px;
+                            line-height: 1.6;
+                        }
+                        h1 { color: #333; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                        th { background-color: #f5f5f5; font-weight: bold; }
+                        .chart-placeholder { 
+                            background: #f0f0f0; 
+                            padding: 40px; 
+                            text-align: center; 
+                            border: 2px dashed #ccc;
+                            margin: 20px 0;
+                        }
+                        .print-btn {
+                            position: fixed;
+                            top: 20px;
+                            right: 20px;
+                            padding: 10px 20px;
+                            background: #6366f1;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        @media print {
+                            .print-btn { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <button class="print-btn" onclick="window.print()">Печать</button>
+                    <h1>${this.currentReport.title}</h1>
+                    <div style="margin-bottom: 20px; color: #666;">
+                        <strong>Тип:</strong> ${this.getReportTypeName(this.currentReport.type)} | 
+                        <strong>Статус:</strong> ${this.getReportStatusName(this.currentReport.status)} | 
+                        <strong>Автор:</strong> ${this.currentReport.author} | 
+                        <strong>Дата:</strong> ${new Date(this.currentReport.updatedDate).toLocaleDateString()}
+                    </div>
+                    <div>${this.currentReport.content}</div>
+                </body>
+                </html>
+            `);
+            previewWindow.document.close();
+        }
     }
 
     exportReport(): void {
-        console.log('Экспорт отчета:', this.currentReport.title);
-        // Здесь можно добавить логику экспорта в PDF, Word и т.д.
+        if (!this.currentReport.content.trim()) {
+            alert('Отчет пуст');
+            return;
+        }
+
+        // Создаем HTML контент для экспорта
+        const exportContent = `
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>${this.currentReport.title}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                    h1 { color: #333; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                    th { background-color: #f5f5f5; }
+                </style>
+            </head>
+            <body>
+                <h1>${this.currentReport.title}</h1>
+                <div style="margin-bottom: 20px; color: #666;">
+                    <strong>Тип:</strong> ${this.getReportTypeName(this.currentReport.type)} | 
+                    <strong>Статус:</strong> ${this.getReportStatusName(this.currentReport.status)} | 
+                    <strong>Автор:</strong> ${this.currentReport.author} | 
+                    <strong>Дата:</strong> ${new Date(this.currentReport.updatedDate).toLocaleDateString()}
+                </div>
+                <div>${this.currentReport.content}</div>
+            </body>
+            </html>
+        `;
+
+        // Создаем blob и ссылку для скачивания
+        const blob = new Blob([exportContent], { type: 'text/html' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${this.currentReport.title || 'report'}.html`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+
+        console.log('Отчет экспортирован');
     }
 
-    formatText(command: string): void {
-        document.execCommand(command, false, '');
+    formatText(command: string, value?: string): void {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            this.saveToUndoStack();
+        }
+
+        switch (command) {
+            case 'fontSize':
+                document.execCommand('fontSize', false, '7');
+                const fontElements = document.getElementsByTagName('font');
+                for (let i = 0; i < fontElements.length; i++) {
+                    if (fontElements[i].size === '7') {
+                        fontElements[i].removeAttribute('size');
+                        fontElements[i].style.fontSize = value + 'px';
+                    }
+                }
+                break;
+            case 'fontName':
+                document.execCommand('fontName', false, value);
+                break;
+            case 'foreColor':
+                document.execCommand('foreColor', false, value);
+                break;
+            case 'backColor':
+                document.execCommand('hiliteColor', false, value);
+                break;
+            default:
+                document.execCommand(command, false, value);
+        }
+        
+        this.onEditorContentChange({ target: { innerHTML: this.getCurrentEditorContent() } });
     }
 
     insertElement(elementType: string): void {
-        let content = '';
+        this.saveToUndoStack();
+        
         switch (elementType) {
             case 'table':
-                content = '<table border="1"><tr><td>Ячейка 1</td><td>Ячейка 2</td></tr><tr><td>Ячейка 3</td><td>Ячейка 4</td></tr></table>';
-                break;
-            case 'chart':
-                content = '<div class="chart-placeholder">[График - будет добавлен позже]</div>';
+                this.showTableDialog();
                 break;
             case 'image':
-                content = '<img src="https://via.placeholder.com/300x200" alt="Изображение">';
+                this.showImageDialog();
+                break;
+            case 'chart':
+                this.insertChart();
                 break;
             case 'list':
-                content = '<ul><li>Элемент списка 1</li><li>Элемент списка 2</li><li>Элемент списка 3</li></ul>';
+                this.insertList();
+                break;
+            case 'hr':
+                document.execCommand('insertHTML', false, '<hr>');
+                break;
+            case 'pageBreak':
+                document.execCommand('insertHTML', false, '<div style="page-break-before: always;"></div>');
                 break;
         }
-        document.execCommand('insertHTML', false, content);
+        
+        this.onEditorContentChange({ target: { innerHTML: this.getCurrentEditorContent() } });
+    }
+
+    showTableDialog(): void {
+        this.tableEditor.showTableDialog = true;
+    }
+
+    insertTable(): void {
+        let tableHTML = '<table border="1" style="width: 100%; border-collapse: collapse;">';
+        
+        if (this.tableEditor.hasHeaders) {
+            tableHTML += '<thead><tr>';
+            for (let j = 0; j < this.tableEditor.cols; j++) {
+                tableHTML += `<th style="padding: 12px; background-color: #f5f5f5; font-weight: bold;">Заголовок ${j + 1}</th>`;
+            }
+            tableHTML += '</tr></thead>';
+        }
+        
+        tableHTML += '<tbody>';
+        const startRow = this.tableEditor.hasHeaders ? 0 : 0;
+        for (let i = startRow; i < this.tableEditor.rows; i++) {
+            tableHTML += '<tr>';
+            for (let j = 0; j < this.tableEditor.cols; j++) {
+                tableHTML += '<td style="padding: 12px; border: 1px solid #ddd;">Ячейка</td>';
+            }
+            tableHTML += '</tr>';
+        }
+        tableHTML += '</tbody></table><br>';
+        
+        document.execCommand('insertHTML', false, tableHTML);
+        this.tableEditor.showTableDialog = false;
+        
+        // Применяем стили темы к новой таблице
+        setTimeout(() => {
+            this.updateEditorTableStyles();
+        }, 100);
+    }
+
+    showImageDialog(): void {
+        this.imageUpload.showImageDialog = true;
+    }
+
+    insertImage(): void {
+        if (!this.imageUpload.imageUrl.trim()) {
+            alert('Введите URL изображения');
+            return;
+        }
+        
+        const imageHTML = `<img src="${this.imageUpload.imageUrl}" 
+                               alt="${this.imageUpload.imageAlt}" 
+                               style="width: ${this.imageUpload.imageWidth}px; height: ${this.imageUpload.imageHeight}px; max-width: 100%;">`;
+        
+        document.execCommand('insertHTML', false, imageHTML);
+        this.imageUpload.showImageDialog = false;
+        this.resetImageDialog();
+    }
+
+    resetImageDialog(): void {
+        this.imageUpload.imageUrl = '';
+        this.imageUpload.imageAlt = '';
+        this.imageUpload.imageWidth = 300;
+        this.imageUpload.imageHeight = 200;
+    }
+
+    insertChart(): void {
+        const chartHTML = `
+            <div class="chart-placeholder" style="background: #f8fafc; border: 2px dashed #6366f1; padding: 40px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                <i class="fas fa-chart-bar" style="font-size: 48px; color: #6366f1; margin-bottom: 16px; display: block;"></i>
+                <h4 style="color: #6366f1; margin: 0;">График</h4>
+                <p style="color: #64748b; margin: 8px 0 0 0;">Место для вставки графика</p>
+            </div>
+        `;
+        document.execCommand('insertHTML', false, chartHTML);
+    }
+
+    insertList(): void {
+        const listHTML = '<ul><li>Элемент списка 1</li><li>Элемент списка 2</li><li>Элемент списка 3</li></ul>';
+        document.execCommand('insertHTML', false, listHTML);
+    }
+
+    saveToUndoStack(): void {
+        const currentContent = this.getCurrentEditorContent();
+        this.editorState.undoStack.push(currentContent);
+        if (this.editorState.undoStack.length > 50) {
+            this.editorState.undoStack.shift();
+        }
+        this.editorState.redoStack = [];
+    }
+
+    undo(): void {
+        if (this.editorState.undoStack.length > 0) {
+            const currentContent = this.getCurrentEditorContent();
+            this.editorState.redoStack.push(currentContent);
+            
+            const previousContent = this.editorState.undoStack.pop();
+            if (previousContent) {
+                this.setEditorContent(previousContent);
+                this.currentReport.content = previousContent;
+            }
+        }
+    }
+
+    redo(): void {
+        if (this.editorState.redoStack.length > 0) {
+            const currentContent = this.getCurrentEditorContent();
+            this.editorState.undoStack.push(currentContent);
+            
+            const nextContent = this.editorState.redoStack.pop();
+            if (nextContent) {
+                this.setEditorContent(nextContent);
+                this.currentReport.content = nextContent;
+            }
+        }
+    }
+
+    getCurrentEditorContent(): string {
+        const editorElement = document.querySelector('.editor-content') as HTMLElement;
+        return editorElement ? editorElement.innerHTML : this.currentReport.content;
+    }
+
+    setEditorContent(content: string): void {
+        const editorElement = document.querySelector('.editor-content') as HTMLElement;
+        if (editorElement && editorElement.innerHTML !== content) {
+            // Сохраняем позицию курсора
+            const caretPosition = this.saveCaretPosition();
+            
+            // Обновляем содержимое
+            editorElement.innerHTML = content;
+            
+            // Восстанавливаем позицию курсора
+            if (caretPosition) {
+                try {
+                    this.restoreCaretPosition(caretPosition);
+                } catch (e) {
+                    // Если не удалось восстановить позицию, устанавливаем курсор в конец
+                    this.setCaretToEnd(editorElement);
+                }
+            }
+        }
+    }
+
+    setCaretToEnd(element: HTMLElement): void {
+        const range = document.createRange();
+        const selection = window.getSelection();
+        
+        if (element.childNodes.length > 0) {
+            range.setStartAfter(element.lastChild!);
+        } else {
+            range.setStart(element, 0);
+        }
+        
+        range.collapse(true);
+        
+        if (selection) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
+
+    onEditorFocus(): void {
+        this.editorState.isEditorFocused = true;
+        this.startAutoSave();
+    }
+
+    onEditorBlur(): void {
+        this.editorState.isEditorFocused = false;
     }
 
     loadTemplate(templateType: string): void {
+        this.saveToUndoStack();
+        
         let content = '';
+        const currentDate = new Date().toLocaleDateString('ru-RU');
+        
         switch (templateType) {
             case 'financial':
                 content = `
                     <h1>Финансовый отчет</h1>
-                    <h2>Общая информация</h2>
-                    <p>Период: ${new Date().toLocaleDateString()}</p>
+                    <div style="margin-bottom: 30px;">
+                        <p><strong>Период:</strong> ${currentDate}</p>
+                        <p><strong>Подготовил:</strong> ${this.currentReport.author}</p>
+                    </div>
+                    
+                    <h2>Краткое резюме</h2>
+                    <p>Общая информация о финансовом состоянии компании за отчетный период...</p>
+                    
                     <h2>Доходы</h2>
-                    <table border="1">
-                        <tr><th>Источник</th><th>Сумма</th></tr>
-                        <tr><td>Основная деятельность</td><td>0 ₽</td></tr>
-                        <tr><td>Дополнительные услуги</td><td>0 ₽</td></tr>
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <thead>
+                            <tr style="background-color: #f5f5f5;">
+                                <th style="padding: 12px; font-weight: bold;">Источник дохода</th>
+                                <th style="padding: 12px; font-weight: bold;">Сумма (₽)</th>
+                                <th style="padding: 12px; font-weight: bold;">% от общего</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px;">Основная деятельность</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">0%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Дополнительные услуги</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">0%</td>
+                            </tr>
+                            <tr style="background-color: #f9f9f9; font-weight: bold;">
+                                <td style="padding: 12px;">Итого доходы</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">100%</td>
+                            </tr>
+                        </tbody>
                     </table>
+                    
                     <h2>Расходы</h2>
-                    <table border="1">
-                        <tr><th>Категория</th><th>Сумма</th></tr>
-                        <tr><td>Операционные расходы</td><td>0 ₽</td></tr>
-                        <tr><td>Административные расходы</td><td>0 ₽</td></tr>
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <thead>
+                            <tr style="background-color: #f5f5f5;">
+                                <th style="padding: 12px; font-weight: bold;">Категория расходов</th>
+                                <th style="padding: 12px; font-weight: bold;">Сумма (₽)</th>
+                                <th style="padding: 12px; font-weight: bold;">% от общего</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px;">Операционные расходы</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">0%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Административные расходы</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">0%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Маркетинг и реклама</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">0%</td>
+                            </tr>
+                            <tr style="background-color: #f9f9f9; font-weight: bold;">
+                                <td style="padding: 12px;">Итого расходы</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">100%</td>
+                            </tr>
+                        </tbody>
                     </table>
-                    <h2>Итого</h2>
-                    <p><strong>Прибыль: 0 ₽</strong></p>
+                    
+                    <h2>Финансовые показатели</h2>
+                    <div class="chart-placeholder" style="background: #f8fafc; border: 2px dashed #6366f1; padding: 40px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                        <h4 style="color: #6366f1; margin: 0;">График финансовых показателей</h4>
+                        <p style="color: #64748b; margin: 8px 0 0 0;">Динамика доходов и расходов</p>
+                    </div>
+                    
+                    <h2>Заключение</h2>
+                    <p><strong>Прибыль за период:</strong> <span style="color: #10b981; font-weight: bold;">0 ₽</span></p>
+                    <p>Выводы и рекомендации по результатам финансового анализа...</p>
                 `;
                 break;
+                
             case 'operational':
                 content = `
                     <h1>Операционный отчет</h1>
-                    <h2>Производительность</h2>
-                    <p>Период: ${new Date().toLocaleDateString()}</p>
-                    <h2>Ключевые показатели</h2>
+                    <div style="margin-bottom: 30px;">
+                        <p><strong>Период:</strong> ${currentDate}</p>
+                        <p><strong>Подготовил:</strong> ${this.currentReport.author}</p>
+                    </div>
+                    
+                    <h2>Ключевые показатели эффективности</h2>
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <thead>
+                            <tr style="background-color: #f5f5f5;">
+                                <th style="padding: 12px; font-weight: bold;">Показатель</th>
+                                <th style="padding: 12px; font-weight: bold;">Значение</th>
+                                <th style="padding: 12px; font-weight: bold;">Цель</th>
+                                <th style="padding: 12px; font-weight: bold;">Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px;">Обработанные заявки</td>
+                                <td style="padding: 12px;">0</td>
+                                <td style="padding: 12px;">100</td>
+                                <td style="padding: 12px;">🔴 Не достигнута</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Среднее время обработки</td>
+                                <td style="padding: 12px;">0 часов</td>
+                                <td style="padding: 12px;">24 часа</td>
+                                <td style="padding: 12px;">🟡 В процессе</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Уровень удовлетворенности</td>
+                                <td style="padding: 12px;">0%</td>
+                                <td style="padding: 12px;">95%</td>
+                                <td style="padding: 12px;">🟢 Достигнута</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h2>Производительность команды</h2>
+                    <div class="chart-placeholder" style="background: #f8fafc; border: 2px dashed #6366f1; padding: 40px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                        <h4 style="color: #6366f1; margin: 0;">График производительности</h4>
+                        <p style="color: #64748b; margin: 8px 0 0 0;">Динамика работы команды</p>
+                    </div>
+                    
+                    <h2>Выявленные проблемы</h2>
                     <ul>
-                        <li>Количество обработанных заявок: 0</li>
-                        <li>Среднее время обработки: 0 часов</li>
-                        <li>Коэффициент качества: 0%</li>
+                        <li>Проблема 1: Описание и влияние на операции</li>
+                        <li>Проблема 2: Описание и влияние на операции</li>
+                        <li>Проблема 3: Описание и влияние на операции</li>
                     </ul>
-                    <h2>Проблемы и решения</h2>
-                    <p>Описание выявленных проблем и принятых мер...</p>
+                    
+                    <h2>Принятые меры</h2>
+                    <ol>
+                        <li>Мера 1: Описание предпринятых действий</li>
+                        <li>Мера 2: Описание предпринятых действий</li>
+                        <li>Мера 3: Описание предпринятых действий</li>
+                    </ol>
+                    
+                    <h2>Планы на следующий период</h2>
+                    <p>Описание планов и целей на предстоящий период...</p>
                 `;
                 break;
+                
             case 'analytics':
                 content = `
                     <h1>Аналитический отчет</h1>
-                    <h2>Анализ данных</h2>
-                    <p>Период: ${new Date().toLocaleDateString()}</p>
-                    <h2>Тренды</h2>
-                    <div class="chart-placeholder">[График трендов]</div>
-                    <h2>Выводы</h2>
-                    <p>Основные выводы по результатам анализа...</p>
-                    <h2>Рекомендации</h2>
+                    <div style="margin-bottom: 30px;">
+                        <p><strong>Период анализа:</strong> ${currentDate}</p>
+                        <p><strong>Аналитик:</strong> ${this.currentReport.author}</p>
+                    </div>
+                    
+                    <h2>Цель анализа</h2>
+                    <p>Описание целей и задач проведенного анализа...</p>
+                    
+                    <h2>Методология</h2>
+                    <p>Описание используемых методов и подходов к анализу данных...</p>
+                    
+                    <h2>Источники данных</h2>
                     <ul>
-                        <li>Рекомендация 1</li>
-                        <li>Рекомендация 2</li>
-                        <li>Рекомендация 3</li>
+                        <li>Внутренние системы учета</li>
+                        <li>CRM система</li>
+                        <li>Внешние источники</li>
+                        <li>Опросы и исследования</li>
                     </ul>
+                    
+                    <h2>Ключевые тренды</h2>
+                    <div class="chart-placeholder" style="background: #f8fafc; border: 2px dashed #6366f1; padding: 40px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                        <h4 style="color: #6366f1; margin: 0;">График трендов</h4>
+                        <p style="color: #64748b; margin: 8px 0 0 0;">Основные тенденции развития</p>
+                    </div>
+                    
+                    <h2>Детальный анализ</h2>
+                    <h3>Сегмент A</h3>
+                    <p>Анализ первого сегмента данных...</p>
+                    
+                    <h3>Сегмент B</h3>
+                    <p>Анализ второго сегмента данных...</p>
+                    
+                    <h3>Сегмент C</h3>
+                    <p>Анализ третьего сегмента данных...</p>
+                    
+                    <h2>Выводы</h2>
+                    <ol>
+                        <li><strong>Основной вывод 1:</strong> Описание вывода и его значимости</li>
+                        <li><strong>Основной вывод 2:</strong> Описание вывода и его значимости</li>
+                        <li><strong>Основной вывод 3:</strong> Описание вывода и его значимости</li>
+                    </ol>
+                    
+                    <h2>Рекомендации</h2>
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <thead>
+                            <tr style="background-color: #f5f5f5;">
+                                <th style="padding: 12px; font-weight: bold;">Рекомендация</th>
+                                <th style="padding: 12px; font-weight: bold;">Приоритет</th>
+                                <th style="padding: 12px; font-weight: bold;">Срок реализации</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px;">Рекомендация 1</td>
+                                <td style="padding: 12px;">🔴 Высокий</td>
+                                <td style="padding: 12px;">1 месяц</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Рекомендация 2</td>
+                                <td style="padding: 12px;">🟡 Средний</td>
+                                <td style="padding: 12px;">3 месяца</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Рекомендация 3</td>
+                                <td style="padding: 12px;">🟢 Низкий</td>
+                                <td style="padding: 12px;">6 месяцев</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 `;
                 break;
         }
+        
         this.currentReport.content = content;
+        this.currentReport.type = templateType;
+        this.setEditorContent(content);
+        
+        // Применяем стили темы после загрузки шаблона
+        setTimeout(() => {
+            this.updateEditorTableStyles();
+        }, 100);
     }
 
     onEditorContentChange(event: any): void {
+        // Обновляем только модель, не DOM элемент
+        const newContent = event.target.innerHTML;
+        if (this.currentReport.content !== newContent) {
+            this.currentReport.content = newContent;
+            this.currentReport.updatedDate = new Date();
+        }
+    }
+
+    onEditorInput(event: any): void {
+        // Обработка ввода текста без потери позиции курсора
         this.currentReport.content = event.target.innerHTML;
         this.currentReport.updatedDate = new Date();
     }
@@ -1942,4 +2569,219 @@ export class AdminComponent implements OnInit, OnDestroy {
         facility.showMenu = false;
         console.log('Объект экспортирован:', facility);
     }
+
+    // Методы для работы с курсором
+    saveCaretPosition(): Range | null {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            return selection.getRangeAt(0).cloneRange();
+        }
+        return null;
+    }
+
+    restoreCaretPosition(range: Range): void {
+        if (range) {
+            const selection = window.getSelection();
+            if (selection) {
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+    }
+
+    // Метод для обновления стилей таблиц в редакторе при смене темы
+    updateEditorTableStyles(): void {
+        const editorElement = document.querySelector('.editor-content') as HTMLElement;
+        if (!editorElement) return;
+
+        const tables = editorElement.querySelectorAll('table');
+        
+        tables.forEach(table => {
+            // Обновляем стили таблицы
+            if (this.isDarkTheme) {
+                table.style.background = 'rgba(30, 41, 59, 0.7)';
+                table.style.border = '1px solid rgba(71, 85, 105, 0.4)';
+                table.style.color = '#e2e8f0';
+                
+                // Обновляем заголовки
+                const headers = table.querySelectorAll('th');
+                headers.forEach(th => {
+                    th.style.background = 'rgba(71, 85, 105, 0.8)';
+                    th.style.color = '#f1f5f9';
+                    th.style.border = '1px solid rgba(100, 116, 139, 0.4)';
+                });
+                
+                // Обновляем ячейки
+                const cells = table.querySelectorAll('td');
+                cells.forEach(td => {
+                    // Проверяем, является ли это заголовочной или итоговой строкой
+                    const parentRow = td.parentElement;
+                    const isHeaderRow = parentRow?.querySelector('th') !== null;
+                    const isFirstRow = parentRow === table.querySelector('tr:first-child');
+                    const isLastRow = parentRow === table.querySelector('tr:last-child');
+                    const isBoldRow = parentRow?.style.fontWeight === 'bold' || 
+                                    parentRow?.getAttribute('style')?.includes('font-weight: bold') ||
+                                    parentRow?.getAttribute('style')?.includes('font-weight:bold');
+                    const hasBackgroundStyle = parentRow?.getAttribute('style')?.includes('background');
+                    
+                    if (isHeaderRow || isFirstRow || isLastRow || isBoldRow || hasBackgroundStyle) {
+                        td.style.background = 'rgba(71, 85, 105, 0.7)';
+                        td.style.color = '#f1f5f9';
+                        td.style.fontWeight = 'bold';
+                    } else {
+                        td.style.background = 'rgba(30, 41, 59, 0.5)';
+                        td.style.color = '#e2e8f0';
+                    }
+                    td.style.border = '1px solid rgba(71, 85, 105, 0.4)';
+                });
+            } else {
+                // Возвращаем светлую тему или убираем принудительные стили
+                table.style.removeProperty('background');
+                table.style.removeProperty('border');
+                table.style.removeProperty('color');
+                
+                const headers = table.querySelectorAll('th');
+                headers.forEach(th => {
+                    th.style.removeProperty('background');
+                    th.style.removeProperty('color');
+                    th.style.removeProperty('border');
+                });
+                
+                const cells = table.querySelectorAll('td');
+                cells.forEach(td => {
+                    td.style.removeProperty('background');
+                    td.style.removeProperty('color');
+                    td.style.removeProperty('border');
+                    td.style.removeProperty('font-weight');
+                });
+            }
+        });
+    }
+
+    // ===== МЕТОДЫ ДЛЯ РАБОТЫ С ОТЗЫВАМИ =====
+
+    getPositiveReviewsCount(): number {
+        return this.reviews.filter(review => review.rating >= 4).length;
+    }
+
+    getNegativeReviewsCount(): number {
+        return this.reviews.filter(review => review.rating <= 2).length;
+    }
+
+    getAverageRating(): number {
+        if (this.reviews.length === 0) return 0;
+        const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
+        return Number((sum / this.reviews.length).toFixed(1));
+    }
+
+    getFilteredReviews(): Review[] {
+        let filtered = this.filteredReviews;
+        
+        // Фильтр по рейтингу
+        if (this.selectedReviewRating) {
+            const rating = parseInt(this.selectedReviewRating);
+            filtered = filtered.filter(review => review.rating === rating);
+        }
+        
+        // Фильтр по статусу
+        if (this.selectedReviewStatus) {
+            filtered = filtered.filter(review => (review as any).status === this.selectedReviewStatus);
+        }
+        
+        // Фильтр по периоду
+        if (this.selectedReviewPeriod) {
+            const now = new Date();
+            filtered = filtered.filter(review => {
+                const reviewDate = new Date(review.date);
+                switch (this.selectedReviewPeriod) {
+                    case 'today':
+                        return reviewDate.toDateString() === now.toDateString();
+                    case 'week':
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        return reviewDate >= weekAgo;
+                    case 'month':
+                        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                        return reviewDate >= monthAgo;
+                    default:
+                        return true;
+                }
+            });
+        }
+        
+        return filtered;
+    }
+
+    filterReviewsByRating(): void {
+        // Фильтрация происходит в getFilteredReviews()
+    }
+
+    filterReviewsByDate(): void {
+        // Фильтрация происходит в getFilteredReviews()
+    }
+
+    filterReviewsByStatus(): void {
+        // Фильтрация происходит в getFilteredReviews()
+    }
+
+    // ===== МЕТОДЫ ДЛЯ РАБОТЫ С ОБРАТНОЙ СВЯЗЬЮ =====
+
+    getNewFeedbacksCount(): number {
+        return this.feedbacks.filter(feedback => feedback.status === 'new').length;
+    }
+
+    getInProgressFeedbacksCount(): number {
+        return this.feedbacks.filter(feedback => feedback.status === 'in_progress').length;
+    }
+
+    getResolvedFeedbacksCount(): number {
+        return this.feedbacks.filter(feedback => feedback.status === 'resolved').length;
+    }
+
+    getFilteredFeedbacks(): Feedback[] {
+        let filtered = this.feedbacks;
+        
+        // Фильтр по статусу
+        if (this.selectedFeedbackStatus) {
+            filtered = filtered.filter(feedback => feedback.status === this.selectedFeedbackStatus);
+        }
+        
+        // Фильтр по приоритету
+        if (this.selectedFeedbackPriority) {
+            filtered = filtered.filter(feedback => feedback.priority === this.selectedFeedbackPriority);
+        }
+        
+        return filtered;
+    }
+
+    filterFeedbackByStatus(): void {
+        // Фильтрация происходит в getFilteredFeedbacks()
+    }
+
+    filterFeedbackByPriority(): void {
+        // Фильтрация происходит в getFilteredFeedbacks()
+    }
+
+    useResponseTemplate(): void {
+        const templates = [
+            'Спасибо за ваше обращение! Мы рассмотрим ваш запрос в ближайшее время.',
+            'Благодарим за обратную связь. Наш специалист свяжется с вами в течение рабочего дня.',
+            'Вопрос принят в работу. Мы уведомим вас о результатах рассмотрения.',
+            'Спасибо за доверие к нашей компании. Мы ценим ваше мнение и обязательно учтем его в работе.'
+        ];
+        
+        const selectedTemplate = prompt('Выберите шаблон ответа:\n' + 
+            templates.map((template, index) => `${index + 1}. ${template}`).join('\n\n') + 
+            '\n\nВведите номер шаблона (1-4):');
+        
+        if (selectedTemplate) {
+            const templateIndex = parseInt(selectedTemplate) - 1;
+            if (templateIndex >= 0 && templateIndex < templates.length) {
+                this.newResponse = templates[templateIndex];
+            }
+        }
+    }
+
+    // Добавляем доступ к Math для шаблонов
+    Math = Math;
+    Number = Number;
 }

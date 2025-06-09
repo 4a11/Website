@@ -387,7 +387,7 @@
                 <div class="finances-header">
                     <h3><i class="fas fa-chart-pie"></i> Финансовая отчетность</h3>
                     <div class="finance-period-selector">
-                        <select [(ngModel)]="selectedFinancePeriod" (change)="updateFinanceData()">
+                        <select [value]="selectedFinancePeriod" (change)="selectedFinancePeriod = $any($event.target).value; updateFinanceData()">
                             <option value="today">Сегодня</option>
                             <option value="week">Неделя</option>
                             <option value="month">Месяц</option>
@@ -641,20 +641,20 @@
                         <div class="search-input">
                             <i class="fas fa-search"></i>
                             <input type="text" 
-                                   [(ngModel)]="employeeSearchQuery" 
-                                   (ngModelChange)="onEmployeeSearch($any($event))"
+                                   [value]="employeeSearchQuery" 
+                                   (input)="employeeSearchQuery = $any($event.target).value; onEmployeeSearch($any($event.target).value)"
                                    placeholder="Поиск сотрудников...">
                         </div>
                     </div>
                     <div class="filter-section">
-                        <select [(ngModel)]="selectedDepartment" (change)="filterEmployeesByDepartment()">
+                        <select [value]="selectedDepartment" (change)="selectedDepartment = $any($event.target).value; filterEmployeesByDepartment()">
                             <option value="">Все отделы</option>
                             <option value="Администрация">Администрация</option>
                             <option value="Техническая поддержка">Техническая поддержка</option>
                             <option value="Продажи">Продажи</option>
                             <option value="Маркетинг">Маркетинг</option>
                         </select>
-                        <select [(ngModel)]="selectedEmployeeStatus" (change)="filterEmployeesByStatus()">
+                        <select [value]="selectedEmployeeStatus" (change)="selectedEmployeeStatus = $any($event.target).value; filterEmployeesByStatus()">
                             <option value="">Все статусы</option>
                             <option value="active">Активные</option>
                             <option value="inactive">Неактивные</option>
@@ -846,7 +846,7 @@
                         <div class="facilities-stats">
                             <div class="facilities-stat-item">
                                 <i class="fas fa-building"></i>
-                                <span class="stat-number">{{facilities?.length || 0}}</span>
+                                <span class="stat-number">{{facilities.length || 0}}</span>
                                 <span class="stat-label">Всего</span>
                             </div>
                             <div class="facilities-stat-item">
@@ -882,15 +882,16 @@
                 <!-- Фильтры и поиск -->
                 <div class="facilities-filters">
                     <div class="facilities-search">
+                        <label>Поиск</label>
                         <i class="fas fa-search"></i>
                         <input type="text" 
-                               [(ngModel)]="facilitySearchQuery" 
-                               (ngModelChange)="onFacilitySearch($any($event))"
+                               [value]="facilitySearchQuery" 
+                               (input)="facilitySearchQuery = $any($event.target).value; onFacilitySearch($any($event.target).value)"
                                placeholder="Поиск по названию, адресу или типу...">
                     </div>
                     <div class="facilities-filter-group">
                         <label>Тип</label>
-                        <select [(ngModel)]="selectedFacilityType" (change)="filterFacilitiesByType()">
+                        <select [value]="selectedFacilityType" (change)="selectedFacilityType = $any($event.target).value; filterFacilitiesByType()">
                             <option value="">Все типы</option>
                             <option value="Офис">Офис</option>
                             <option value="Склад">Склад</option>
@@ -900,7 +901,7 @@
                     </div>
                     <div class="facilities-filter-group">
                         <label>Статус</label>
-                        <select [(ngModel)]="selectedFacilityStatus" (change)="filterFacilitiesByStatus()">
+                        <select [value]="selectedFacilityStatus" (change)="selectedFacilityStatus = $any($event.target).value; filterFacilitiesByStatus()">
                             <option value="">Все статусы</option>
                             <option value="active">Активен</option>
                             <option value="inactive">Неактивен</option>
@@ -1142,15 +1143,16 @@
                 <!-- Фильтры и поиск -->
                 <div class="equipment-filters">
                     <div class="equipment-search">
+                        <label>Поиск</label>
                         <i class="fas fa-search"></i>
                         <input type="text" 
-                               [(ngModel)]="equipmentSearchQuery" 
-                               (ngModelChange)="onEquipmentSearch($any($event))"
+                               [value]="equipmentSearchQuery" 
+                               (input)="equipmentSearchQuery = $any($event.target).value; onEquipmentSearch($any($event.target).value)"
                                placeholder="Поиск по названию, типу или местоположению...">
                     </div>
                     <div class="filter-group">
                         <label>Категория</label>
-                        <select [(ngModel)]="selectedEquipmentCategory" (change)="filterEquipmentByCategory()">
+                        <select [value]="selectedEquipmentCategory" (change)="selectedEquipmentCategory = $any($event.target).value; filterEquipmentByCategory()">
                             <option value="">Все категории</option>
                             <option value="Компьютеры">Компьютеры</option>
                             <option value="Принтеры">Принтеры</option>
@@ -1160,7 +1162,7 @@
                     </div>
                     <div class="filter-group">
                         <label>Статус</label>
-                        <select [(ngModel)]="selectedEquipmentStatus" (change)="filterEquipmentByStatus()">
+                        <select [value]="selectedEquipmentStatus" (change)="selectedEquipmentStatus = $any($event.target).value; filterEquipmentByStatus()">
                             <option value="">Все статусы</option>
                             <option value="active">Активно</option>
                             <option value="inactive">Неактивно</option>
@@ -1380,17 +1382,16 @@
                 <!-- Фильтры и поиск -->
                 <div class="news-filters">
                     <div class="news-search">
-                        <div class="search-input">
-                            <i class="fas fa-search"></i>
-                            <input type="text" 
-                                   [(ngModel)]="newsSearchQuery" 
-                                   (ngModelChange)="onNewsSearch($any($event))"
-                                   placeholder="Поиск новостей...">
-                        </div>
+                        <label>Поиск</label>
+                        <i class="fas fa-search"></i>
+                        <input type="text" 
+                               [value]="newsSearchQuery" 
+                               (input)="newsSearchQuery = $any($event.target).value; onNewsSearch($any($event.target).value)"
+                               placeholder="Поиск новостей...">
                     </div>
                     <div class="filter-group">
-                        <label>Автор:</label>
-                        <select [(ngModel)]="selectedNewsAuthor" (change)="filterNewsByAuthor()">
+                        <label>Автор</label>
+                        <select [value]="selectedNewsAuthor" (change)="selectedNewsAuthor = $any($event.target).value; filterNewsByAuthor()">
                             <option value="">Все авторы</option>
                             <option value="Администратор">Администратор</option>
                             <option value="Редактор">Редактор</option>
@@ -1398,8 +1399,8 @@
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label>Период:</label>
-                        <select [(ngModel)]="selectedNewsPeriod" (change)="filterNewsByPeriod()">
+                        <label>Период</label>
+                        <select [value]="selectedNewsPeriod" (change)="selectedNewsPeriod = $any($event.target).value; filterNewsByPeriod()">
                             <option value="">Все время</option>
                             <option value="today">Сегодня</option>
                             <option value="week">Неделя</option>
@@ -1571,20 +1572,20 @@
                         <div class="search-input">
                             <i class="fas fa-search"></i>
                             <input type="text" 
-                                   [(ngModel)]="reportSearchQuery" 
-                                   (ngModelChange)="onReportSearch($any($event))"
+                                   [value]="reportSearchQuery" 
+                                   (input)="reportSearchQuery = $any($event.target).value; onReportSearch($any($event.target).value)"
                                    placeholder="Поиск отчетов...">
                         </div>
                     </div>
                     <div class="filter-section">
-                        <select [(ngModel)]="selectedReportType" (change)="filterReportsByType()">
+                        <select [value]="selectedReportType" (change)="selectedReportType = $any($event.target).value; filterReportsByType()">
                             <option value="">Все типы</option>
                             <option value="financial">Финансовые</option>
                             <option value="operational">Операционные</option>
                             <option value="maintenance">Обслуживание</option>
                             <option value="analytics">Аналитика</option>
                         </select>
-                        <select [(ngModel)]="selectedReportStatus" (change)="filterReportsByStatus()">
+                        <select [value]="selectedReportStatus" (change)="selectedReportStatus = $any($event.target).value; filterReportsByStatus()">
                             <option value="">Все статусы</option>
                             <option value="draft">Черновик</option>
                             <option value="published">Опубликован</option>
@@ -1720,14 +1721,18 @@
                         <div class="editor-header">
                             <div class="editor-title">
                                 <input type="text" 
-                                       [(ngModel)]="currentReport.title" 
+                                       [value]="currentReport.title" 
                                        placeholder="Название отчета..."
                                        class="title-input">
                             </div>
                             <div class="editor-toolbar">
                                 <div class="toolbar-group">
-                                    <button class="toolbar-btn" (click)="saveReport()" title="Сохранить">
-                                        <i class="fas fa-save"></i>
+                                    <button class="toolbar-btn" 
+                                            (click)="saveReport()" 
+                                            [disabled]="editorState.isSaving"
+                                            title="Сохранить">
+                                        <i class="fas fa-save" *ngIf="!editorState.isSaving"></i>
+                                        <i class="fas fa-spinner fa-spin" *ngIf="editorState.isSaving"></i>
                                     </button>
                                     <button class="toolbar-btn" (click)="previewReport()" title="Предварительный просмотр">
                                         <i class="fas fa-eye"></i>
@@ -1735,19 +1740,34 @@
                                     <button class="toolbar-btn" (click)="exportReport()" title="Экспорт">
                                         <i class="fas fa-file-export"></i>
                                     </button>
+                                    <button class="toolbar-btn" 
+                                            (click)="undo()" 
+                                            [disabled]="editorState.undoStack.length === 0"
+                                            title="Отменить">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+                                    <button class="toolbar-btn" 
+                                            (click)="redo()" 
+                                            [disabled]="editorState.redoStack.length === 0"
+                                            title="Повторить">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
                                 </div>
                                 <div class="toolbar-group">
-                                    <select [(ngModel)]="currentReport.type" class="type-select">
+                                    <select [value]="currentReport.type" class="type-select">
                                         <option value="financial">Финансовый</option>
                                         <option value="operational">Операционный</option>
                                         <option value="maintenance">Обслуживание</option>
                                         <option value="analytics">Аналитика</option>
                                     </select>
-                                    <select [(ngModel)]="currentReport.status" class="status-select">
+                                    <select [value]="currentReport.status" class="status-select">
                                         <option value="draft">Черновик</option>
                                         <option value="published">Опубликован</option>
                                         <option value="archived">В архиве</option>
                                     </select>
+                                </div>
+                                <div class="save-status" *ngIf="editorState.lastSaved">
+                                    <small>Сохранено: {{editorState.lastSaved | date:'HH:mm:ss'}}</small>
                                 </div>
                             </div>
                         </div>
@@ -1755,8 +1775,9 @@
                         <div class="editor-workspace">
                             <!-- Панель инструментов редактора -->
                             <div class="editor-tools">
+                                <!-- Группа: Основное форматирование -->
                                 <div class="tools-section">
-                                    <h5>Форматирование</h5>
+                                    <h5>📝 Текст</h5>
                                     <div class="tool-buttons">
                                         <button (click)="formatText('bold')" title="Жирный">
                                             <i class="fas fa-bold"></i>
@@ -1772,9 +1793,67 @@
                                         </button>
                                     </div>
                                 </div>
-                                
+
+                                <!-- Группа: Выравнивание -->
                                 <div class="tools-section">
-                                    <h5>Элементы</h5>
+                                    <h5>📐 Выравнивание</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="formatText('justifyLeft')" title="По левому краю">
+                                            <i class="fas fa-align-left"></i>
+                                        </button>
+                                        <button (click)="formatText('justifyCenter')" title="По центру">
+                                            <i class="fas fa-align-center"></i>
+                                        </button>
+                                        <button (click)="formatText('justifyRight')" title="По правому краю">
+                                            <i class="fas fa-align-right"></i>
+                                        </button>
+                                        <button (click)="formatText('justifyFull')" title="По ширине">
+                                            <i class="fas fa-align-justify"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Группа: Цвета и стили -->
+                                <div class="tools-section">
+                                    <h5>🎨 Стили</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="formatText('foreColor', '#000000')" title="Цвет текста">
+                                            <i class="fas fa-paint-brush"></i>
+                                        </button>
+                                        <button (click)="formatText('backColor', '#ffff00')" title="Фон текста">
+                                            <i class="fas fa-highlighter"></i>
+                                        </button>
+                                        <button (click)="formatText('fontSize', '18')" title="Увеличить шрифт">
+                                            <i class="fas fa-text-height"></i>
+                                        </button>
+                                        <button (click)="formatText('removeFormat')" title="Очистить форматирование">
+                                            <i class="fas fa-eraser"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Группа: Списки -->
+                                <div class="tools-section">
+                                    <h5>📋 Списки</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="formatText('insertUnorderedList')" title="Маркированный список">
+                                            <i class="fas fa-list-ul"></i>
+                                        </button>
+                                        <button (click)="formatText('insertOrderedList')" title="Нумерованный список">
+                                            <i class="fas fa-list-ol"></i>
+                                        </button>
+                                        <button (click)="formatText('indent')" title="Увеличить отступ">
+                                            <i class="fas fa-indent"></i>
+                                        </button>
+                                        <button (click)="formatText('outdent')" title="Уменьшить отступ">
+                                            <i class="fas fa-outdent"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Группа: Таблицы и данные -->
+                                <div class="tools-section">
+                                    <h5>📊 Таблицы</h5>
                                     <div class="tool-buttons">
                                         <button (click)="insertElement('table')" title="Таблица">
                                             <i class="fas fa-table"></i>
@@ -1782,17 +1861,75 @@
                                         <button (click)="insertElement('chart')" title="График">
                                             <i class="fas fa-chart-bar"></i>
                                         </button>
-                                        <button (click)="insertElement('image')" title="Изображение">
-                                            <i class="fas fa-image"></i>
+                                        <button (click)="insertElement('chart')" title="Круговая диаграмма">
+                                            <i class="fas fa-chart-pie"></i>
                                         </button>
-                                        <button (click)="insertElement('list')" title="Список">
-                                            <i class="fas fa-list"></i>
+                                        <button (click)="insertElement('chart')" title="Линейный график">
+                                            <i class="fas fa-chart-line"></i>
                                         </button>
                                     </div>
                                 </div>
 
+                                <!-- Группа: Медиа контент -->
                                 <div class="tools-section">
-                                    <h5>Шаблоны</h5>
+                                    <h5>🖼️ Медиа</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="insertElement('image')" title="Изображение">
+                                            <i class="fas fa-image"></i>
+                                        </button>
+                                        <button (click)="insertElement('link')" title="Ссылка">
+                                            <i class="fas fa-link"></i>
+                                        </button>
+                                        <button (click)="insertElement('video')" title="Видео">
+                                            <i class="fas fa-video"></i>
+                                        </button>
+                                        <button (click)="insertElement('file')" title="Файл">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Группа: Разделители -->
+                                <div class="tools-section">
+                                    <h5>➖ Структура</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="insertElement('hr')" title="Горизонтальная линия">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button (click)="insertElement('pageBreak')" title="Разрыв страницы">
+                                            <i class="fas fa-file-medical"></i>
+                                        </button>
+                                        <button (click)="formatText('insertParagraph')" title="Новый абзац">
+                                            <i class="fas fa-paragraph"></i>
+                                        </button>
+                                        <button (click)="formatText('insertLineBreak')" title="Перенос строки">
+                                            <i class="fas fa-level-down-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Группа: Действия -->
+                                <div class="tools-section">
+                                    <h5>⚡ Действия</h5>
+                                    <div class="tool-buttons">
+                                        <button (click)="undo()" title="Отменить" [disabled]="editorState.undoStack.length === 0">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                        <button (click)="redo()" title="Повторить" [disabled]="editorState.redoStack.length === 0">
+                                            <i class="fas fa-redo"></i>
+                                        </button>
+                                        <button (click)="formatText('selectAll')" title="Выделить все">
+                                            <i class="fas fa-select-all"></i>
+                                        </button>
+                                        <button (click)="clearCalculation()" title="Очистить все">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Группа: Шаблоны -->
+                                <div class="tools-section">
+                                    <h5>📄 Шаблоны</h5>
                                     <div class="template-buttons">
                                         <button (click)="loadTemplate('financial')" class="template-btn">
                                             <i class="fas fa-chart-line"></i>
@@ -1806,6 +1943,10 @@
                                             <i class="fas fa-chart-bar"></i>
                                             Аналитика
                                         </button>
+                                        <button (click)="loadTemplate('maintenance')" class="template-btn">
+                                            <i class="fas fa-tools"></i>
+                                            Техническое обслуживание
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -1814,10 +1955,86 @@
                             <div class="editor-main">
                                 <div class="editor-content" 
                                      contenteditable="true" 
-                                     [(ngModel)]="currentReport.content"
-                                     (input)="onEditorContentChange($event)"
-                                     [innerHTML]="currentReport.content">
+                                     (input)="onEditorInput($event)"
+                                     (focus)="onEditorFocus()"
+                                     (blur)="onEditorBlur()"
+                                     placeholder="Начните писать отчет...">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Диалог создания таблицы -->
+                    <div *ngIf="tableEditor.showTableDialog" class="modal-overlay" (click)="tableEditor.showTableDialog = false">
+                        <div class="modal-content table-dialog" (click)="$event.stopPropagation()">
+                            <div class="modal-header">
+                                <h4>Вставить таблицу</h4>
+                                <button class="close-btn" (click)="tableEditor.showTableDialog = false">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Количество строк:</label>
+                                    <input type="number" [value]="tableEditor.rows" min="1" max="20">
+                                </div>
+                                <div class="form-group">
+                                    <label>Количество столбцов:</label>
+                                    <input type="number" [value]="tableEditor.cols" min="1" max="10">
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" [checked]="tableEditor.hasHeaders">
+                                        Добавить заголовки
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" (click)="tableEditor.showTableDialog = false">Отмена</button>
+                                <button class="btn btn-primary" (click)="insertTable()">Вставить</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Диалог вставки изображения -->
+                    <div *ngIf="imageUpload.showImageDialog" class="modal-overlay" (click)="imageUpload.showImageDialog = false">
+                        <div class="modal-content image-dialog" (click)="$event.stopPropagation()">
+                            <div class="modal-header">
+                                <h4>Вставить изображение</h4>
+                                <button class="close-btn" (click)="imageUpload.showImageDialog = false">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>URL изображения:</label>
+                                    <input type="url" [value]="imageUpload.imageUrl" placeholder="https://example.com/image.jpg">
+                                </div>
+                                <div class="form-group">
+                                    <label>Альтернативный текст:</label>
+                                    <input type="text" [value]="imageUpload.imageAlt" placeholder="Описание изображения">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Ширина (px):</label>
+                                        <input type="number" [value]="imageUpload.imageWidth" min="50" max="800">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Высота (px):</label>
+                                        <input type="number" [value]="imageUpload.imageHeight" min="50" max="600">
+                                    </div>
+                                </div>
+                                <div class="image-preview" *ngIf="imageUpload.imageUrl">
+                                    <img [src]="imageUpload.imageUrl" 
+                                         [alt]="imageUpload.imageAlt"
+                                         [style.width.px]="imageUpload.imageWidth"
+                                         [style.height.px]="imageUpload.imageHeight"
+                                         style="max-width: 100%; border: 1px solid #ddd;">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" (click)="imageUpload.showImageDialog = false">Отмена</button>
+                                <button class="btn btn-primary" (click)="insertImage()" [disabled]="!imageUpload.imageUrl">Вставить</button>
                             </div>
                         </div>
                     </div>
@@ -1878,15 +2095,15 @@
                         <div *ngIf="selectedCalculationType === 'cost'" class="calculation-form">
                             <div class="form-group">
                                 <label>Площадь (м²):</label>
-                                <input type="number" [(ngModel)]="calculatorData.cost.area" placeholder="Введите площадь">
+                                <input type="number" [value]="calculatorData.cost.area" placeholder="Введите площадь">
                             </div>
                             <div class="form-group">
                                 <label>Стоимость за м² (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.cost.pricePerSquare" placeholder="Введите стоимость">
+                                <input type="number" [value]="calculatorData.cost.pricePerSquare" placeholder="Введите стоимость">
                             </div>
                             <div class="form-group">
                                 <label>Коэффициент сложности:</label>
-                                <select [(ngModel)]="calculatorData.cost.complexityFactor">
+                                <select [value]="calculatorData.cost.complexityFactor">
                                     <option value="1">Простой (1.0)</option>
                                     <option value="1.2">Средний (1.2)</option>
                                     <option value="1.5">Сложный (1.5)</option>
@@ -1895,7 +2112,7 @@
                             </div>
                             <div class="form-group">
                                 <label>НДС (%):</label>
-                                <input type="number" [(ngModel)]="calculatorData.cost.vat" placeholder="20" value="20">
+                                <input type="number" [value]="calculatorData.cost.vat" placeholder="20" value="20">
                             </div>
                             <button class="calc-btn" (click)="calculateCost()">
                                 <i class="fas fa-calculator"></i>
@@ -1907,19 +2124,19 @@
                         <div *ngIf="selectedCalculationType === 'efficiency'" class="calculation-form">
                             <div class="form-group">
                                 <label>Доходы (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.efficiency.income" placeholder="Введите доходы">
+                                <input type="number" [value]="calculatorData.efficiency.income" placeholder="Введите доходы">
                             </div>
                             <div class="form-group">
                                 <label>Расходы (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.efficiency.expenses" placeholder="Введите расходы">
+                                <input type="number" [value]="calculatorData.efficiency.expenses" placeholder="Введите расходы">
                             </div>
                             <div class="form-group">
                                 <label>Инвестиции (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.efficiency.investments" placeholder="Введите инвестиции">
+                                <input type="number" [value]="calculatorData.efficiency.investments" placeholder="Введите инвестиции">
                             </div>
                             <div class="form-group">
                                 <label>Период (месяцев):</label>
-                                <input type="number" [(ngModel)]="calculatorData.efficiency.period" placeholder="12" value="12">
+                                <input type="number" [value]="calculatorData.efficiency.period" placeholder="12" value="12">
                             </div>
                             <button class="calc-btn" (click)="calculateEfficiency()">
                                 <i class="fas fa-chart-line"></i>
@@ -1931,19 +2148,19 @@
                         <div *ngIf="selectedCalculationType === 'maintenance'" class="calculation-form">
                             <div class="form-group">
                                 <label>Количество оборудования:</label>
-                                <input type="number" [(ngModel)]="calculatorData.maintenance.equipmentCount" placeholder="Введите количество">
+                                <input type="number" [value]="calculatorData.maintenance.equipmentCount" placeholder="Введите количество">
                             </div>
                             <div class="form-group">
                                 <label>Стоимость обслуживания за единицу (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.maintenance.costPerUnit" placeholder="Введите стоимость">
+                                <input type="number" [value]="calculatorData.maintenance.costPerUnit" placeholder="Введите стоимость">
                             </div>
                             <div class="form-group">
                                 <label>Периодичность (дней):</label>
-                                <input type="number" [(ngModel)]="calculatorData.maintenance.frequency" placeholder="30" value="30">
+                                <input type="number" [value]="calculatorData.maintenance.frequency" placeholder="30" value="30">
                             </div>
                             <div class="form-group">
                                 <label>Тип обслуживания:</label>
-                                <select [(ngModel)]="calculatorData.maintenance.maintenanceType">
+                                <select [value]="calculatorData.maintenance.maintenanceType">
                                     <option value="preventive">Профилактическое</option>
                                     <option value="corrective">Корректирующее</option>
                                     <option value="emergency">Экстренное</option>
@@ -1959,31 +2176,31 @@
                         <div *ngIf="selectedCalculationType === 'technical'" class="calculation-form">
                             <div class="form-group">
                                 <label>Количество камер:</label>
-                                <input type="number" [(ngModel)]="calculatorData.technical.cameraCount" placeholder="Введите количество камер">
+                                <input type="number" [value]="calculatorData.technical.cameraCount" placeholder="Введите количество камер">
                             </div>
                             <div class="form-group">
                                 <label>Стоимость одной камеры (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.technical.cameraPrice" placeholder="Введите стоимость камеры">
+                                <input type="number" [value]="calculatorData.technical.cameraPrice" placeholder="Введите стоимость камеры">
                             </div>
                             <div class="form-group">
                                 <label>Количество серверов:</label>
-                                <input type="number" [(ngModel)]="calculatorData.technical.serverCount" placeholder="Введите количество серверов">
+                                <input type="number" [value]="calculatorData.technical.serverCount" placeholder="Введите количество серверов">
                             </div>
                             <div class="form-group">
                                 <label>Стоимость одного сервера (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.technical.serverPrice" placeholder="Введите стоимость сервера">
+                                <input type="number" [value]="calculatorData.technical.serverPrice" placeholder="Введите стоимость сервера">
                             </div>
                             <div class="form-group">
                                 <label>Длина провода (м):</label>
-                                <input type="number" [(ngModel)]="calculatorData.technical.cableLength" placeholder="Введите длину провода">
+                                <input type="number" [value]="calculatorData.technical.cableLength" placeholder="Введите длину провода">
                             </div>
                             <div class="form-group">
                                 <label>Стоимость провода за метр (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.technical.cablePricePerMeter" placeholder="Введите стоимость за метр">
+                                <input type="number" [value]="calculatorData.technical.cablePricePerMeter" placeholder="Введите стоимость за метр">
                             </div>
                             <div class="form-group">
                                 <label>Тип инсталляции:</label>
-                                <select [(ngModel)]="calculatorData.technical.installationType">
+                                <select [value]="calculatorData.technical.installationType" (change)="calculatorData.technical.installationType = $any($event.target).value">
                                     <option value="basic">Базовая установка</option>
                                     <option value="professional">Профессиональная установка</option>
                                     <option value="premium">Премиум установка</option>
@@ -1991,7 +2208,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Стоимость работ (₽):</label>
-                                <input type="number" [(ngModel)]="calculatorData.technical.installationCost" placeholder="Введите стоимость работ">
+                                <input type="number" [value]="calculatorData.technical.installationCost" (input)="calculatorData.technical.installationCost = Number($any($event.target).value)" placeholder="Введите стоимость работ">
                             </div>
                             <button class="calc-btn" (click)="calculateTechnical()">
                                 <i class="fas fa-video"></i>
@@ -2035,8 +2252,8 @@
                         <div class="search-box">
                             <i class="fas fa-search"></i>
                             <input type="text" 
-                                   [(ngModel)]="calculationSearchQuery" 
-                                   (ngModelChange)="onCalculationSearch($any($event))"
+                                   [value]="calculationSearchQuery" 
+                                   (input)="calculationSearchQuery = $any($event.target).value; onCalculationSearch($any($event.target).value)"
                                    placeholder="Поиск по названию или типу...">
                         </div>
                     </div>
@@ -2093,79 +2310,322 @@
         </div>
 
         <!-- Раздел отзывов -->
-        <div *ngIf="currentSection === 'reviews'" class="feedback-container">
-            <div class="feedback-list">
-                <div class="feedback-item" *ngFor="let feedback of feedbacks" 
-                     [class.active]="selectedFeedback?.id === feedback.id"
-                     (click)="onSelectFeedback(feedback)">
-                    <div class="feedback-header">
-                        <div class="feedback-info">
-                            <h4>{{feedback.subject}}</h4>
-                            <span class="author">{{feedback.author}}</span>
-                        </div>
-                        <div class="feedback-meta">
-                            <span class="date">{{feedback.date | date:'d MMMM yyyy'}}</span>
-                            <span class="status" [ngClass]="feedback.status">
-                                {{feedback.status === 'new' ? 'Новое' : 
-                                  feedback.status === 'in_progress' ? 'В работе' : 
-                                  feedback.status === 'resolved' ? 'Решено' : 'Закрыто'}}
-                            </span>
-                            <span class="priority" [ngClass]="feedback.priority">
-                                {{feedback.priority === 'high' ? 'Высокий' : 
-                                  feedback.priority === 'medium' ? 'Средний' : 'Низкий'}}
-                            </span>
-                        </div>
-                    </div>
-                    <p class="message">{{feedback.message}}</p>
-                </div>
-            </div>
-            
-            <div class="feedback-detail" *ngIf="selectedFeedback">
-                <div class="feedback-detail-header">
-                    <h3>{{selectedFeedback.subject}}</h3>
-                    <div class="feedback-actions">
-                        <button class="action-btn" [ngClass]="selectedFeedback.status"
-                                (click)="onUpdateStatus(selectedFeedback)">
-                            {{selectedFeedback.status === 'new' ? 'Взять в работу' : 
-                              selectedFeedback.status === 'in_progress' ? 'Решено' : 
-                              selectedFeedback.status === 'resolved' ? 'Закрыть' : 'Открыть'}}
-                        </button>
-                        <button class="action-btn delete" (click)="onDeleteFeedback(selectedFeedback)">
-                            <i class="fas fa-trash"></i>
-                        </button>
+        <div *ngIf="currentSection === 'reviews'">
+            <div class="reviews-container">
+                <div class="reviews-header">
+                    <h3>📝 Отзывы клиентов</h3>
+                    <div class="reviews-header-info">
+                        <p>Управление отзывами от клиентов</p>
                     </div>
                 </div>
-                
-                <div class="feedback-messages">
-                    <div class="message user">
-                        <div class="message-header">
-                            <span class="author">{{selectedFeedback.author}}</span>
-                            <span class="date">{{selectedFeedback.date | date:'d MMMM yyyy, HH:mm'}}</span>
+
+                <!-- Статистика отзывов -->
+                <div class="reviews-stats">
+                    <div class="review-stat-card total">
+                        <div class="review-rating-display">
+                            <div class="review-rating-number">{{reviews.length}}</div>
                         </div>
-                        <div class="message-content">
-                            {{selectedFeedback.message}}
-                        </div>
+                        <div class="review-stat-label">Всего отзывов</div>
                     </div>
                     
-                    <div class="message admin" *ngFor="let response of selectedFeedback.responses">
-                        <div class="message-header">
-                            <span class="author">{{response.author}}</span>
-                            <span class="date">{{response.date | date:'d MMMM yyyy, HH:mm'}}</span>
+                    <div class="review-stat-card positive">
+                        <div class="review-rating-display">
+                            <div class="review-stars">
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                            </div>
+                            <div class="review-rating-number">{{getPositiveReviewsCount()}}</div>
                         </div>
-                        <div class="message-content">
-                            {{response.message}}
+                        <div class="review-stat-label">Положительных (4-5★)</div>
+                    </div>
+                    
+                    <div class="review-stat-card negative">
+                        <div class="review-rating-display">
+                            <div class="review-stars">
+                                <span class="review-star">★</span>
+                                <span class="review-star">★</span>
+                                <span class="review-star empty">★</span>
+                                <span class="review-star empty">★</span>
+                                <span class="review-star empty">★</span>
+                            </div>
+                            <div class="review-rating-number">{{getNegativeReviewsCount()}}</div>
+                        </div>
+                        <div class="review-stat-label">Негативных (1-2★)</div>
+                    </div>
+                    
+                    <div class="review-stat-card average">
+                        <div class="review-rating-display">
+                            <div class="review-rating-number">{{getAverageRating()}}</div>
+                            <div class="review-stars">
+                                <span class="review-star" *ngFor="let star of [].constructor(Math.floor(getAverageRating()))">★</span>
+                                <span class="review-star empty" *ngFor="let star of [].constructor(5 - Math.floor(getAverageRating()))">★</span>
+                            </div>
+                        </div>
+                        <div class="review-stat-label">Средняя оценка</div>
+                    </div>
+                </div>
+
+                <!-- Список отзывов -->
+                <div class="reviews-list">
+                    <div class="reviews-filters">
+                        <div class="rating-filter">
+                            <select [value]="selectedReviewRating" (change)="selectedReviewRating = $any($event.target).value; filterReviewsByRating()">
+                                <option value="">Все оценки</option>
+                                <option value="5">5 звезд</option>
+                                <option value="4">4 звезды</option>
+                                <option value="3">3 звезды</option>
+                                <option value="2">2 звезды</option>
+                                <option value="1">1 звезда</option>
+                            </select>
+                        </div>
+                        <div class="date-filter">
+                            <select [value]="selectedReviewPeriod" (change)="selectedReviewPeriod = $any($event.target).value; filterReviewsByDate()">
+                                <option value="">Все время</option>
+                                <option value="today">Сегодня</option>
+                                <option value="week">За неделю</option>
+                                <option value="month">За месяц</option>
+                            </select>
+                        </div>
+                        <div class="status-filter">
+                            <select [value]="selectedReviewStatus" (change)="selectedReviewStatus = $any($event.target).value; filterReviewsByStatus()">
+                                <option value="">Все статусы</option>
+                                <option value="pending">На модерации</option>
+                                <option value="approved">Одобрено</option>
+                                <option value="rejected">Отклонено</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="review-item" *ngFor="let review of getFilteredReviews()">
+                        <div class="review-header">
+                            <div class="review-author">
+                                <div class="review-avatar">{{review.author.charAt(0).toUpperCase()}}</div>
+                                <div class="review-author-info">
+                                    <h5>{{review.author}}</h5>
+                                    <div class="review-date">{{review.date | date:'d MMMM yyyy, HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="review-rating-display">
+                                <div class="review-stars">
+                                    <span class="review-star" *ngFor="let star of [].constructor(review.rating)">★</span>
+                                    <span class="review-star empty" *ngFor="let star of [].constructor(5 - review.rating)">★</span>
+                                </div>
+                                <span class="review-status" [ngClass]="review.status">
+                                    {{review.status === 'pending' ? 'На модерации' : 
+                                      review.status === 'approved' ? 'Одобрено' : 'Отклонено'}}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="review-content">{{review.content}}</div>
+                        
+                        <div class="review-actions" *ngIf="review.status === 'pending'">
+                            <button class="review-action-btn approve" (click)="onApproveReview(review)">
+                                <i class="fas fa-check"></i> Одобрить
+                            </button>
+                            <button class="review-action-btn reject" (click)="onRejectReview(review)">
+                                <i class="fas fa-times"></i> Отклонить
+                            </button>
+                            <button class="review-action-btn respond" (click)="onAddResponse(review)">
+                                <i class="fas fa-reply"></i> Ответить
+                            </button>
+                        </div>
+                        
+                        <div class="review-response" *ngIf="review.response">
+                            <div class="response-header">
+                                <strong>Ответ администратора:</strong>
+                            </div>
+                            <div class="response-content">{{review.response}}</div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="feedback-response">
-                    <textarea [(ngModel)]="newResponse" 
-                              placeholder="Введите ваш ответ..."
-                              rows="3"></textarea>
-                    <button class="send-btn" (click)="onSendResponse()">
-                        <i class="fas fa-paper-plane"></i>
-                        Отправить
-                    </button>
+            </div>
+        </div>
+
+        <!-- Раздел обратной связи -->
+        <div *ngIf="currentSection === 'feedback'">
+            <div class="feedback-container">
+                <div class="feedback-header">
+                    <h3>💬 Обратная связь</h3>
+                    <div class="feedback-header-info">
+                        <p>Управление сообщениями от клиентов</p>
+                    </div>
+                </div>
+
+                <!-- Статистика обратной связи -->
+                <div class="feedback-stats">
+                    <div class="feedback-stat-card new">
+                        <div class="stat-icon">📩</div>
+                        <div class="stat-number">{{getNewFeedbacksCount()}}</div>
+                        <div class="stat-label">Новых сообщений</div>
+                    </div>
+                    
+                    <div class="feedback-stat-card in-progress">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-number">{{getInProgressFeedbacksCount()}}</div>
+                        <div class="stat-label">В работе</div>
+                    </div>
+                    
+                    <div class="feedback-stat-card resolved">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-number">{{getResolvedFeedbacksCount()}}</div>
+                        <div class="stat-label">Решенных</div>
+                    </div>
+                    
+                    <div class="feedback-stat-card total">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-number">{{feedbacks.length}}</div>
+                        <div class="stat-label">Всего обращений</div>
+                    </div>
+                </div>
+
+                <!-- Макет с двумя панелями -->
+                <div class="feedback-layout">
+                    <!-- Левая панель - список сообщений -->
+                    <div class="feedback-list">
+                        <div class="feedback-filters">
+                            <select [value]="selectedFeedbackStatus" (change)="selectedFeedbackStatus = $any($event.target).value; filterFeedbackByStatus()">
+                                <option value="">Все статусы</option>
+                                <option value="new">Новые</option>
+                                <option value="in_progress">В работе</option>
+                                <option value="resolved">Решенные</option>
+                                <option value="closed">Закрытые</option>
+                            </select>
+                            <select [value]="selectedFeedbackPriority" (change)="selectedFeedbackPriority = $any($event.target).value; filterFeedbackByPriority()">
+                                <option value="">Все приоритеты</option>
+                                <option value="high">Высокий</option>
+                                <option value="medium">Средний</option>
+                                <option value="low">Низкий</option>
+                            </select>
+                        </div>
+
+                        <div class="feedback-item" *ngFor="let feedback of getFilteredFeedbacks()" 
+                             [class.active]="selectedFeedback?.id === feedback.id"
+                             (click)="onSelectFeedback(feedback)">
+                            <div class="feedback-item-header">
+                                <div class="feedback-author-info">
+                                    <div class="feedback-avatar">{{feedback.author.charAt(0).toUpperCase()}}</div>
+                                    <div class="feedback-details">
+                                        <h5>{{feedback.author}}</h5>
+                                        <p class="feedback-email">{{feedback.email}}</p>
+                                        <p class="feedback-phone">{{feedback.phone}}</p>
+                                    </div>
+                                </div>
+                                <div class="feedback-meta">
+                                    <span class="feedback-date">{{feedback.date | date:'d MMM'}}</span>
+                                    <span class="feedback-status" [ngClass]="feedback.status">
+                                        {{feedback.status === 'new' ? 'Новое' : 
+                                          feedback.status === 'in_progress' ? 'В работе' : 
+                                          feedback.status === 'resolved' ? 'Решено' : 'Закрыто'}}
+                                    </span>
+                                    <span class="feedback-priority" [ngClass]="feedback.priority">
+                                        {{feedback.priority === 'high' ? '🔴' : 
+                                          feedback.priority === 'medium' ? '🟡' : '🟢'}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="feedback-subject">{{feedback.subject}}</div>
+                            <div class="feedback-preview">{{feedback.message.substring(0, 100)}}...</div>
+                        </div>
+                    </div>
+
+                    <!-- Правая панель - детали сообщения -->
+                    <div class="feedback-detail" *ngIf="selectedFeedback">
+                        <div class="feedback-detail-header">
+                            <div class="feedback-detail-title">
+                                <h3>{{selectedFeedback.subject}}</h3>
+                                <div class="feedback-detail-meta">
+                                    <span class="author">{{selectedFeedback.author}}</span>
+                                    <span class="date">{{selectedFeedback.date | date:'d MMMM yyyy, HH:mm'}}</span>
+                                    <span class="status" [ngClass]="selectedFeedback.status">
+                                        {{selectedFeedback.status === 'new' ? 'Новое' : 
+                                          selectedFeedback.status === 'in_progress' ? 'В работе' : 
+                                          selectedFeedback.status === 'resolved' ? 'Решено' : 'Закрыто'}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="feedback-actions">
+                                <button class="action-btn primary" 
+                                        (click)="onUpdateStatus(selectedFeedback)">
+                                    {{selectedFeedback.status === 'new' ? '⏳ Взять в работу' : 
+                                      selectedFeedback.status === 'in_progress' ? '✅ Решено' : 
+                                      selectedFeedback.status === 'resolved' ? '🔒 Закрыть' : '🔄 Открыть'}}
+                                </button>
+                                <button class="action-btn danger" 
+                                        (click)="onDeleteFeedback(selectedFeedback)">
+                                    <i class="fas fa-trash"></i> Удалить
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Контактная информация -->
+                        <div class="feedback-contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{selectedFeedback.email}}</span>
+                                <a [href]="'mailto:' + selectedFeedback.email" class="contact-link">Написать</a>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>{{selectedFeedback.phone}}</span>
+                                <a [href]="'tel:' + selectedFeedback.phone" class="contact-link">Позвонить</a>
+                            </div>
+                        </div>
+
+                        <!-- Сообщения -->
+                        <div class="feedback-messages">
+                            <div class="message user">
+                                <div class="message-header">
+                                    <span class="message-author">{{selectedFeedback.author}}</span>
+                                    <span class="message-date">{{selectedFeedback.date | date:'d MMMM yyyy, HH:mm'}}</span>
+                                </div>
+                                <div class="message-content">{{selectedFeedback.message}}</div>
+                            </div>
+                            
+                            <div class="message admin" *ngFor="let response of selectedFeedback.responses">
+                                <div class="message-header">
+                                    <span class="message-author">{{response.author}}</span>
+                                    <span class="message-date">{{response.date | date:'d MMMM yyyy, HH:mm'}}</span>
+                                    <span class="admin-badge">Администратор</span>
+                                </div>
+                                <div class="message-content">{{response.message}}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Поле для ответа -->
+                        <div class="feedback-response">
+                            <div class="response-header">
+                                <i class="fas fa-reply"></i>
+                                <span>Ответить клиенту</span>
+                            </div>
+                            <textarea ngModel="{{newResponse}}" 
+                                      (input)="newResponse = $any($event.target).value"
+                                      placeholder="Введите ваш ответ клиенту..."
+                                      rows="4"></textarea>
+                            <div class="response-actions">
+                                <button class="send-btn" (click)="onSendResponse()" [disabled]="!newResponse || !newResponse.trim()">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Отправить ответ
+                                </button>
+                                <button class="template-btn" (click)="useResponseTemplate()">
+                                    <i class="fas fa-file-alt"></i>
+                                    Использовать шаблон
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Плейсхолдер когда не выбрано сообщение -->
+                    <div class="feedback-placeholder" *ngIf="!selectedFeedback">
+                        <div class="placeholder-content">
+                            <i class="fas fa-comments placeholder-icon"></i>
+                            <h3>Выберите сообщение</h3>
+                            <p>Выберите сообщение из списка слева для просмотра деталей и ответа клиенту</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2195,15 +2655,13 @@
                                 </div>
                                 <div class="setting-control">
                                     <ng-container [ngSwitch]="typeof setting.value">
-                                        <select *ngSwitchCase="'string'" 
-                                                [(ngModel)]="setting.value"
-                                                (change)="onSettingChange(setting)">
+                                        <select ngModel="{{setting.value}}"
+                                                (change)="setting.value = $any($event.target).value; onSettingChange(setting)">
                                             <option value="ru">Русский</option>
                                             <option value="en">English</option>
                                         </select>
-                                        <select *ngSwitchCase="'boolean'" 
-                                                [(ngModel)]="setting.value"
-                                                (change)="onSettingChange(setting)">
+                                        <select ngModel="{{setting.value}}"
+                                                (change)="setting.value = $any($event.target).value === 'true'; onSettingChange(setting)">
                                             <option [ngValue]="true">Включено</option>
                                             <option [ngValue]="false">Выключено</option>
                                         </select>
