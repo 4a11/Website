@@ -64,7 +64,7 @@
                     <p>Статус: {{ item.status === 'active' ? 'Активно' : 
                                  item.status === 'inactive' ? 'Неактивно' : 'На обслуживании' }}</p>
                     <p>Местоположение: {{ item.location }}</p>
-                    <p>Инв. номер: {{ item.inventoryNumber }}</p>
+                    <p *ngIf="item.cost">Стоимость: {{ item.cost | number:'1.0-0' }} ₽</p>
                 </div>
             </div>
         </div>

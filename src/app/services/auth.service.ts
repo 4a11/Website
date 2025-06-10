@@ -137,7 +137,11 @@ export class AuthService {
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
           
-          console.log('Текущий пользователь после входа:', this.currentUserValue);
+                      console.log('Текущий пользователь после входа:', {
+                id: this.currentUserValue?.id,
+                username: this.currentUserValue?.username,
+                role: this.currentUserValue?.role
+            });
           return user;
         }),
         map(response => {

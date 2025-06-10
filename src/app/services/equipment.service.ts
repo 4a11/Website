@@ -22,6 +22,7 @@ export class EquipmentService {
     private loadEquipment(): void {
         this.http.get<Equipment[]>(this.apiUrl).subscribe(
             equipment => {
+                console.log('🔧 Загружено оборудование:', equipment);
                 this.equipment = equipment;
                 this.equipmentSubject.next(equipment);
             },
@@ -62,16 +63,15 @@ export class EquipmentService {
         let filteredEquipment = [...this.equipment];
 
         if (category !== 'Все') {
-            filteredEquipment = filteredEquipment.filter(item => item.category === category);
+            filteredEquipment = filteredEquipment.filter(item => item.type === category);
         }
 
         if (query) {
             filteredEquipment = filteredEquipment.filter(item =>
                 item.name.toLowerCase().includes(query) ||
-                item.features.some(feature => 
-                    feature.name.toLowerCase().includes(query) ||
-                    feature.value.toLowerCase().includes(query)
-                )
+                (item.type && item.type.toLowerCase().includes(query)) ||
+                (item.description && item.description.toLowerCase().includes(query)) ||
+                (item.location && item.location.toLowerCase().includes(query))
             );
         }
 
@@ -79,7 +79,7 @@ export class EquipmentService {
     }
 
     getCategories(): string[] {
-        return ['Все', ...new Set(this.equipment.map(item => item.category))];
+        return ['Все', ...new Set(this.equipment.map(item => item.type || 'Без категории'))];
     }
 
     addEquipment(equipment: Omit<Equipment, 'id'>): Observable<Equipment> {
@@ -98,15 +98,20 @@ export class EquipmentService {
         return this.getEquipment().pipe(
             map(equipment => equipment.filter(item => 
                 item.name.toLowerCase().includes(query.toLowerCase()) ||
-                item.type.toLowerCase().includes(query.toLowerCase()) ||
-                item.category.toLowerCase().includes(query.toLowerCase()) ||
-                item.location.toLowerCase().includes(query.toLowerCase()) ||
-                item.responsiblePerson.toLowerCase().includes(query.toLowerCase()) ||
-                item.features.some(feature => 
-                    feature.name.toLowerCase().includes(query.toLowerCase()) ||
-                    feature.value.toLowerCase().includes(query.toLowerCase())
-                )
+                (item.type && item.type.toLowerCase().includes(query.toLowerCase())) ||
+                (item.description && item.description.toLowerCase().includes(query.toLowerCase())) ||
+                (item.location && item.location.toLowerCase().includes(query.toLowerCase()))
             ))
         );
+    }
+
+    // Получить оборудование с Observable для автообновления
+    getEquipmentStream(): Observable<Equipment[]> {
+        return this.equipmentSubject.asObservable();
+    }
+
+    // Обновить данные
+    refreshEquipment(): void {
+        this.loadEquipment();
     }
 } 

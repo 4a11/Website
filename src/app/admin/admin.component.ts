@@ -387,7 +387,11 @@ export class AdminComponent implements OnInit, OnDestroy {
         
         // Получаем текущего пользователя напрямую из сервиса
         const currentUser = this.authService.currentUserValue;
-        console.log('Текущий пользователь при проверке доступа:', currentUser);
+        console.log('Текущий пользователь при проверке доступа:', {
+            id: currentUser?.id,
+            username: currentUser?.username,
+            role: currentUser?.role
+        });
         
         if (!currentUser) {
             console.log('Пользователь не авторизован, доступ запрещен');
@@ -444,22 +448,48 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login']);
     }
 
+    /**
+     * Оптимизированное переключение темы
+     * 
+     * Оптимизации для устранения лагов:
+     * 1. requestAnimationFrame - синхронизация с циклом рендеринга браузера
+     * 2. Временный класс .theme-switching - отключение анимаций во время переключения
+     * 3. CSS переменные - один пересчет стилей вместо множественных
+     * 4. Аппаратное ускорение через transform: translateZ(0)
+     * 5. Уменьшенное время переходов с 0.3s до 0.15s
+     */
     toggleTheme(): void {
-        this.isDarkTheme = !this.isDarkTheme;
-        localStorage.setItem('adminTheme', this.isDarkTheme ? 'dark' : 'light');
-        
-        // Обновляем стили таблиц в редакторе при смене темы
-        setTimeout(() => {
-            this.updateEditorTableStyles();
-        }, 100);
+        // Оптимизация: использование requestAnimationFrame для более плавного переключения
+        requestAnimationFrame(() => {
+            this.isDarkTheme = !this.isDarkTheme;
+            localStorage.setItem('adminTheme', this.isDarkTheme ? 'dark' : 'light');
+            
+            // Добавляем временный класс для отключения анимаций во время переключения
+            const container = document.querySelector('.admin-container');
+            if (container) {
+                container.classList.add('theme-switching');
+                
+                // Убираем класс через короткое время
+                setTimeout(() => {
+                    container.classList.remove('theme-switching');
+                    // Обновляем стили таблиц в редакторе после завершения переключения
+                    this.updateEditorTableStyles();
+                }, 150);
+            }
+        });
     }
 
     switchToSection(section: string): void {
-        console.log(`Переключение на раздел: ${section}`);
+        console.log(`🔄 SWITCH: Переключение на раздел: ${section}`);
         
         // Получаем текущего пользователя напрямую из сервиса
         const currentUser = this.authService.currentUserValue;
-        console.log('Текущий пользователь при переключении раздела:', currentUser);
+        console.log('Текущий пользователь при переключении раздела:', {
+            id: currentUser?.id,
+            username: currentUser?.username,
+            role: currentUser?.role
+            // Токен НИКОГДА не логируем!
+        });
         
         if (!currentUser) {
             console.log('Пользователь не авторизован, перенаправление на страницу входа');
@@ -486,6 +516,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         } else if (section === 'facilities') {
             console.log('Загружаем данные объектов...');
             this.loadFacilities();
+        } else if (section === 'equipment') {
+            console.log('Загружаем данные оборудования...');
+            this.loadEquipment();
         } else if (section === 'feedback') {
             console.log('Загружаем данные обратной связи...');
             this.loadFeedbacks();
@@ -552,11 +585,20 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     loadEquipment(): void {
-        this.equipmentService.getEquipment().subscribe(equipment => {
-            this.equipments = equipment;
-            this.filteredEquipments = equipment;
+        this.equipmentService.getEquipment().subscribe({
+            next: (equipment) => {
+                this.equipments = equipment || [];
+                this.filteredEquipments = equipment || [];
+            },
+            error: (error) => {
+                console.error('Ошибка при загрузке оборудования:', error);
+                this.equipments = [];
+                this.filteredEquipments = [];
+            }
         });
     }
+
+
 
     loadNews(): void {
         this.newsService.getNews().subscribe(news => {
@@ -997,8 +1039,8 @@ export class AdminComponent implements OnInit, OnDestroy {
         query = query.toLowerCase();
         this.filteredEquipments = this.equipments.filter(equipment => 
             equipment.name.toLowerCase().includes(query) ||
-            equipment.type.toLowerCase().includes(query) ||
-            equipment.location.toLowerCase().includes(query)
+            (equipment.type && equipment.type.toLowerCase().includes(query)) ||
+            (equipment.location && equipment.location.toLowerCase().includes(query))
         );
     }
 
@@ -2311,9 +2353,9 @@ export class AdminComponent implements OnInit, OnDestroy {
     getFilteredEquipment(): Equipment[] {
         let filtered = this.filteredEquipments;
         
-        // Фильтр по категории
+        // Фильтр по типу (вместо category)
         if (this.selectedEquipmentCategory) {
-            filtered = filtered.filter(eq => (eq as any).category === this.selectedEquipmentCategory);
+            filtered = filtered.filter(eq => eq.type === this.selectedEquipmentCategory);
         }
         
         // Фильтр по статусу
@@ -2341,10 +2383,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         return statusNames[status] || 'Неизвестно';
     }
 
-    isMaintenanceOverdue(equipment: Equipment): boolean {
-        const today = new Date();
-        const nextMaintenance = new Date(equipment.nextMaintenance);
-        return nextMaintenance < today;
+    getEquipmentTypes(): string[] {
+        const types = new Set(this.equipments.map(eq => eq.type).filter(type => type));
+        return Array.from(types);
     }
 
     onViewEquipment(equipment: Equipment): void {
@@ -2360,9 +2401,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     onDuplicateEquipment(equipment: Equipment): void {
         const duplicatedEquipment = {
             ...equipment,
-            name: equipment.name + ' (копия)',
-            inventoryNumber: equipment.inventoryNumber + '_copy'
+            id: 0, // Новый ID будет присвоен сервером
+            name: equipment.name + ' (копия)'
         };
+        delete (duplicatedEquipment as any).id; // Удаляем ID для создания новой записи
         this.equipments.unshift(duplicatedEquipment as Equipment);
         this.filteredEquipments = [...this.equipments];
         console.log('Оборудование дублировано:', duplicatedEquipment.name);

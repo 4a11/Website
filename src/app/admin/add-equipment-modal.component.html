@@ -10,15 +10,10 @@
 
             <div class="form-group">
                 <label for="type">Тип</label>
-                <input type="text" id="type" [(ngModel)]="equipment.type" name="type" required>
-            </div>
-
-            <div class="form-group">
-                <label for="category">Категория</label>
-                <select id="category" [(ngModel)]="equipment.category" name="category" required>
-                    <option value="">Выберите категорию</option>
-                    <option *ngFor="let category of categories" [value]="category">
-                        {{ category }}
+                <select id="type" [(ngModel)]="equipment.type" name="type" required>
+                    <option value="">Выберите тип</option>
+                    <option *ngFor="let type of types" [value]="type">
+                        {{ type }}
                     </option>
                 </select>
             </div>
@@ -34,43 +29,23 @@
             </div>
 
             <div class="form-group">
-                <label for="inventoryNumber">Инвентарный номер</label>
-                <input type="text" id="inventoryNumber" [(ngModel)]="equipment.inventoryNumber" name="inventoryNumber" required>
-            </div>
-
-            <div class="form-group">
                 <label for="location">Местоположение</label>
                 <input type="text" id="location" [(ngModel)]="equipment.location" name="location" required>
             </div>
 
             <div class="form-group">
-                <label for="responsiblePerson">Ответственное лицо</label>
-                <input type="text" id="responsiblePerson" [(ngModel)]="equipment.responsiblePerson" name="responsiblePerson" required>
+                <label for="cost">Стоимость (₽)</label>
+                <input type="number" id="cost" [(ngModel)]="equipment.cost" name="cost" min="0" step="0.01">
             </div>
 
             <div class="form-group">
-                <label for="purchaseDate">Дата покупки</label>
-                <input type="date" id="purchaseDate" [(ngModel)]="equipment.purchaseDate" name="purchaseDate" required>
+                <label for="purchase_date">Дата покупки</label>
+                <input type="date" id="purchase_date" [(ngModel)]="equipment.purchase_date" name="purchase_date">
             </div>
 
             <div class="form-group">
-                <label for="lastMaintenance">Дата последнего обслуживания</label>
-                <input type="date" id="lastMaintenance" [(ngModel)]="equipment.lastMaintenance" name="lastMaintenance" required>
-            </div>
-
-            <div class="form-group">
-                <label for="nextMaintenance">Дата следующего обслуживания</label>
-                <input type="date" id="nextMaintenance" [(ngModel)]="equipment.nextMaintenance" name="nextMaintenance" required>
-            </div>
-
-            <div class="form-group">
-                <label>Характеристики</label>
-                <div *ngFor="let feature of equipment.features; let i = index" class="feature-item">
-                    <input type="text" [(ngModel)]="feature.name" [name]="'featureName' + i" placeholder="Название" required>
-                    <input type="text" [(ngModel)]="feature.value" [name]="'featureValue' + i" placeholder="Значение" required>
-                    <button type="button" (click)="removeFeature(i)">Удалить</button>
-                </div>
-                <button type="button" (click)="addFeature()">Добавить характеристику</button>
+                <label for="description">Описание</label>
+                <textarea id="description" [(ngModel)]="equipment.description" name="description" rows="3"></textarea>
             </div>
 
             <div class="button-group">

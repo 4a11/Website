@@ -3,6 +3,7 @@ const cors = require('cors');
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const path = require('path');
 
 // Настройки подключения к БД
 const pool = new Pool({
@@ -16,16 +17,39 @@ const pool = new Pool({
 
 const app = express();
 const port = process.env.PORT || 3000;
+const host = '0.0.0.0'; // Разрешаем подключения с любых IP
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-should-be-long-and-secure';
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+    origin: [
+        'http://localhost:4200', 
+        'http://127.0.0.1:4200',
+        'http://192.168.0.4:4200',
+        'http://212.220.204.230:3000',
+        'http://212.220.204.230',
+        // Домены DuckDNS
+        'http://novadom.duckdns.org:3000',
+        'http://novadom.duckdns.org',
+        // Если купите настоящий домен
+        'http://novadom.com:3000',
+        'http://novadom.com',
+        'http://www.novadom.com:3000',
+        'http://www.novadom.com',
+        // Локальный домен
+        'http://novadom.local:3000',
+        'http://www.novadom.local:3000',
+        // Разрешаем все для внешнего доступа
+        '*'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+
+// Раздача статических файлов Angular
+app.use(express.static(path.join(__dirname, 'dist', 'untitled2', 'browser')));
 
 // Логирование запросов
 app.use((req, res, next) => {
@@ -412,10 +436,107 @@ app.get('/api/settings', async (req, res) => {
     }
 });
 
+// ==================== КОРНЕВОЙ МАРШРУТ ====================
+
+// Обработчик для всех остальных маршрутов (для Angular SPA)
+app.get('*', (req, res) => {
+    // Если это API запрос, возвращаем 404
+    if (req.url.startsWith('/api/')) {
+        return res.status(404).json({ message: 'API маршрут не найден' });
+    }
+    
+    // Для всех остальных запросов отдаем index.html
+    const indexPath = path.join(__dirname, 'dist', 'untitled2', 'browser', 'index.html');
+    
+    // Проверяем существование файла
+    const fs = require('fs');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        // Если Angular не собран, показываем простую страницу
+        res.send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>🚀 Node.js Server</title>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 0; 
+                        padding: 20px; 
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        min-height: 100vh;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    .container { 
+                        text-align: center; 
+                        background: rgba(255,255,255,0.1);
+                        padding: 40px;
+                        border-radius: 20px;
+                        backdrop-filter: blur(10px);
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                    }
+                    .status { 
+                        color: #4CAF50; 
+                        font-size: 1.2em; 
+                        margin: 20px 0;
+                    }
+                    .api-list { 
+                        text-align: left; 
+                        background: rgba(0,0,0,0.2);
+                        padding: 20px;
+                        border-radius: 10px;
+                        margin: 20px 0;
+                    }
+                    .api-item { 
+                        margin: 5px 0; 
+                        font-family: monospace;
+                        color: #ffd700;
+                    }
+                    h1 { font-size: 2.5em; margin-bottom: 10px; }
+                    h2 { color: #ffd700; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>🚀 Сервер работает!</h1>
+                    <div class="status">✅ Соединение установлено</div>
+                    <p>Сервер успешно запущен и доступен по адресу:</p>
+                    <h2>http://212.220.204.230:3000</h2>
+                    
+                    <div class="api-list">
+                        <h3>📋 Доступные API маршруты:</h3>
+                        <div class="api-item">POST /api/auth/login - авторизация</div>
+                        <div class="api-item">GET /api/auth/verify - проверка токена</div>
+                        <div class="api-item">GET /api/employees - сотрудники</div>
+                        <div class="api-item">GET /api/facilities - объекты</div>
+                        <div class="api-item">GET /api/equipment - оборудование</div>
+                        <div class="api-item">GET /api/news - новости</div>
+                        <div class="api-item">GET /api/reports - отчеты</div>
+                        <div class="api-item">GET /api/calculations - расчеты</div>
+                        <div class="api-item">GET /api/reviews - отзывы</div>
+                        <div class="api-item">GET /api/feedback - обратная связь</div>
+                        <div class="api-item">GET /api/settings - настройки</div>
+                    </div>
+                    
+                    <p><small>💡 Для отображения Angular приложения выполните: <code>npm run build</code></small></p>
+                </div>
+            </body>
+            </html>
+        `);
+    }
+});
+
 // ==================== ЗАПУСК СЕРВЕРА ====================
 
-app.listen(port, () => {
-    console.log(`Сервер запущен на порту ${port}`);
+app.listen(port, host, () => {
+    console.log(`Сервер запущен на ${host}:${port}`);
     console.log('Доступные маршруты:');
     console.log('- POST /api/auth/login - авторизация');
     console.log('- GET /api/auth/verify - проверка токена');

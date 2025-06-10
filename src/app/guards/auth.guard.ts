@@ -28,8 +28,11 @@ export class AuthGuard {
       return false;
     }
     
-    console.log('Текущий пользователь:', currentUser);
-    console.log('Роль пользователя:', currentUser.role);
+            console.log('Текущий пользователь:', {
+            id: currentUser?.id,
+            username: currentUser?.username,
+            role: currentUser?.role
+        });
     
     // Нормализуем роль пользователя (преобразуем в строку и приводим к нижнему регистру)
     const userRoleStr = String(currentUser.role).toLowerCase();

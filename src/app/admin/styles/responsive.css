@@ -43,7 +43,7 @@
     }
     
     /* Дашборд */
-    .stats-container .stat-card {
+    .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
     
@@ -177,14 +177,28 @@
         font-size: 1.5rem;
     }
     
-    /* Дашборд */
-    .stats-container .stat-card {
+        /* Дашборд */
+    .stats-grid {
         grid-template-columns: 1fr;
     }
+
+    .stat-card {
+        flex-direction: row;
+        gap: 12px;
+    }
     
-    .stat-item {
-        flex-direction: column;
-        text-align: center;
+    .stat-card .stat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.4rem;
+    }
+    
+    .stat-trend {
+        font-size: 0.75rem;
     }
     
     /* Сотрудники */
@@ -213,13 +227,36 @@
     .reports-table,
     .transactions-table {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .employees-table table,
     .equipment-table table,
     .reports-table table,
     .transactions-table table {
-        min-width: 600px;
+        min-width: 800px;
+    }
+    
+    .reports-table th,
+    .reports-table td {
+        padding: 12px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .reports-table th:nth-child(1),
+    .reports-table td:nth-child(1) {
+        min-width: 180px;
+    }
+    
+    .report-actions {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .report-actions .action-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
     }
     
     /* Оборудование */

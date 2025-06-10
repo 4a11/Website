@@ -143,6 +143,41 @@ body {
                 box-shadow 0.3s ease;
 }
 
+/* === ОПТИМИЗАЦИЯ ПЕРЕКЛЮЧЕНИЯ ТЕМЫ === */
+/* Отключение анимаций во время переключения темы для устранения лагов */
+.admin-container.theme-switching *,
+.admin-container.theme-switching *::before,
+.admin-container.theme-switching *::after {
+    transition: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+}
+
+/* Более быстрые переходы для критических элементов */
+.admin-container {
+    transition: background-color 0.15s ease;
+    transform: translateZ(0); /* Включаем аппаратное ускорение */
+    will-change: background-color; /* Предупреждаем браузер о изменениях */
+}
+
+.content, .header, .sidebar {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.card, .equipment-card, .facility-card, .news-card {
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Оптимизированные переходы для таблиц */
+table, th, td {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Оптимизированные переходы для кнопок */
+button, .btn {
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.2s ease;
+}
+
 /* Основной контент */
 .content {
     flex: 1;
@@ -286,4 +321,27 @@ table {
 .action-buttons {
     display: flex;
     gap: 0.5rem;
+}
+
+/* === ДОПОЛНИТЕЛЬНЫЕ ОПТИМИЗАЦИИ ПРОИЗВОДИТЕЛЬНОСТИ === */
+
+/* Оптимизация для элементов с большим количеством переходов */
+.equipment-card, .facility-card, .news-card, .report-card {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Оптимизация скроллинга */
+.content {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Отключение выделения текста для интерактивных элементов во время переключения */
+.admin-container.theme-switching {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 } 

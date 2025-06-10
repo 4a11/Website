@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Переход на Novadom</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin: 0 0 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .url-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            word-break: break-all;
+        }
+        
+        .links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .link-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning h3 {
+            margin: 0 0 10px 0;
+            color: #FFC107;
+        }
+        
+        .alternative {
+            background: rgba(0, 123, 255, 0.2);
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .alternative h3 {
+            margin: 0 0 10px 0;
+            color: #007BFF;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+    <script>
+        function openSite() {
+            // Пытаемся открыть сайт по HTTP
+            window.open('http://novadom.duckdns.org:3000', '_blank');
+        }
+        
+        function copyUrl() {
+            navigator.clipboard.writeText('http://novadom.duckdns.org:3000').then(() => {
+                alert('✅ URL скопирован в буфер обмена!');
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Novadom</h1>
+        <p>Добро пожаловать! Ваш сайт готов к использованию.</p>
+        
+        <div class="url-box">
+            <strong>🌐 Адрес сайта:</strong><br>
+            http://novadom.duckdns.org:3000
+        </div>
+        
+        <div class="links">
+            <a href="http://novadom.duckdns.org:3000" class="link-btn" target="_blank">
+                🚀 Открыть сайт
+            </a>
+            <button onclick="copyUrl()" class="link-btn" style="border: none; cursor: pointer;">
+                📋 Копировать URL
+            </button>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ Важно!</h3>
+            <p>Обязательно используйте <strong>HTTP</strong> (не HTTPS). 
+            Если браузер выдает ошибку SSL, убедитесь что в адресе указан именно <code>http://</code></p>
+        </div>
+        
+        <div class="alternative">
+            <h3>🔧 Альтернативные адреса:</h3>
+            <p>Если домен не работает, используйте прямой IP:</p>
+            <a href="http://212.220.204.230:3000" target="_blank" style="color: #FFC107;">
+                http://212.220.204.230:3000
+            </a>
+        </div>
+        
+        <div style="margin-top: 40px; font-size: 0.9em; opacity: 0.8;">
+            <p>💡 Совет: Добавьте эту страницу в закладки для быстрого доступа</p>
+            <p>🔒 Для настройки HTTPS см. файл DOMAIN-SETUP-GUIDE.md</p>
+        </div>
+    </div>
+</body>
+</html> 

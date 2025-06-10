@@ -134,43 +134,61 @@
         <!-- Дашборд (по умолчанию) -->
         <div *ngIf="currentSection === 'dashboard'">
             <!-- Статистика -->
-            <section class="stats-container">
-                <h3>Общая статистика</h3>
-                <div class="stat-card">
-                    <div class="stat-item">
-                        <div class="stat-icon employees">
+            <section class="overview-stats">
+                <div class="stats-grid">
+                    <div class="stat-card employees">
+                        <div class="stat-icon">
                             <i class="fas fa-users"></i>
                         </div>
-                        <div class="stat-info">
-                            <span class="number">{{totalEmployees}}</span>
-                            <span class="trend">Всего сотрудников</span>
+                        <div class="stat-content">
+                            <div class="stat-number">{{totalEmployees}}</div>
+                            <div class="stat-label">Сотрудников</div>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            +12%
                         </div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-icon facilities">
+                    
+                    <div class="stat-card facilities">
+                        <div class="stat-icon">
                             <i class="fas fa-building"></i>
                         </div>
-                        <div class="stat-info">
-                            <span class="number">{{totalFacilities}}</span>
-                            <span class="trend">Всего объектов</span>
+                        <div class="stat-content">
+                            <div class="stat-number">{{totalFacilities}}</div>
+                            <div class="stat-label">Объектов</div>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            +5%
                         </div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-icon workload">
+                    
+                    <div class="stat-card workload">
+                        <div class="stat-icon">
                             <i class="fas fa-chart-pie"></i>
                         </div>
-                        <div class="stat-info">
-                            <span class="number">{{averageWorkload}}%</span>
-                            <span class="trend">Средняя загрузка</span>
+                        <div class="stat-content">
+                            <div class="stat-number">{{averageWorkload}}%</div>
+                            <div class="stat-label">Загрузка</div>
+                        </div>
+                        <div class="stat-trend neutral">
+                            <i class="fas fa-minus"></i>
+                            0%
                         </div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-icon equipment">
+                    
+                    <div class="stat-card equipment">
+                        <div class="stat-icon">
                             <i class="fas fa-tools"></i>
                         </div>
-                        <div class="stat-info">
-                            <span class="number">{{equipments.length}}</span>
-                            <span class="trend">Всего оборудования</span>
+                        <div class="stat-content">
+                            <div class="stat-number">{{equipments.length}}</div>
+                            <div class="stat-label">Оборудования</div>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            +8%
                         </div>
                     </div>
                 </div>
@@ -929,30 +947,28 @@
                     <div class="facilities-grid" *ngIf="filteredFacilities && filteredFacilities.length > 0">
                         <div *ngFor="let facility of filteredFacilities" class="facility-card">
                             <div class="facility-card-header">
-                                <div>
-                                    <div class="facility-avatar" 
-                                         [class.office]="facility.type === 'Офис'"
-                                         [class.warehouse]="facility.type === 'Склад'"
-                                         [class.production]="facility.type === 'Производство'"
-                                         [class.retail]="facility.type === 'Торговля'">
-                                        <i class="fas" [ngClass]="{
-                                            'fa-building': facility.type === 'Офис',
-                                            'fa-warehouse': facility.type === 'Склад',
-                                            'fa-industry': facility.type === 'Производство',
-                                            'fa-store': facility.type === 'Торговля'
-                                        }"></i>
-                                    </div>
-                                    <div class="facility-info">
-                                        <h4>{{facility.name}}</h4>
-                                        <p class="facility-address">{{facility.address}}</p>
-                                        <span class="facility-type-badge" 
-                                              [class.office]="facility.type === 'Офис'"
-                                              [class.warehouse]="facility.type === 'Склад'"
-                                              [class.production]="facility.type === 'Производство'"
-                                              [class.retail]="facility.type === 'Торговля'">
-                                            {{facility.type}}
-                                        </span>
-                                    </div>
+                                <div class="facility-avatar" 
+                                     [class.office]="facility.type === 'Офис'"
+                                     [class.warehouse]="facility.type === 'Склад'"
+                                     [class.production]="facility.type === 'Производство'"
+                                     [class.retail]="facility.type === 'Торговля'">
+                                    <i class="fas" [ngClass]="{
+                                        'fa-building': facility.type === 'Офис',
+                                        'fa-warehouse': facility.type === 'Склад',
+                                        'fa-industry': facility.type === 'Производство',
+                                        'fa-store': facility.type === 'Торговля'
+                                    }"></i>
+                                </div>
+                                <div class="facility-info">
+                                    <h4>{{facility.name}}</h4>
+                                    <span class="facility-type-badge" 
+                                          [class.office]="facility.type === 'Офис'"
+                                          [class.warehouse]="facility.type === 'Склад'"
+                                          [class.production]="facility.type === 'Производство'"
+                                          [class.retail]="facility.type === 'Торговля'">
+                                        {{facility.type}}
+                                    </span>
+                                    <p class="facility-address">{{facility.address}}</p>
                                 </div>
                                 <div class="facility-card-menu">
                                     <button class="facility-menu-btn" (click)="toggleFacilityMenu(facility)">
@@ -1151,13 +1167,10 @@
                                placeholder="Поиск по названию, типу или местоположению...">
                     </div>
                     <div class="filter-group">
-                        <label>Категория</label>
+                        <label>Тип</label>
                         <select [value]="selectedEquipmentCategory" (change)="selectedEquipmentCategory = $any($event.target).value; filterEquipmentByCategory()">
-                            <option value="">Все категории</option>
-                            <option value="Компьютеры">Компьютеры</option>
-                            <option value="Принтеры">Принтеры</option>
-                            <option value="Сетевое оборудование">Сетевое оборудование</option>
-                            <option value="Другое">Другое</option>
+                            <option value="">Все типы</option>
+                            <option *ngFor="let type of getEquipmentTypes()" [value]="type">{{type}}</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -1171,6 +1184,8 @@
                     </div>
                 </div>
 
+
+
                 <!-- Карточный вид оборудования -->
                 <div *ngIf="equipmentView === 'cards'" class="equipment-grid">
                     <div *ngFor="let equipment of getFilteredEquipment()" class="equipment-card">
@@ -1179,10 +1194,11 @@
                         </div>
                         
                         <div class="equipment-icon">
-                            <i class="fas" [class.fa-desktop]="equipment.category === 'Компьютеры'"
-                               [class.fa-print]="equipment.category === 'Принтеры'"
-                               [class.fa-network-wired]="equipment.category === 'Сетевое оборудование'"
-                               [class.fa-tools]="equipment.category === 'Другое'"></i>
+                            <i class="fas" [class.fa-desktop]="equipment.type.includes('Компьютер')"
+                               [class.fa-print]="equipment.type.includes('Принтер') || equipment.type.includes('МФУ')"
+                               [class.fa-network-wired]="equipment.type.includes('Сетевое')"
+                               [class.fa-server]="equipment.type.includes('Сервер')"
+                               [class.fa-tools]="!equipment.type.includes('Компьютер') && !equipment.type.includes('Принтер') && !equipment.type.includes('Сетевое') && !equipment.type.includes('Сервер')"></i>
                         </div>
 
                         <div class="equipment-info">
@@ -1191,33 +1207,22 @@
                         </div>
 
                         <div class="equipment-details">
-                            <div class="detail-row">
-                                <i class="fas fa-barcode"></i>
-                                <span>{{equipment.inventoryNumber}}</span>
+                            <div class="detail-row" *ngIf="equipment.cost">
+                                <i class="fas fa-ruble-sign"></i>
+                                <span>{{equipment.cost | number:'1.0-0'}} ₽</span>
                             </div>
-                            <div class="detail-row">
+                            <div class="detail-row" *ngIf="equipment.location">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <span>{{equipment.location}}</span>
                             </div>
-                            <div class="detail-row">
-                                <i class="fas fa-user"></i>
-                                <span>{{equipment.responsiblePerson}}</span>
+                            <div class="detail-row" *ngIf="equipment.purchase_date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>{{equipment.purchase_date | date:'dd.MM.yyyy'}}</span>
                             </div>
                         </div>
 
-                        <div class="equipment-maintenance">
-                            <div class="maintenance-info">
-                                <div class="maintenance-item">
-                                    <span class="label">Последнее ТО:</span>
-                                    <span class="date">{{equipment.lastMaintenance | date:'dd.MM.yyyy'}}</span>
-                                </div>
-                                <div class="maintenance-item">
-                                    <span class="label">Следующее ТО:</span>
-                                    <span class="date" [class.overdue]="isMaintenanceOverdue(equipment)">
-                                        {{equipment.nextMaintenance | date:'dd.MM.yyyy'}}
-                                    </span>
-                                </div>
-                            </div>
+                        <div class="equipment-description" *ngIf="equipment.description">
+                            <p>{{equipment.description | slice:0:100}}{{equipment.description.length > 100 ? '...' : ''}}</p>
                         </div>
 
                         <div class="equipment-actions">
@@ -1262,12 +1267,11 @@
                         <thead>
                             <tr>
                                 <th>Оборудование</th>
-                                <th>Категория</th>
-                                <th>Инв. номер</th>
+                                <th>Тип</th>
+                                <th>Стоимость</th>
                                 <th>Местоположение</th>
-                                <th>Ответственный</th>
+                                <th>Дата покупки</th>
                                 <th>Статус</th>
-                                <th>Следующее ТО</th>
                                 <th>Действия</th>
                             </tr>
                         </thead>
@@ -1276,10 +1280,11 @@
                                 <td>
                                     <div class="table-equipment-info">
                                         <div class="table-equipment-icon">
-                                            <i class="fas" [class.fa-desktop]="equipment.category === 'Компьютеры'"
-                                               [class.fa-print]="equipment.category === 'Принтеры'"
-                                               [class.fa-network-wired]="equipment.category === 'Сетевое оборудование'"
-                                               [class.fa-tools]="equipment.category === 'Другое'"></i>
+                                            <i class="fas" [class.fa-desktop]="equipment.type.includes('Компьютер')"
+                                               [class.fa-print]="equipment.type.includes('Принтер') || equipment.type.includes('МФУ')"
+                                               [class.fa-network-wired]="equipment.type.includes('Сетевое')"
+                                               [class.fa-server]="equipment.type.includes('Сервер')"
+                                               [class.fa-tools]="!equipment.type.includes('Компьютер') && !equipment.type.includes('Принтер') && !equipment.type.includes('Сетевое') && !equipment.type.includes('Сервер')"></i>
                                         </div>
                                         <div class="table-equipment-details">
                                             <h5>{{equipment.name}}</h5>
@@ -1287,18 +1292,13 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{equipment.category}}</td>
-                                <td>{{equipment.inventoryNumber}}</td>
-                                <td>{{equipment.location}}</td>
-                                <td>{{equipment.responsiblePerson}}</td>
+                                <td>{{equipment.type}}</td>
+                                <td>{{equipment.cost ? (equipment.cost | number:'1.0-0') + ' ₽' : 'Н/Д'}}</td>
+                                <td>{{equipment.location || 'Не указано'}}</td>
+                                <td>{{equipment.purchase_date ? (equipment.purchase_date | date:'dd.MM.yyyy') : 'Не указано'}}</td>
                                 <td>
                                     <span class="equipment-status" [class]="equipment.status">
                                         {{getEquipmentStatusName(equipment.status)}}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span [class.overdue]="isMaintenanceOverdue(equipment)">
-                                        {{equipment.nextMaintenance | date:'dd.MM.yyyy'}}
                                     </span>
                                 </td>
                                 <td>
@@ -1412,22 +1412,25 @@
                 <!-- Карточный вид новостей -->
                 <div *ngIf="newsView === 'cards'" class="news-grid">
                     <div *ngFor="let news of getFilteredNews()" class="news-card">
-                        <div class="news-date-badge">
-                            {{news.date | date:'dd MMM'}}
+                        <div class="news-image">
+                            <i class="fas fa-newspaper"></i>
                         </div>
                         
                         <div class="news-content">
+                            <div class="news-date">
+                                {{news.date | date:'dd MMM yyyy'}}
+                            </div>
+                            
                             <h4>{{news.title}}</h4>
-                            <p class="news-excerpt">
-                                {{news.content.length > 120 ? (news.content | slice:0:120) + '...' : news.content}}
-                            </p>
+                            
+                            <p>{{news.content.length > 120 ? (news.content | slice:0:120) + '...' : news.content}}</p>
                             
                             <div class="news-meta">
-                                <div class="author-info">
+                                <div class="news-author">
                                     <i class="fas fa-user"></i>
                                     <span>{{news.author}}</span>
                                 </div>
-                                <div class="read-time">
+                                <div class="news-read-time">
                                     <i class="fas fa-clock"></i>
                                     <span>{{getReadTime(news.content)}} мин</span>
                                 </div>
@@ -1447,7 +1450,7 @@
                                 <button class="more-btn" (click)="toggleNewsMenu(news)">
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
-                                <div class="actions-menu" *ngIf="news.showMenu">
+                                <div class="actions-menu" [class.show]="news.showMenu">
                                     <button class="menu-item" (click)="onDuplicateNews(news)">
                                         <i class="fas fa-copy"></i>
                                         Дублировать
@@ -1766,7 +1769,7 @@
                                         <option value="archived">В архиве</option>
                                     </select>
                                 </div>
-                                <div class="save-status" *ngIf="editorState.lastSaved">
+                                <div class="save-status" *ngIf="editorState.lastSaved && reportsView === 'editor'">
                                     <small>Сохранено: {{editorState.lastSaved | date:'HH:mm:ss'}}</small>
                                 </div>
                             </div>

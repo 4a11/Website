@@ -19,27 +19,21 @@ export class AddEquipmentModalComponent implements OnInit {
     equipment: Partial<Equipment> = {
         name: '',
         type: '',
-        category: '',
         status: 'active',
-        inventoryNumber: '',
         location: '',
-        responsiblePerson: '',
-        purchaseDate: new Date(),
-        lastMaintenance: new Date(),
-        nextMaintenance: new Date(),
-        features: []
+        cost: 0,
+        purchase_date: new Date().toISOString().split('T')[0],
+        description: ''
     };
 
-    categories = ['Компьютеры', 'Принтеры', 'Сетевое оборудование', 'Другое'];
+    types = ['Компьютер', 'Принтер', 'МФУ', 'Сетевое оборудование', 'Сервер', 'Другое'];
     statuses = ['active', 'inactive', 'maintenance'];
 
     ngOnInit(): void {
         if (this.equipmentToEdit) {
             this.equipment = {
                 ...this.equipmentToEdit,
-                purchaseDate: new Date(this.equipmentToEdit.purchaseDate),
-                lastMaintenance: new Date(this.equipmentToEdit.lastMaintenance),
-                nextMaintenance: new Date(this.equipmentToEdit.nextMaintenance)
+                purchase_date: this.equipmentToEdit.purchase_date || new Date().toISOString().split('T')[0]
             };
         }
     }
@@ -58,18 +52,5 @@ export class AddEquipmentModalComponent implements OnInit {
 
     onClose(): void {
         this.close.emit();
-    }
-
-    addFeature(): void {
-        if (!this.equipment.features) {
-            this.equipment.features = [];
-        }
-        this.equipment.features.push({ name: '', value: '' });
-    }
-
-    removeFeature(index: number): void {
-        if (this.equipment.features) {
-            this.equipment.features = this.equipment.features.filter((_, i) => i !== index);
-        }
     }
 } 
