@@ -26,19 +26,26 @@ app.use(cors({
         'http://localhost:4200', 
         'http://127.0.0.1:4200',
         'http://192.168.0.4:4200',
-        'http://212.220.204.230:3000',
-        'http://212.220.204.230',
+        'http://26.230.34.171:4200', // VPN адрес
+        'http://212.220.204.230:4200', // Внешний IP Angular
+        'http://212.220.204.230:3000', // Внешний IP API
+        'http://212.220.204.230',      // Внешний IP
         // Домены DuckDNS
         'http://novadom.duckdns.org:3000',
+        'http://novadom.duckdns.org:4200',
         'http://novadom.duckdns.org',
         // Если купите настоящий домен
         'http://novadom.com:3000',
+        'http://novadom.com:4200',
         'http://novadom.com',
         'http://www.novadom.com:3000',
+        'http://www.novadom.com:4200',
         'http://www.novadom.com',
         // Локальный домен
         'http://novadom.local:3000',
+        'http://novadom.local:4200',
         'http://www.novadom.local:3000',
+        'http://www.novadom.local:4200',
         // Разрешаем все для внешнего доступа
         '*'
     ],

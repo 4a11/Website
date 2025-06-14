@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export type FacilityStatus = 'active' | 'inactive' | 'ready' | 'ready_to_rent' | 'rented';
 export type FacilityType = 'Офис' | 'Склад' | 'Производство' | 'Торговля';
@@ -20,7 +21,7 @@ export interface Facility {
   providedIn: 'root'
 })
 export class FacilityService {
-  private apiUrl = 'http://localhost:3000/api/facilities';
+      private apiUrl = `${environment.apiUrl}/facilities`;
 
   constructor(private http: HttpClient) { }
 

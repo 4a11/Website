@@ -1,7 +1,9 @@
 export interface Setting {
     id: number;
-    name: string;
-    description: string;
-    value: string | boolean;
+    key: string;
+    value: string;
     category: 'system' | 'notification' | 'security' | 'appearance';
+    description: string;
+    type: 'text' | 'number' | 'boolean' | 'select' | 'color';
+    created_at?: Date;
 }

@@ -1,7 +1,6 @@
 export const environment = {
     production: false,
-    // Динамическое определение API URL на основе текущего хоста
-    // Работает и для localhost, и для сетевых подключений
+    // Прямое подключение к API - определяет URL на основе текущего хоста
     apiUrl: getApiUrl(),
     database: {
         host: 'localhost',
@@ -19,13 +18,13 @@ function getApiUrl(): string {
         
         // Если это localhost, используем localhost
         if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            return '/api'; // Используем прокси для localhost
+            return 'http://localhost:3000/api';
         }
         
-        // Для всех остальных случаев используем прямое подключение
+        // Для всех остальных случаев используем текущий хост
         return `http://${hostname}:3000/api`;
     }
     
     // Fallback для серверной стороны
-    return '/api';
+    return 'http://localhost:3000/api';
 } 

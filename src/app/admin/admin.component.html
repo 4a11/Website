@@ -2653,21 +2653,60 @@
                         <div class="settings-list">
                             <div class="setting-item" *ngFor="let setting of getSettingsByCategory(category.id)">
                                 <div class="setting-info">
-                                    <span class="setting-name">{{setting.name}}</span>
+                                    <span class="setting-name">{{setting.key || setting.name}}</span>
                                     <span class="setting-description">{{setting.description}}</span>
                                 </div>
                                 <div class="setting-control">
-                                    <ng-container [ngSwitch]="typeof setting.value">
-                                        <select ngModel="{{setting.value}}"
-                                                (change)="setting.value = $any($event.target).value; onSettingChange(setting)">
-                                            <option value="ru">Русский</option>
-                                            <option value="en">English</option>
+                                    <ng-container [ngSwitch]="setting.type || 'text'">
+                                        <!-- Булевые настройки -->
+                                        <label class="switch" *ngSwitchCase="'boolean'">
+                                            <input type="checkbox" 
+                                                   [checked]="setting.value === 'true' || setting.value === true"
+                                                   (change)="setting.value = $any($event.target).checked; onSettingChange(setting)">
+                                            <span class="slider"></span>
+                                        </label>
+                                        
+                                        <!-- Числовые настройки -->
+                                        <input type="number" 
+                                               *ngSwitchCase="'number'"
+                                               [value]="setting.value"
+                                               (input)="setting.value = $any($event.target).value; onSettingChange(setting)"
+                                               class="setting-input">
+                                        
+                                        <!-- Выбор из списка -->
+                                        <select *ngSwitchCase="'select'"
+                                                [value]="setting.value"
+                                                (change)="setting.value = $any($event.target).value; onSettingChange(setting)"
+                                                class="setting-select">
+                                            <ng-container [ngSwitch]="setting.key">
+                                                <ng-container *ngSwitchCase="'backup_frequency'">
+                                                    <option value="daily">Ежедневно</option>
+                                                    <option value="weekly">Еженедельно</option>
+                                                    <option value="monthly">Ежемесячно</option>
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="'default_language'">
+                                                    <option value="ru">Русский</option>
+                                                    <option value="en">English</option>
+                                                </ng-container>
+                                                <ng-container *ngSwitchDefault>
+                                                    <option [value]="setting.value">{{setting.value}}</option>
+                                                </ng-container>
+                                            </ng-container>
                                         </select>
-                                        <select ngModel="{{setting.value}}"
-                                                (change)="setting.value = $any($event.target).value === 'true'; onSettingChange(setting)">
-                                            <option [ngValue]="true">Включено</option>
-                                            <option [ngValue]="false">Выключено</option>
-                                        </select>
+                                        
+                                        <!-- Цвет -->
+                                        <input type="color" 
+                                               *ngSwitchCase="'color'"
+                                               [value]="setting.value"
+                                               (input)="setting.value = $any($event.target).value; onSettingChange(setting)"
+                                               class="setting-color">
+                                        
+                                        <!-- Текстовые настройки (по умолчанию) -->
+                                        <input type="text" 
+                                               *ngSwitchDefault
+                                               [value]="setting.value"
+                                               (input)="setting.value = $any($event.target).value; onSettingChange(setting)"
+                                               class="setting-input">
                                     </ng-container>
                                 </div>
                             </div>
