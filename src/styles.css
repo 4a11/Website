@@ -1,1 +1,77 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Глобальный сброс стилей для убирания белых рамок */
+* {
+    box-sizing: border-box;
+}
+
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #1C243C;
+    font-family: 'Roboto', 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Убираем белые рамки у всех элементов */
+*,
+*::before,
+*::after {
+    border: none;
+    outline: none;
+}
+
+/* Убираем стандартные отступы у всех элементов */
+h1, h2, h3, h4, h5, h6, p, ul, ol, li, figure, figcaption, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
+}
+
+/* Убираем рамки у изображений */
+img {
+    border: none;
+    outline: none;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Убираем рамки у форм */
+input, textarea, select, button {
+    border: none;
+    outline: none;
+}
+
+/* Убираем рамки у ссылок */
+a {
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+/* Убираем рамки у таблиц */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+td, th {
+    border: none;
+    padding: 0;
+}
+
+/* Убираем рамки у iframe */
+iframe {
+    border: none;
+    outline: none;
+}
