@@ -52,16 +52,16 @@ body {
     bottom: 0;
     transition: all 0.3s ease;
     
-    /* Переменные светлой темы - обновленная цветовая схема */
+    /* Переменные светлой темы - улучшенная цветовая схема */
     --primary-bg: #f8faff;
     --secondary-bg: #ffffff;
     --primary-text: #2d3748;
     --secondary-text: #718096;
     --border-color: #e2e8f0;
-    --sidemenu-bg: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    --sidemenu-bg: linear-gradient(180deg, #4f46e5 0%, #7c3aed 50%, #3b82f6 100%);
     --sidemenu-text: #ffffff;
-    --sidemenu-active: rgba(255, 255, 255, 0.15);
-    --sidemenu-hover: rgba(255, 255, 255, 0.1);
+    --sidemenu-active: linear-gradient(90deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+    --sidemenu-hover: linear-gradient(90deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08));
     --header-bg: #ffffff;
     --card-bg: #ffffff;
     --card-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
@@ -95,17 +95,17 @@ body {
     color: var(--primary-text);
 }
 
-/* Переменные для темной темы - обновленная цветовая схема */
+/* Переменные для темной темы - улучшенная цветовая схема */
 .admin-container.dark-theme {
     --primary-bg: #0a0e1a;
     --secondary-bg: #111827;
     --primary-text: #f9fafb;
     --secondary-text: #9ca3af;
     --border-color: #1f2937;
-    --sidemenu-bg: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    --sidemenu-bg: linear-gradient(180deg, #1a1b2e 0%, #16213e 50%, #0f172a 100%);
     --sidemenu-text: #f1f5f9;
-    --sidemenu-active: rgba(139, 92, 246, 0.2);
-    --sidemenu-hover: rgba(139, 92, 246, 0.1);
+    --sidemenu-active: linear-gradient(90deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.2));
+    --sidemenu-hover: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.1));
     --header-bg: #111827;
     --card-bg: #111827;
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест мобильной админ панели</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+        .status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        .feature-list li::before {
+            content: "✅";
+            margin-right: 10px;
+        }
+        .link-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 10px 10px 10px 0;
+            transition: all 0.2s ease;
+        }
+        .link-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+        .device-info {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Тест мобильной адаптации админ панели</h1>
+        
+        <div class="test-section">
+            <h3>📱 Информация об устройстве</h3>
+            <div class="device-info" id="deviceInfo">
+                Загрузка информации об устройстве...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>✅ Исправленные проблемы</h3>
+            <ul class="feature-list">
+                <li>Убрано overflow: hidden из контейнеров</li>
+                <li>Исправлена высота контента (auto вместо фиксированной)</li>
+                <li>Добавлены fallback значения для CSS переменных</li>
+                <li>Улучшена нижняя навигация с фиксированной высотой</li>
+                <li>Правильные отступы и padding для всех элементов</li>
+                <li>Адаптивные карточки с box-sizing: border-box</li>
+                <li>Полноэкранные модальные окна</li>
+                <li>Улучшенные формы с правильными размерами</li>
+                <li>Таблицы с горизонтальной прокруткой</li>
+                <li>Touch-friendly кнопки и элементы</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🎨 Ключевые улучшения UX</h3>
+            <div class="status success">Нижняя навигация</div>
+            <div class="status success">Адаптивные карточки</div>
+            <div class="status success">Touch-friendly интерфейс</div>
+            <div class="status success">Полноэкранные модальные окна</div>
+            <div class="status success">Правильная прокрутка</div>
+            <div class="status info">Поддержка ландшафтной ориентации</div>
+            <div class="status info">Темная тема</div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔗 Ссылки для тестирования</h3>
+            <a href="http://localhost:3000/admin" class="link-btn" target="_blank">
+                🖥️ Локальная админ панель
+            </a>
+            <a href="http://novadom.duckdns.org:3000/admin" class="link-btn" target="_blank">
+                🌐 Удаленная админ панель
+            </a>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Инструкции по тестированию</h3>
+            <ol>
+                <li><strong>Откройте админ панель</strong> на мобильном устройстве</li>
+                <li><strong>Проверьте навигацию</strong> - она должна быть внизу экрана</li>
+                <li><strong>Протестируйте все разделы</strong> - дашборд, сотрудники, объекты и т.д.</li>
+                <li><strong>Проверьте формы</strong> - добавление/редактирование записей</li>
+                <li><strong>Тестируйте в разных ориентациях</strong> - портретной и ландшафтной</li>
+                <li><strong>Проверьте прокрутку</strong> - все элементы должны быть видны</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🐛 Что исправлено</h3>
+            <div class="status warning">Проблема: Элементы обрезались</div>
+            <div class="status success">Решение: Убрано overflow: hidden, добавлено overflow: visible</div>
+            
+            <div class="status warning">Проблема: Фиксированная высота контейнеров</div>
+            <div class="status success">Решение: Использование min-height и auto</div>
+            
+            <div class="status warning">Проблема: Неправильные отступы</div>
+            <div class="status success">Решение: Правильные padding и margin с box-sizing</div>
+            
+            <div class="status warning">Проблема: Мелкие элементы интерфейса</div>
+            <div class="status success">Решение: Touch-friendly размеры (min-height: 44px)</div>
+        </div>
+    </div>
+
+    <script>
+        // Получаем информацию об устройстве
+        function getDeviceInfo() {
+            const info = {
+                'Ширина экрана': window.screen.width + 'px',
+                'Высота экрана': window.screen.height + 'px',
+                'Ширина viewport': window.innerWidth + 'px',
+                'Высота viewport': window.innerHeight + 'px',
+                'Device Pixel Ratio': window.devicePixelRatio,
+                'User Agent': navigator.userAgent,
+                'Touch Support': 'ontouchstart' in window ? 'Да' : 'Нет',
+                'Ориентация': window.innerWidth > window.innerHeight ? 'Ландшафтная' : 'Портретная'
+            };
+
+            let infoHtml = '';
+            for (const [key, value] of Object.entries(info)) {
+                infoHtml += `<strong>${key}:</strong> ${value}<br>`;
+            }
+
+            document.getElementById('deviceInfo').innerHTML = infoHtml;
+        }
+
+        // Обновляем информацию при загрузке и изменении ориентации
+        getDeviceInfo();
+        window.addEventListener('resize', getDeviceInfo);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(getDeviceInfo, 100);
+        });
+
+        // Проверяем поддержку CSS переменных
+        if (CSS.supports('color', 'var(--test)')) {
+            console.log('✅ CSS переменные поддерживаются');
+        } else {
+            console.log('❌ CSS переменные не поддерживаются');
+        }
+
+        // Проверяем медиа-запросы
+        const mobileQuery = window.matchMedia('(max-width: 768px)');
+        const smallQuery = window.matchMedia('(max-width: 480px)');
+
+        console.log('📱 Мобильный режим:', mobileQuery.matches);
+        console.log('📱 Очень маленький экран:', smallQuery.matches);
+
+        // Отслеживаем изменения медиа-запросов
+        mobileQuery.addListener((e) => {
+            console.log('📱 Изменение мобильного режима:', e.matches);
+        });
+    </script>
+</body>
+</html> 

@@ -28,6 +28,8 @@ import { ReviewService } from '../services/review.service';
 import { Review } from '../models/review.model';
 import { FeedbackService } from '../services/feedback.service';
 import { Feedback, FeedbackResponse } from '../models/feedback.model';
+import { FinanceService } from '../services/finance.service';
+import { Transaction, Budget, FinanceSummary, RevenueBreakdown } from '../models/finance.model';
 import { DatePipe } from '@angular/common';
 import { AuthService, UserRole } from '../services/auth.service';
 import { takeUntil } from 'rxjs/operators';
@@ -36,7 +38,10 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-    styleUrls: ['./admin.component.css'],
+    styleUrls: [
+        './admin.component.css',
+        './styles/mobile-admin.css'
+    ],
     standalone: true,
     imports: [
         CommonModule, 
@@ -60,7 +65,8 @@ import { Subject } from 'rxjs';
         CalculationService,
         SettingService,
         ReviewService,
-        FeedbackService
+        FeedbackService,
+        FinanceService
     ]
 })
 export class AdminComponent implements OnInit, OnDestroy {
@@ -140,6 +146,16 @@ export class AdminComponent implements OnInit, OnDestroy {
     chartType: string = 'bar';
     showAddTransactionModal: boolean = false;
     showBudgetModal: boolean = false;
+    
+    // Финансовые данные
+    transactions: Transaction[] = [];
+    budgets: Budget[] = [];
+    financeSummary: FinanceSummary | null = null;
+    revenueBreakdown: RevenueBreakdown[] = [];
+    selectedTransaction: Transaction | null = null;
+    selectedBudget: Budget | null = null;
+    transactionData: any = {};
+    budgetData: any = {};
 
     // Отчеты - расширенные свойства
     reportsView: 'list' | 'cards' | 'editor' = 'list';
@@ -238,8 +254,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     private roleAccess = {
         [UserRole.ADMIN]: ['dashboard', 'employees', 'facilities', 'equipment', 'news', 'reports', 'calculations', 'finances', 'settings', 'reviews', 'feedback'],
         [UserRole.MANAGER]: ['dashboard', 'employees', 'facilities', 'equipment', 'reports', 'finances'],
-        [UserRole.EMPLOYEE]: ['dashboard', 'facilities', 'equipment'],
-        [UserRole.GUEST]: ['dashboard']
+        [UserRole.EMPLOYEE]: ['dashboard', 'employees', 'facilities', 'equipment'],
+        [UserRole.GUEST]: ['dashboard', 'employees', 'facilities']
     };
 
     // Сотрудники - расширенные свойства
@@ -283,6 +299,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         private settingService: SettingService,
         private reviewService: ReviewService,
         private feedbackService: FeedbackService,
+        private financeService: FinanceService,
         private authService: AuthService
     ) {
         this.router.events.subscribe((event) => {
@@ -437,6 +454,33 @@ export class AdminComponent implements OnInit, OnDestroy {
         return this.authService.hasAnyRole(roles);
     }
 
+    // Проверяем, может ли пользователь редактировать сотрудников
+    canManageEmployees(): boolean {
+        const currentUser = this.authService.currentUserValue;
+        if (!currentUser) return false;
+        
+        const roleStr = String(currentUser.role).toLowerCase();
+        return roleStr === 'admin' || roleStr === 'manager';
+    }
+
+    // Проверяем, может ли пользователь редактировать объекты
+    canManageFacilities(): boolean {
+        const currentUser = this.authService.currentUserValue;
+        if (!currentUser) return false;
+        
+        const roleStr = String(currentUser.role).toLowerCase();
+        return roleStr === 'admin' || roleStr === 'manager';
+    }
+
+    // Проверяем, может ли пользователь редактировать оборудование
+    canManageEquipment(): boolean {
+        const currentUser = this.authService.currentUserValue;
+        if (!currentUser) return false;
+        
+        const roleStr = String(currentUser.role).toLowerCase();
+        return roleStr === 'admin' || roleStr === 'manager' || roleStr === 'employee';
+    }
+
     // Метод выхода из системы
     logout(): void {
         console.log('Вызван метод logout в AdminComponent');
@@ -558,6 +602,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.loadReviews();
         this.loadFeedbacks();
         this.loadSettings();
+        this.loadFinanceData();
     }
 
     // Обновляем методы загрузки данных
@@ -578,9 +623,21 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     loadFacilities(): void {
-        this.facilityService.getFacilities().subscribe(facilities => {
-            this.facilities = facilities;
-            this.filteredFacilities = facilities;
+        this.facilityService.getFacilities().subscribe({
+            next: (facilities) => {
+                console.log('✅ Получены объекты:', facilities);
+                this.facilities = facilities;
+                this.filteredFacilities = facilities;
+                this.totalFacilities = facilities.length;
+                this.calculateStatistics();
+            },
+            error: (error) => {
+                console.error('❌ Ошибка при загрузке объектов:', error);
+                this.facilities = [];
+                this.filteredFacilities = [];
+                this.totalFacilities = 0;
+                this.calculateStatistics();
+            }
         });
     }
 
@@ -932,6 +989,48 @@ export class AdminComponent implements OnInit, OnDestroy {
                 console.error('Ошибка при загрузке обращений:', error);
             }
         );
+    }
+
+    loadFinanceData(): void {
+        // Загружаем транзакции
+        this.financeService.getTransactions().pipe(takeUntil(this.destroy$)).subscribe({
+            next: (transactions) => {
+                this.transactions = transactions;
+            },
+            error: (error) => {
+                console.error('Ошибка при загрузке транзакций:', error);
+            }
+        });
+
+        // Загружаем бюджеты
+        this.financeService.getBudgets().pipe(takeUntil(this.destroy$)).subscribe({
+            next: (budgets) => {
+                this.budgets = budgets;
+            },
+            error: (error) => {
+                console.error('Ошибка при загрузке бюджетов:', error);
+            }
+        });
+
+        // Загружаем финансовую сводку
+        this.financeService.getFinanceSummary(this.selectedFinancePeriod).pipe(takeUntil(this.destroy$)).subscribe({
+            next: (summary) => {
+                this.financeSummary = summary;
+            },
+            error: (error) => {
+                console.error('Ошибка при загрузке финансовой сводки:', error);
+            }
+        });
+
+        // Загружаем структуру доходов
+        this.financeService.getRevenueBreakdown().pipe(takeUntil(this.destroy$)).subscribe({
+            next: (breakdown) => {
+                this.revenueBreakdown = breakdown;
+            },
+            error: (error) => {
+                console.error('Ошибка при загрузке структуры доходов:', error);
+            }
+        });
     }
 
     onSelectFeedback(feedback: Feedback) {
@@ -1326,17 +1425,26 @@ export class AdminComponent implements OnInit, OnDestroy {
     // Финансовые методы
     updateFinanceData(): void {
         // Обновление финансовых данных в зависимости от выбранного периода
-        console.log('Обновление финансовых данных для периода:', this.selectedFinancePeriod);
+        this.financeService.getFinanceSummary(this.selectedFinancePeriod).pipe(takeUntil(this.destroy$)).subscribe({
+            next: (summary) => {
+                this.financeSummary = summary;
+            },
+            error: (error) => {
+                console.error('Ошибка при обновлении финансовых данных:', error);
+            }
+        });
     }
 
     getFinanceData(type: string): number {
+        if (!this.financeSummary) return 0;
+        
         switch (type) {
             case 'revenue':
-                return this.getTotalRevenue();
+                return this.financeSummary.totalRevenue;
             case 'expenses':
-                return this.getTotalExpenses();
+                return this.financeSummary.totalExpenses;
             case 'profit':
-                return this.getProfit();
+                return this.financeSummary.profit;
             default:
                 return 0;
         }
@@ -1354,6 +1462,25 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     getChartData(): any[] {
+        // Генерируем данные на основе финансовой сводки или используем мок данные
+        if (this.financeSummary) {
+            const monthlyData = [];
+            const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн'];
+            
+            for (let i = 0; i < 6; i++) {
+                const baseRevenue = this.financeSummary.totalRevenue / 6;
+                const baseExpenses = this.financeSummary.totalExpenses / 6;
+                
+                monthlyData.push({
+                    label: months[i],
+                    revenue: Math.round((baseRevenue + (Math.random() - 0.5) * baseRevenue * 0.3) / 10000),
+                    expenses: Math.round((baseExpenses + (Math.random() - 0.5) * baseExpenses * 0.3) / 10000)
+                });
+            }
+            
+            return monthlyData;
+        }
+        
         return [
             { label: 'Янв', revenue: 85, expenses: 65 },
             { label: 'Фев', revenue: 75, expenses: 70 },
@@ -1364,84 +1491,168 @@ export class AdminComponent implements OnInit, OnDestroy {
         ];
     }
 
-    getRevenueBreakdown(): any[] {
-        return [
-            { category: 'Аренда', amount: 2500000, percentage: 45, color: '#7c3aed' },
-            { category: 'Услуги', amount: 1800000, percentage: 32, color: '#a855f7' },
-            { category: 'Продажи', amount: 900000, percentage: 16, color: '#c084fc' },
-            { category: 'Прочее', amount: 400000, percentage: 7, color: '#ddd6fe' }
-        ];
+    getRevenueBreakdown(): RevenueBreakdown[] {
+        return this.revenueBreakdown;
     }
 
-    getRecentTransactions(): any[] {
-        return [
-            {
-                id: 1,
-                date: new Date('2024-01-15'),
-                description: 'Аренда офиса',
-                category: 'Аренда',
-                type: 'income',
-                amount: 150000
-            },
-            {
-                id: 2,
-                date: new Date('2024-01-14'),
-                description: 'Закупка оборудования',
-                category: 'Оборудование',
-                type: 'expense',
-                amount: 85000
-            },
-            {
-                id: 3,
-                date: new Date('2024-01-13'),
-                description: 'Консультационные услуги',
-                category: 'Услуги',
-                type: 'income',
-                amount: 75000
-            }
-        ];
+    getRecentTransactions(): Transaction[] {
+        return this.transactions.slice(0, 10); // Возвращаем последние 10 транзакций
     }
 
-    editTransaction(transaction: any): void {
-        console.log('Редактирование транзакции:', transaction);
+    editTransaction(transaction: Transaction): void {
+        this.selectedTransaction = { ...transaction };
+        this.transactionData = {
+            id: transaction.id,
+            date: transaction.date instanceof Date ? transaction.date.toISOString().split('T')[0] : transaction.date,
+            description: transaction.description,
+            category: transaction.category,
+            type: transaction.type,
+            amount: transaction.amount
+        };
+        this.showAddTransactionModal = true;
+    }
+
+    onAddTransaction(): void {
+        this.selectedTransaction = null;
+        this.transactionData = {
+            date: new Date().toISOString().split('T')[0],
+            description: '',
+            category: '',
+            type: 'expense',
+            amount: 0
+        };
+        this.showAddTransactionModal = true;
+    }
+
+    onCloseTransactionModal(): void {
+        this.showAddTransactionModal = false;
+        this.selectedTransaction = null;
+    }
+
+    onTransactionSaved(transaction: Transaction): void {
+        if (this.selectedTransaction) {
+            // Обновление существующей транзакции
+            this.financeService.updateTransaction(transaction).pipe(takeUntil(this.destroy$)).subscribe({
+                next: () => {
+                    console.log('Транзакция обновлена');
+                    this.loadFinanceData();
+                    this.onCloseTransactionModal();
+                },
+                error: (error) => {
+                    console.error('Ошибка при обновлении транзакции:', error);
+                }
+            });
+        } else {
+            // Создание новой транзакции
+            this.financeService.addTransaction(transaction).pipe(takeUntil(this.destroy$)).subscribe({
+                next: () => {
+                    console.log('Транзакция создана');
+                    this.loadFinanceData();
+                    this.onCloseTransactionModal();
+                },
+                error: (error) => {
+                    console.error('Ошибка при создании транзакции:', error);
+                }
+            });
+        }
     }
 
     deleteTransaction(id: number): void {
-        console.log('Удаление транзакции:', id);
+        if (confirm('Вы уверены, что хотите удалить эту транзакцию?')) {
+            this.financeService.deleteTransaction(id).pipe(takeUntil(this.destroy$)).subscribe({
+                next: () => {
+                    console.log('Транзакция удалена');
+                    // Перезагружаем данные после удаления
+                    this.loadFinanceData();
+                },
+                error: (error) => {
+                    console.error('Ошибка при удалении транзакции:', error);
+                }
+            });
+        }
     }
 
-    getBudgets(): any[] {
-        return [
-            {
-                id: 1,
-                name: 'Операционные расходы',
-                period: 'Месяц',
-                limit: 500000,
-                spent: 380000
-            },
-            {
-                id: 2,
-                name: 'Маркетинг',
-                period: 'Квартал',
-                limit: 300000,
-                spent: 245000
-            },
-            {
-                id: 3,
-                name: 'Развитие',
-                period: 'Год',
-                limit: 1000000,
-                spent: 1050000
-            }
-        ];
+    getBudgets(): Budget[] {
+        return this.budgets;
     }
 
-    editBudget(budget: any): void {
-        console.log('Редактирование бюджета:', budget);
+    editBudget(budget: Budget): void {
+        this.selectedBudget = { ...budget };
+        this.budgetData = {
+            id: budget.id,
+            name: budget.name,
+            category: budget.category,
+            period: budget.period,
+            limit: budget.limit,
+            spent: budget.spent,
+            startDate: budget.startDate instanceof Date ? budget.startDate.toISOString().split('T')[0] : budget.startDate,
+            endDate: budget.endDate instanceof Date ? budget.endDate.toISOString().split('T')[0] : budget.endDate
+        };
+        this.showBudgetModal = true;
+    }
+
+    onAddBudget(): void {
+        this.selectedBudget = null;
+        const today = new Date();
+        const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        this.budgetData = {
+            name: '',
+            category: '',
+            period: 'month',
+            limit: 0,
+            spent: 0,
+            startDate: today.toISOString().split('T')[0],
+            endDate: nextMonth.toISOString().split('T')[0]
+        };
+        this.showBudgetModal = true;
+    }
+
+    onCloseBudgetModal(): void {
+        this.showBudgetModal = false;
+        this.selectedBudget = null;
+    }
+
+    onBudgetSaved(budget: Budget): void {
+        if (this.selectedBudget) {
+            // Обновление существующего бюджета
+            this.financeService.updateBudget(budget).pipe(takeUntil(this.destroy$)).subscribe({
+                next: () => {
+                    console.log('Бюджет обновлен');
+                    this.loadFinanceData();
+                    this.onCloseBudgetModal();
+                },
+                error: (error) => {
+                    console.error('Ошибка при обновлении бюджета:', error);
+                }
+            });
+        } else {
+            // Создание нового бюджета
+            this.financeService.addBudget(budget).pipe(takeUntil(this.destroy$)).subscribe({
+                next: () => {
+                    console.log('Бюджет создан');
+                    this.loadFinanceData();
+                    this.onCloseBudgetModal();
+                },
+                error: (error) => {
+                    console.error('Ошибка при создании бюджета:', error);
+                }
+            });
+        }
     }
 
     deleteBudget(id: number): void {
-        console.log('Удаление бюджета:', id);
+        if (confirm('Вы уверены, что хотите удалить этот бюджет?')) {
+            this.financeService.deleteBudget(id).pipe(takeUntil(this.destroy$)).subscribe({
+                next: () => {
+                    console.log('Бюджет удален');
+                    // Перезагружаем данные после удаления
+                    this.loadFinanceData();
+                },
+                error: (error) => {
+                    console.error('Ошибка при удалении бюджета:', error);
+                }
+            });
+        }
     }
 
     clearCalculation(): void {

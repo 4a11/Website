@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface Employee {
     id: number;
@@ -24,9 +25,11 @@ export interface Employee {
     providedIn: 'root'
 })
 export class EmployeeService {
-    private apiUrl = 'http://localhost:3000/api/employees';
+    private apiUrl = `${environment.apiUrl}/employees`;
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+        console.log('EmployeeService initialized with apiUrl:', this.apiUrl);
+    }
 
     getEmployees(): Observable<Employee[]> {
         console.log('Запрашиваем список сотрудников');

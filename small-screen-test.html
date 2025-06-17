@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест маленьких экранов - Админ панель</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Базовые стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1f2937;
+        }
+        
+        .admin-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Хедер */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header h2 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .notification-btn,
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #f9fafb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Контент */
+        .content {
+            padding-top: 75px;
+            padding-bottom: 85px;
+            min-height: calc(100vh - 145px);
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+        
+        /* Статистические карточки */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-icon.employees { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stat-icon.facilities { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stat-icon.workload { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stat-icon.equipment { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        
+        .stat-content {
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        /* Карточки сотрудников */
+        .employees-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        
+        .employee-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .employee-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .employee-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .employee-info .position {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        /* Навигация */
+        .sidemenu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100vw;
+            height: 70px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidemenu nav {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidemenu nav ul {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .sidemenu nav ul li {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidemenu nav ul li a {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.7rem;
+            padding: 8px 4px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            gap: 4px;
+            text-align: center;
+        }
+        
+        .sidemenu nav ul li a i {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1;
+        }
+        
+        .sidemenu nav ul li a span {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 60px;
+        }
+        
+        .sidemenu nav ul li a.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sidemenu nav ul li a.active i,
+        .sidemenu nav ul li a.active span {
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Медиа-запросы для маленьких экранов */
+        @media (max-width: 400px) {
+            .sidemenu {
+                height: 60px;
+            }
+            
+            .header {
+                height: 50px;
+                padding: 0 12px;
+            }
+            
+            .header h2 {
+                font-size: 1rem;
+            }
+            
+            .notification-btn,
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .notification-badge {
+                width: 16px;
+                height: 16px;
+                font-size: 0.6rem;
+            }
+            
+            .content {
+                padding-top: 65px;
+                padding-bottom: 75px;
+                min-height: calc(100vh - 125px);
+            }
+            
+            .sidemenu nav ul li a {
+                padding: 6px 2px;
+                gap: 2px;
+            }
+            
+            .sidemenu nav ul li a i {
+                font-size: 1rem;
+            }
+            
+            .sidemenu nav ul li a span {
+                font-size: 0.55rem;
+                max-width: 50px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .stat-label {
+                font-size: 0.7rem;
+            }
+            
+            .employee-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .employee-info h4 {
+                font-size: 0.9rem;
+            }
+            
+            .employee-info .position {
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .sidemenu {
+                height: 55px;
+            }
+            
+            .header {
+                height: 45px;
+                padding: 0 8px;
+            }
+            
+            .header h2 {
+                font-size: 0.9rem;
+            }
+            
+            .notification-btn,
+            .theme-toggle {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .content {
+                padding-top: 60px;
+                padding-bottom: 70px;
+            }
+            
+            .sidemenu nav ul li a {
+                padding: 4px 1px;
+            }
+            
+            .sidemenu nav ul li a i {
+                font-size: 0.9rem;
+            }
+            
+            .sidemenu nav ul li a span {
+                font-size: 0.5rem;
+                max-width: 45px;
+            }
+            
+            /* Скрываем лишние элементы навигации */
+            .sidemenu nav ul li:nth-child(n+7) {
+                display: none;
+            }
+            
+            .stat-card {
+                padding: 8px;
+            }
+            
+            .employee-avatar {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .employee-info h4 {
+                font-size: 0.8rem;
+            }
+            
+            .employee-info .position {
+                font-size: 0.7rem;
+            }
+            
+            .stat-number {
+                font-size: 1.2rem;
+            }
+            
+            .stat-label {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Хедер -->
+        <header class="header">
+            <h2>Дашборд</h2>
+            <div class="header-actions">
+                <button class="notification-btn" title="Уведомления">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge">3</div>
+                </button>
+                <button class="theme-toggle" title="Сменить тему">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="content">
+            <!-- Статистика -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon employees">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Сотрудников</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon facilities">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Объектов</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon workload">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Загрузка</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon equipment">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Оборудования</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Сотрудники -->
+            <div class="employees-grid">
+                <div class="employee-card">
+                    <div class="card-header">
+                        <div class="employee-avatar">АИ</div>
+                        <div class="employee-info">
+                            <h4>Алексей Иванов</h4>
+                            <div class="position">Старший инженер</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="employee-card">
+                    <div class="card-header">
+                        <div class="employee-avatar">МП</div>
+                        <div class="employee-info">
+                            <h4>Мария Петрова</h4>
+                            <div class="position">Менеджер проектов</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="employee-card">
+                    <div class="card-header">
+                        <div class="employee-avatar">ДС</div>
+                        <div class="employee-info">
+                            <h4>Дмитрий Сидоров</h4>
+                            <div class="position">Техник</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Навигация -->
+        <aside class="sidemenu">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Дашборд</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span>Сотрудники</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-building"></i>
+                            <span>Объекты</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tools"></i>
+                            <span>Оборудование</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-pen"></i>
+                            <span>Новости</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Отчеты</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-calculator"></i>
+                            <span>Расчеты</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Финансы</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span>Отзывы</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Настройки</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+    </div>
+
+    <script>
+        // Простая демонстрация переключения темы
+        document.querySelector('.theme-toggle').addEventListener('click', function() {
+            document.body.style.background = document.body.style.background === 'rgb(31, 41, 55)' ? '#f8fafc' : '#1f2937';
+            document.body.style.color = document.body.style.color === 'rgb(249, 250, 251)' ? '#1f2937' : '#f9fafb';
+        });
+        
+        // Показываем текущий размер экрана
+        function showScreenSize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            console.log(`Размер экрана: ${width}x${height}px`);
+            
+            if (width <= 360) {
+                console.log('📱 Экстремально маленький экран (≤360px)');
+            } else if (width <= 400) {
+                console.log('📱 Очень маленький экран (≤400px)');
+            } else if (width <= 480) {
+                console.log('📱 Маленький экран (≤480px)');
+            } else if (width <= 768) {
+                console.log('📱 Планшет (≤768px)');
+            } else {
+                console.log('💻 Десктоп (>768px)');
+            }
+        }
+        
+        showScreenSize();
+        window.addEventListener('resize', showScreenSize);
+    </script>
+</body>
+</html> 

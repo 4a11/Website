@@ -133,6 +133,10 @@
 
         <!-- Дашборд (по умолчанию) -->
         <div *ngIf="currentSection === 'dashboard'">
+            <!-- Мобильный заголовок страницы -->
+            <div class="page-header mobile-only">
+                <h1><i class="fas fa-chart-line"></i> Дашборд</h1>
+            </div>
             <!-- Статистика -->
             <section class="overview-stats">
                 <div class="stats-grid">
@@ -403,7 +407,10 @@
             <section class="finances-container">
                 <!-- Заголовок и статистика -->
                 <div class="finances-header">
-                    <h3><i class="fas fa-chart-pie"></i> Финансовая отчетность</h3>
+                    <div class="finances-header-info">
+                        <h3>Финансовая отчетность</h3>
+                        <p>Управление доходами, расходами и бюджетом компании</p>
+                    </div>
                     <div class="finance-period-selector">
                         <select [value]="selectedFinancePeriod" (change)="selectedFinancePeriod = $any($event.target).value; updateFinanceData()">
                             <option value="today">Сегодня</option>
@@ -469,16 +476,85 @@
                         <div class="chart-header">
                             <h4><i class="fas fa-chart-area"></i> Динамика доходов и расходов</h4>
                             <div class="chart-controls">
-                                <button [class.active]="chartType === 'line'" (click)="setChartType('line')">
-                                    <i class="fas fa-chart-line"></i>
-                                </button>
                                 <button [class.active]="chartType === 'bar'" (click)="setChartType('bar')">
-                                    <i class="fas fa-chart-bar"></i>
+                                    <i class="fas fa-chart-bar"></i> Столбцы
+                                </button>
+                                <button [class.active]="chartType === 'line'" (click)="setChartType('line')">
+                                    <i class="fas fa-chart-line"></i> Линия
+                                </button>
+                                <button [class.active]="chartType === 'area'" (click)="setChartType('area')">
+                                    <i class="fas fa-chart-area"></i> Область
                                 </button>
                             </div>
                         </div>
                         <div class="chart-placeholder">
-                            <div class="mock-chart">
+                            <!-- Минималистичный столбчатый график -->
+                            <div class="minimal-chart" *ngIf="chartType === 'bar'">
+                                <div class="chart-legend">
+                                    <span class="legend-item revenue"><span class="legend-color"></span>Доходы</span>
+                                    <span class="legend-item expenses"><span class="legend-color"></span>Расходы</span>
+                                </div>
+                                <div class="chart-area">
+                                    <div class="chart-grid">
+                                        <div class="grid-line"></div>
+                                        <div class="grid-line"></div>
+                                        <div class="grid-line"></div>
+                                        <div class="grid-line"></div>
+                                    </div>
+                                    <div class="chart-bars-container">
+                                        <div class="chart-bar" 
+                                             *ngFor="let data of getChartData()" 
+                                             [style.height.%]="data.revenue"
+                                             [class.expense]="false">
+                                            <div class="chart-bar-value">{{(data.revenue * 10000) | number:'1.0-0'}} ₽</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chart-labels">
+                                    <div class="chart-label" *ngFor="let data of getChartData()">{{data.label}}</div>
+                                </div>
+                            </div>
+
+                            <!-- Линейный график -->
+                            <div class="line-chart" *ngIf="chartType === 'line'">
+                                <svg viewBox="0 0 400 200">
+                                    <defs>
+                                        <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.3"/>
+                                            <stop offset="100%" style="stop-color:#10b981;stop-opacity:0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="chart-area-fill" d="M50,150 L100,120 L150,100 L200,80 L250,90 L350,60 L350,180 L50,180 Z"/>
+                                    <path class="chart-line" d="M50,150 L100,120 L150,100 L200,80 L250,90 L350,60"/>
+                                    <circle class="chart-point" cx="50" cy="150" r="4"/>
+                                    <circle class="chart-point" cx="100" cy="120" r="4"/>
+                                    <circle class="chart-point" cx="150" cy="100" r="4"/>
+                                    <circle class="chart-point" cx="200" cy="80" r="4"/>
+                                    <circle class="chart-point" cx="250" cy="90" r="4"/>
+                                    <circle class="chart-point" cx="350" cy="60" r="4"/>
+                                </svg>
+                            </div>
+
+                            <!-- Область график -->
+                            <div class="line-chart" *ngIf="chartType === 'area'">
+                                <svg viewBox="0 0 400 200">
+                                    <defs>
+                                        <linearGradient id="areaGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#e91e63;stop-opacity:0.4"/>
+                                            <stop offset="100%" style="stop-color:#e91e63;stop-opacity:0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="chart-area-fill" style="fill: url(#areaGradient2);" d="M50,150 Q100,120 150,100 T250,90 L350,60 L350,180 L50,180 Z"/>
+                                    <path class="chart-line" style="stroke: #e91e63;" d="M50,150 Q100,120 150,100 T250,90 L350,60"/>
+                                    <circle class="chart-point" style="fill: #e91e63;" cx="50" cy="150" r="4"/>
+                                    <circle class="chart-point" style="fill: #e91e63;" cx="150" cy="100" r="4"/>
+                                    <circle class="chart-point" style="fill: #e91e63;" cx="250" cy="90" r="4"/>
+                                    <circle class="chart-point" style="fill: #e91e63;" cx="350" cy="60" r="4"/>
+                                </svg>
+                            </div>
+
+                            <!-- Старый график для совместимости -->
+                            <div class="mock-chart" *ngIf="!['bar', 'line', 'area'].includes(chartType)">
                                 <div class="chart-legend">
                                     <span class="legend-item revenue"><span class="legend-color"></span>Доходы</span>
                                     <span class="legend-item expenses"><span class="legend-color"></span>Расходы</span>
@@ -499,6 +575,24 @@
                         <div class="breakdown-header">
                             <h4><i class="fas fa-pie-chart"></i> Структура доходов</h4>
                         </div>
+                        
+                        <!-- Круговая диаграмма -->
+                        <div class="pie-chart" *ngIf="getRevenueBreakdown().length > 0">
+                            <svg viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#e2e8f0" stroke-width="20"/>
+                                <circle cx="100" cy="100" r="80" fill="none" 
+                                        [attr.stroke]="getRevenueBreakdown()[0]?.color || '#10b981'" 
+                                        stroke-width="20"
+                                        stroke-dasharray="{{(getRevenueBreakdown()[0]?.percentage || 0) * 5.03}} 502"
+                                        stroke-dashoffset="0"
+                                        class="pie-slice"/>
+                            </svg>
+                            <div class="pie-center">
+                                <div class="pie-center-value">{{(financeSummary?.totalRevenue || 0) | number:'1.0-0'}}</div>
+                                <div class="pie-center-label">Общий доход</div>
+                            </div>
+                        </div>
+
                         <div class="breakdown-list">
                             <div class="breakdown-item" *ngFor="let item of getRevenueBreakdown()">
                                 <div class="breakdown-info">
@@ -520,7 +614,7 @@
                     <div class="transactions-section">
                         <div class="section-header">
                             <h4><i class="fas fa-exchange-alt"></i> Последние транзакции</h4>
-                            <button class="add-btn" (click)="showAddTransactionModal = true">
+                            <button class="add-btn" (click)="onAddTransaction()">
                                 <i class="fas fa-plus"></i>
                                 Добавить транзакцию
                             </button>
@@ -575,7 +669,7 @@
                     <div class="budget-section">
                         <div class="section-header">
                             <h4><i class="fas fa-calendar-alt"></i> Бюджет</h4>
-                            <button class="add-btn" (click)="showBudgetModal = true">
+                            <button class="add-btn" (click)="onAddBudget()">
                                 <i class="fas fa-plus"></i>
                                 Создать бюджет
                             </button>
@@ -615,33 +709,41 @@
 
         <!-- Раздел сотрудников -->
         <div *ngIf="currentSection === 'employees'">
+            <!-- Мобильный заголовок страницы -->
+            <div class="page-header mobile-only">
+                <h1><i class="fas fa-users"></i> Сотрудники</h1>
+            </div>
             <section class="employees-container">
                 <!-- Заголовок и статистика -->
                 <div class="employees-header">
-                    <div class="header-info">
-                        <h3><i class="fas fa-users"></i> Управление сотрудниками</h3>
-                        <div class="stats-row">
-                            <div class="stat-item">
+                    <div class="employees-header-info">
+                        <h3>Управление сотрудниками</h3>
+                        <p>Контроль персонала и управление командой компании</p>
+                        <div class="employees-stats">
+                            <div class="employees-stat-item">
+                                <i class="fas fa-users"></i>
                                 <span class="stat-number">{{employees.length}}</span>
-                                <span class="stat-label">Всего сотрудников</span>
+                                <span class="stat-label">всего</span>
                             </div>
-                            <div class="stat-item">
+                            <div class="employees-stat-item">
+                                <i class="fas fa-user-check"></i>
                                 <span class="stat-number">{{getActiveEmployeesCount()}}</span>
-                                <span class="stat-label">Активных</span>
+                                <span class="stat-label">активных</span>
                             </div>
-                            <div class="stat-item">
+                            <div class="employees-stat-item">
+                                <i class="fas fa-building"></i>
                                 <span class="stat-number">{{getDepartmentsCount()}}</span>
-                                <span class="stat-label">Отделов</span>
+                                <span class="stat-label">отделов</span>
                             </div>
                         </div>
                     </div>
-                    <div class="header-actions">
-                        <div class="view-toggle">
-                            <button [class.active]="employeesView === 'cards'" (click)="setEmployeesView('cards')">
+                    <div class="employees-header-actions">
+                        <div class="employees-view-toggle">
+                            <button class="employees-view-btn" [class.active]="employeesView === 'cards'" (click)="setEmployeesView('cards')">
                                 <i class="fas fa-th-large"></i>
                                 Карточки
                             </button>
-                            <button [class.active]="employeesView === 'list'" (click)="setEmployeesView('list')">
+                            <button class="employees-view-btn" [class.active]="employeesView === 'list'" (click)="setEmployeesView('list')">
                                 <i class="fas fa-list"></i>
                                 Список
                             </button>
@@ -2653,7 +2755,7 @@
                         <div class="settings-list">
                             <div class="setting-item" *ngFor="let setting of getSettingsByCategory(category.id)">
                                 <div class="setting-info">
-                                    <span class="setting-name">{{setting.key || setting.name}}</span>
+                                    <span class="setting-name">{{setting.key}}</span>
                                     <span class="setting-description">{{setting.description}}</span>
                                 </div>
                                 <div class="setting-control">
@@ -2661,7 +2763,7 @@
                                         <!-- Булевые настройки -->
                                         <label class="switch" *ngSwitchCase="'boolean'">
                                             <input type="checkbox" 
-                                                   [checked]="setting.value === 'true' || setting.value === true"
+                                                   [checked]="setting.value === 'true'"
                                                    (change)="setting.value = $any($event.target).checked; onSettingChange(setting)">
                                             <span class="slider"></span>
                                         </label>
@@ -2754,4 +2856,119 @@
             (close)="onCloseAddEquipmentModal()">
         </app-add-equipment-modal>
     </main>
+
+    <!-- Модальное окно для добавления/редактирования транзакции -->
+    <div class="modal-overlay" *ngIf="showAddTransactionModal" (click)="onCloseTransactionModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>{{selectedTransaction ? 'Редактировать транзакцию' : 'Добавить транзакцию'}}</h3>
+                <button class="close-btn" (click)="onCloseTransactionModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #transactionForm="ngForm" (ngSubmit)="onTransactionSaved(transactionData)">
+                    <div class="form-group">
+                        <label for="transactionDate">Дата</label>
+                        <input type="date" id="transactionDate" name="date" 
+                               [(ngModel)]="transactionData.date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionDescription">Описание</label>
+                        <input type="text" id="transactionDescription" name="description" 
+                               [(ngModel)]="transactionData.description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionCategory">Категория</label>
+                        <input type="text" id="transactionCategory" name="category" 
+                               [(ngModel)]="transactionData.category" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionType">Тип</label>
+                        <select id="transactionType" name="type" 
+                                [(ngModel)]="transactionData.type" required>
+                            <option value="income">Доход</option>
+                            <option value="expense">Расход</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionAmount">Сумма</label>
+                        <input type="number" id="transactionAmount" name="amount" 
+                               [(ngModel)]="transactionData.amount" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="cancel-btn" (click)="onCloseTransactionModal()">
+                            Отмена
+                        </button>
+                        <button type="submit" class="save-btn" [disabled]="!transactionForm.valid">
+                            {{selectedTransaction ? 'Обновить' : 'Создать'}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления/редактирования бюджета -->
+    <div class="modal-overlay" *ngIf="showBudgetModal" (click)="onCloseBudgetModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>{{selectedBudget ? 'Редактировать бюджет' : 'Создать бюджет'}}</h3>
+                <button class="close-btn" (click)="onCloseBudgetModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #budgetForm="ngForm" (ngSubmit)="onBudgetSaved(budgetData)">
+                    <div class="form-group">
+                        <label for="budgetName">Название</label>
+                        <input type="text" id="budgetName" name="name" 
+                               [(ngModel)]="budgetData.name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetCategory">Категория</label>
+                        <input type="text" id="budgetCategory" name="category" 
+                               [(ngModel)]="budgetData.category" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetPeriod">Период</label>
+                        <select id="budgetPeriod" name="period" 
+                                [(ngModel)]="budgetData.period" required>
+                            <option value="month">Месяц</option>
+                            <option value="quarter">Квартал</option>
+                            <option value="year">Год</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetLimit">Лимит</label>
+                        <input type="number" id="budgetLimit" name="limit" 
+                               [(ngModel)]="budgetData.limit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetSpent">Потрачено</label>
+                        <input type="number" id="budgetSpent" name="spent" 
+                               [(ngModel)]="budgetData.spent">
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetStartDate">Дата начала</label>
+                        <input type="date" id="budgetStartDate" name="startDate" 
+                               [(ngModel)]="budgetData.startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetEndDate">Дата окончания</label>
+                        <input type="date" id="budgetEndDate" name="endDate" 
+                               [(ngModel)]="budgetData.endDate" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="cancel-btn" (click)="onCloseBudgetModal()">
+                            Отмена
+                        </button>
+                        <button type="submit" class="save-btn" [disabled]="!budgetForm.valid">
+                            {{selectedBudget ? 'Обновить' : 'Создать'}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

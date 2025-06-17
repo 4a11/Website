@@ -6,9 +6,9 @@ export const environment = {
     database: {
         host: 'localhost',
         port: 5432,
-        name: 'admin_panel_db',
+        name: 'postgres',
         user: 'postgres',
-        password: 'postgres'
+        password: 'NiceDbPassword'
     }
 };
 

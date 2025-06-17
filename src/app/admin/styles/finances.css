@@ -44,6 +44,19 @@
     filter: drop-shadow(0 2px 4px rgba(233, 30, 99, 0.3));
 }
 
+.finances-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.finances-header-info p {
+    color: #64748b;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
 .finances-header-info p {
     color: #64748b;
     margin: 0 0 12px 0;
@@ -318,7 +331,204 @@
     overflow: hidden;
 }
 
-/* Мок график */
+/* Минималистичные графики */
+.minimal-chart {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.chart-area {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    padding: 20px 0;
+    margin-bottom: 20px;
+}
+
+.chart-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.grid-line {
+    height: 1px;
+    background: rgba(233, 30, 99, 0.1);
+    width: 100%;
+}
+
+.chart-bars-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    width: 100%;
+    height: 100%;
+    gap: 8px;
+    z-index: 2;
+    position: relative;
+}
+
+.chart-bar {
+    flex: 1;
+    max-width: 40px;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.chart-bar:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.chart-bar.expense {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.chart-bar.expense:hover {
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+}
+
+.chart-bar-value {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1e293b;
+    background: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.chart-bar:hover .chart-bar-value {
+    opacity: 1;
+    top: -35px;
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 0 4px;
+}
+
+.chart-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;
+}
+
+/* Круговая диаграмма */
+.pie-chart {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.pie-chart svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.pie-slice {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.pie-slice:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.pie-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.pie-center-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.pie-center-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Линейный график */
+.line-chart {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.line-chart svg {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-line {
+    fill: none;
+    stroke: #10b981;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+}
+
+.chart-area-fill {
+    fill: url(#areaGradient);
+    opacity: 0.3;
+}
+
+.chart-point {
+    fill: #10b981;
+    stroke: white;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.chart-point:hover {
+    r: 6;
+    stroke-width: 3;
+    filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.5));
+}
+
+/* Мок график (старый) */
 .mock-chart {
     width: 100%;
     height: 100%;
@@ -1063,4 +1273,256 @@
     background: linear-gradient(135deg, #f87171, #ef4444);
     color: white;
     box-shadow: 0 4px 12px rgba(248, 113, 113, 0.4);
-} 
+}
+
+/* Стили для новых графиков в темной теме */
+.dark-theme .grid-line {
+    background: rgba(233, 30, 99, 0.2);
+}
+
+.dark-theme .chart-bar-value {
+    background: #1e293b;
+    color: #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .chart-label {
+    color: #94a3b8;
+}
+
+.dark-theme .pie-center-value {
+    color: #e2e8f0;
+}
+
+.dark-theme .pie-center-label {
+    color: #94a3b8;
+}
+
+.dark-theme .chart-line {
+    filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.5));
+}
+
+.dark-theme .chart-point {
+    stroke: #1e293b;
+}
+
+/* Модальные окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    color: #1f2937;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.cancel-btn,
+.save-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.cancel-btn {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.cancel-btn:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.save-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+.save-btn:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+    background: #d1d5db;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Темная тема для модальных окон */
+.dark-theme .modal-content {
+    background: #1f2937;
+    border: 1px solid #374151;
+}
+
+.dark-theme .modal-header {
+    border-bottom-color: #374151;
+}
+
+.dark-theme .modal-header h3 {
+    color: #f9fafb;
+}
+
+.dark-theme .close-btn {
+    color: #9ca3af;
+}
+
+.dark-theme .close-btn:hover {
+    background: #374151;
+    color: #f9fafb;
+}
+
+.dark-theme .form-group label {
+    color: #f9fafb;
+}
+
+.dark-theme .form-group input,
+.dark-theme .form-group select {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+
+.dark-theme .form-group input:focus,
+.dark-theme .form-group select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark-theme .modal-actions {
+    border-top-color: #374151;
+}
+
+.dark-theme .cancel-btn {
+    background: #374151;
+    color: #9ca3af;
+}
+
+.dark-theme .cancel-btn:hover {
+    background: #4b5563;
+    color: #f9fafb;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .cancel-btn,
+    .save-btn {
+        width: 100%;
+    }
+}

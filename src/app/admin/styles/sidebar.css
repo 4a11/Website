@@ -34,13 +34,14 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .logo-section::before {
@@ -50,24 +51,29 @@
     top: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.5));
+    background: linear-gradient(to bottom, #60a5fa, #a78bfa, #34d399);
     border-radius: 0 2px 2px 0;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0.7;
 }
 
 .logo-section:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(2px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+    transform: translateX(3px) scale(1.01);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
 }
 
 .logo-section:hover::before {
     width: 6px;
-    background: linear-gradient(to bottom, #ffffff, #a78bfa);
+    background: linear-gradient(to bottom, #60a5fa, #a78bfa, #34d399);
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
 }
 
 .logo-section:hover i {
-    transform: rotate(10deg) scale(1.1);
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    transform: rotate(10deg) scale(1.15);
+    box-shadow: 0 6px 25px rgba(96, 165, 250, 0.4);
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.4), rgba(167, 139, 250, 0.3));
 }
 
 .logo-section i {
@@ -78,12 +84,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.3), rgba(167, 139, 250, 0.2));
     border-radius: 12px;
     padding: 0.5rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 4px 15px rgba(96, 165, 250, 0.2);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .logo-section span {
@@ -195,10 +202,11 @@ nav a:hover i {
 .user-section {
     margin-top: auto;
     padding: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    backdrop-filter: blur(20px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .user-info {
@@ -207,20 +215,29 @@ nav a:hover i {
     gap: 1rem;
     margin-bottom: 1rem;
     padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(167, 139, 250, 0.05));
     border-radius: 12px;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-info:hover {
-    background: rgba(255, 255, 255, 0.12);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(167, 139, 250, 0.08));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(96, 165, 250, 0.15);
 }
 
 .user-info i {
     font-size: 2rem;
-    color: #a78bfa;
-    filter: drop-shadow(0 2px 4px rgba(167, 139, 250, 0.3));
+    color: #60a5fa;
+    filter: drop-shadow(0 2px 8px rgba(96, 165, 250, 0.4));
+    transition: all 0.3s ease;
+}
+
+.user-info:hover i {
+    color: #34d399;
+    filter: drop-shadow(0 3px 12px rgba(52, 211, 153, 0.5));
+    transform: scale(1.1);
 }
 
 .user-details {
@@ -418,9 +435,9 @@ nav li:has(a[href*="employees"]) a {
 }
 
 nav li:has(a[href*="employees"]) i {
-    color: #7c3aed;
-    text-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
-    filter: drop-shadow(0 2px 4px rgba(124, 58, 237, 0.3));
+    color: #a855f7;
+    text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+    filter: drop-shadow(0 2px 4px rgba(168, 85, 247, 0.4));
 }
 
 nav li:has(a[href*="employees"]) a:hover {
@@ -431,7 +448,7 @@ nav li:has(a[href*="employees"]) a:hover {
 }
 
 nav li:has(a[href*="employees"]) a:hover i {
-    color: #6d28d9;
+    color: #c084fc;
     transform: scale(1.15) rotate(5deg);
 }
 
@@ -558,9 +575,9 @@ nav li:has(a[href*="calculations"]) a {
 }
 
 nav li:has(a[href*="calculations"]) i {
-    color: #3f51b5;
-    text-shadow: 0 0 8px rgba(63, 81, 181, 0.4);
-    filter: drop-shadow(0 2px 4px rgba(63, 81, 181, 0.3));
+    color: #6366f1;
+    text-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+    filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.4));
 }
 
 nav li:has(a[href*="calculations"]) a:hover {
@@ -571,7 +588,7 @@ nav li:has(a[href*="calculations"]) a:hover {
 }
 
 nav li:has(a[href*="calculations"]) a:hover i {
-    color: #303f9f;
+    color: #818cf8;
     transform: scale(1.15) rotate(5deg);
 }
 
@@ -621,8 +638,12 @@ nav li:has(a[href*="finances"])::before {
 
 /* Темная тема для всех вкладок */
 .admin-container.dark-theme nav li:has(a[href*="employees"]) a {
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.08));
-    border-color: rgba(124, 58, 237, 0.3);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(139, 92, 246, 0.08));
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="employees"]) i {
+    color: #c084fc;
 }
 
 .admin-container.dark-theme nav li:has(a[href*="equipment"]) a {
@@ -641,11 +662,354 @@ nav li:has(a[href*="finances"])::before {
 }
 
 .admin-container.dark-theme nav li:has(a[href*="calculations"]) a {
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.15), rgba(57, 73, 171, 0.08));
-    border-color: rgba(63, 81, 181, 0.3);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(129, 140, 248, 0.08));
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="calculations"]) i {
+    color: #a5b4fc;
 }
 
 .admin-container.dark-theme nav li:has(a[href*="finances"]) a {
     background: linear-gradient(135deg, rgba(233, 30, 99, 0.15), rgba(216, 27, 96, 0.08));
     border-color: rgba(233, 30, 99, 0.3);
+}
+
+/* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ТЕМНОЙ ТЕМЫ ===== */
+
+/* Темная тема - секция логотипа */
+.admin-container.dark-theme .logo-section {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(59, 130, 246, 0.08));
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.admin-container.dark-theme .logo-section::before {
+    background: linear-gradient(to bottom, #8b5cf6, #3b82f6, #06b6d4);
+    opacity: 0.8;
+}
+
+.admin-container.dark-theme .logo-section:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.12));
+    box-shadow: 0 6px 30px rgba(139, 92, 246, 0.2);
+}
+
+.admin-container.dark-theme .logo-section:hover::before {
+    background: linear-gradient(to bottom, #8b5cf6, #3b82f6, #06b6d4);
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+.admin-container.dark-theme .logo-section i {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(59, 130, 246, 0.3));
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.admin-container.dark-theme .logo-section:hover i {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.4));
+    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+}
+
+/* Темная тема - секция пользователя */
+.admin-container.dark-theme .user-section {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(59, 130, 246, 0.08));
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.admin-container.dark-theme .user-info {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.1));
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.admin-container.dark-theme .user-info:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.15));
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+}
+
+.admin-container.dark-theme .user-info i {
+    color: #8b5cf6;
+    filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.5));
+}
+
+.admin-container.dark-theme .user-info:hover i {
+    color: #06b6d4;
+    filter: drop-shadow(0 3px 12px rgba(6, 182, 212, 0.6));
+}
+
+/* Темная тема - общие стили навигации */
+.admin-container.dark-theme nav a {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(59, 130, 246, 0.05));
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.admin-container.dark-theme nav a:hover {
+    background: var(--sidemenu-hover);
+    border-color: rgba(139, 92, 246, 0.25);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);
+}
+
+.admin-container.dark-theme nav li.active a {
+    background: var(--sidemenu-active);
+    border-color: rgba(139, 92, 246, 0.35);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+}
+
+.admin-container.dark-theme nav li.active a::before {
+    background: linear-gradient(90deg, #8b5cf6, rgba(139, 92, 246, 0.7));
+}
+
+/* Темная тема - улучшенные эффекты для кнопки выхода */
+.admin-container.dark-theme .logout-btn {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.admin-container.dark-theme .logout-btn:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4);
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Темная тема - улучшенный скроллбар */
+.admin-container.dark-theme .sidemenu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-container.dark-theme .sidemenu::-webkit-scrollbar-track {
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.admin-container.dark-theme .sidemenu::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #8b5cf6, #3b82f6);
+    border-radius: 3px;
+}
+
+.admin-container.dark-theme .sidemenu::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #a855f7, #2563eb);
+}
+
+/* Дополнительные анимации для лучшего UX */
+.admin-container .sidemenu {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+.admin-container nav a {
+    will-change: transform, background-color, border-color;
+}
+
+.admin-container .logo-section {
+    will-change: transform, background-color;
+}
+
+.admin-container .user-info {
+    will-change: transform, background-color;
+}
+
+/* Светлая тема - улучшенный скроллбар */
+.admin-container:not(.dark-theme) .sidemenu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-container:not(.dark-theme) .sidemenu::-webkit-scrollbar-track {
+    background: rgba(79, 70, 229, 0.08);
+}
+
+.admin-container:not(.dark-theme) .sidemenu::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #4f46e5, #7c3aed);
+    border-radius: 3px;
+}
+
+.admin-container:not(.dark-theme) .sidemenu::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #4338ca, #6d28d9);
+}
+
+/* ===== ДОПОЛНИТЕЛЬНЫЕ КНОПКИ МЕНЮ ===== */
+
+/* Вкладка "Дашборд" - голубая тема */
+nav li:has(a[href*="dashboard"]) a,
+nav li:has(a[href="/admin"]) a {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05));
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+nav li:has(a[href*="dashboard"]) i,
+nav li:has(a[href="/admin"]) i {
+    color: #3b82f6;
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+    filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.4));
+}
+
+nav li:has(a[href*="dashboard"]) a:hover,
+nav li:has(a[href="/admin"]) a:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
+}
+
+nav li:has(a[href*="dashboard"]) a:hover i,
+nav li:has(a[href="/admin"]) a:hover i {
+    color: #60a5fa;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="dashboard"]) a,
+nav li.active:has(a[href="/admin"]) a {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.15));
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+nav li:has(a[href*="dashboard"])::before,
+nav li:has(a[href="/admin"])::before {
+    background: linear-gradient(to bottom, #3b82f6, #2563eb);
+}
+
+/* Вкладка "Отзывы" - янтарная тема */
+nav li:has(a[href*="reviews"]) a {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+nav li:has(a[href*="reviews"]) i {
+    color: #f59e0b;
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+    filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.4));
+}
+
+nav li:has(a[href*="reviews"]) a:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+    border-color: rgba(245, 158, 11, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
+}
+
+nav li:has(a[href*="reviews"]) a:hover i {
+    color: #fbbf24;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="reviews"]) a {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.15));
+    border-color: rgba(245, 158, 11, 0.5);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+nav li:has(a[href*="reviews"])::before {
+    background: linear-gradient(to bottom, #f59e0b, #d97706);
+}
+
+/* Вкладка "Обратная связь" - изумрудная тема */
+nav li:has(a[href*="feedback"]) a {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+nav li:has(a[href*="feedback"]) i {
+    color: #10b981;
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.4));
+}
+
+nav li:has(a[href*="feedback"]) a:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+    border-color: rgba(16, 185, 129, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
+}
+
+nav li:has(a[href*="feedback"]) a:hover i {
+    color: #34d399;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="feedback"]) a {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15));
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+nav li:has(a[href*="feedback"])::before {
+    background: linear-gradient(to bottom, #10b981, #059669);
+}
+
+/* Вкладка "Настройки" - серая тема */
+nav li:has(a[href*="settings"]) a {
+    background: linear-gradient(135deg, rgba(107, 114, 128, 0.1), rgba(75, 85, 99, 0.05));
+    border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+nav li:has(a[href*="settings"]) i {
+    color: #6b7280;
+    text-shadow: 0 0 8px rgba(107, 114, 128, 0.6);
+    filter: drop-shadow(0 2px 4px rgba(107, 114, 128, 0.4));
+}
+
+nav li:has(a[href*="settings"]) a:hover {
+    background: linear-gradient(135deg, rgba(107, 114, 128, 0.2), rgba(75, 85, 99, 0.1));
+    border-color: rgba(107, 114, 128, 0.4);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(107, 114, 128, 0.25);
+}
+
+nav li:has(a[href*="settings"]) a:hover i {
+    color: #9ca3af;
+    transform: scale(1.15) rotate(5deg);
+}
+
+nav li.active:has(a[href*="settings"]) a {
+    background: linear-gradient(135deg, rgba(107, 114, 128, 0.25), rgba(75, 85, 99, 0.15));
+    border-color: rgba(107, 114, 128, 0.5);
+    box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+}
+
+nav li:has(a[href*="settings"])::before {
+    background: linear-gradient(to bottom, #6b7280, #4b5563);
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ ДОПОЛНИТЕЛЬНЫХ КНОПОК ===== */
+
+/* Темная тема - дашборд */
+.admin-container.dark-theme nav li:has(a[href*="dashboard"]) a,
+.admin-container.dark-theme nav li:has(a[href="/admin"]) a {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.08));
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="dashboard"]) i,
+.admin-container.dark-theme nav li:has(a[href="/admin"]) i {
+    color: #60a5fa;
+}
+
+/* Темная тема - отзывы */
+.admin-container.dark-theme nav li:has(a[href*="reviews"]) a {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.08));
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="reviews"]) i {
+    color: #fbbf24;
+}
+
+/* Темная тема - обратная связь */
+.admin-container.dark-theme nav li:has(a[href*="feedback"]) a {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.08));
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="feedback"]) i {
+    color: #34d399;
+}
+
+/* Темная тема - настройки */
+.admin-container.dark-theme nav li:has(a[href*="settings"]) a {
+    background: linear-gradient(135deg, rgba(156, 163, 175, 0.15), rgba(107, 114, 128, 0.08));
+    border-color: rgba(156, 163, 175, 0.3);
+}
+
+.admin-container.dark-theme nav li:has(a[href*="settings"]) i {
+    color: #d1d5db;
 } 

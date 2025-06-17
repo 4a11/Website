@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Equipment } from '../models/equipment.model';
+import { environment } from '../../environments/environment';
 
 export interface Company {
     id: number;
@@ -35,9 +36,11 @@ export interface Contact {
     providedIn: 'root'
 })
 export class DataService {
-    private apiUrl = 'http://localhost:3000/api';
+    private apiUrl = environment.apiUrl;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+        console.log('DataService initialized with apiUrl:', this.apiUrl);
+    }
 
     // Компании
     getCompanies(): Observable<Company[]> {

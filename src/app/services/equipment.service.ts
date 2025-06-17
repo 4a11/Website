@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
     providedIn: 'root'
 })
 export class EquipmentService {
-    private apiUrl = '/api/equipment';
+    private apiUrl = `${environment.apiUrl}/equipment`;
     private equipment: Equipment[] = [];
     private equipmentSubject = new BehaviorSubject<Equipment[]>([]);
     private selectedCategorySubject = new BehaviorSubject<string>('Все');
