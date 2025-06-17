@@ -1052,19 +1052,74 @@ body {
 }
 
 .service-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    padding: 0 20px;
+    align-items: start;
+}
+
+@media (min-width: 1200px) {
+    .service-list {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 1200px;
+        margin: 40px auto 0;
+    }
 }
 
 .service-item {
-    background: rgba(36, 44, 72, 0.7);
-    padding: 1.5rem;
-    border-radius: 15px;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    backdrop-filter: blur(20px);
+    padding: 35px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    height: fit-content;
+    min-height: 280px;
+}
+
+.service-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #FF2B72, #ff4785);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 
+        0 8px 20px rgba(255, 43, 114, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.service-icon svg {
+    width: 35px;
+    height: 35px;
+    fill: white;
+    transition: all 0.3s ease;
+}
+
+.service-item:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 
+        0 12px 30px rgba(255, 43, 114, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.service-item:hover .service-icon svg {
+    transform: scale(1.1);
 }
 
 /* Анимация подсветки выбранной услуги */
@@ -1091,37 +1146,192 @@ body {
 .service-item::before {
     content: '';
     position: absolute;
-    left: 0;
     top: 0;
-    width: 4px;
-    height: 100%;
-    background: #FF2B72;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 43, 114, 0.1), rgba(255, 255, 255, 0.05));
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.service-item::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #FF2B72, transparent, #FF2B72);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: 22px;
+    z-index: -1;
 }
 
 .service-item:hover {
-    background: rgba(36, 44, 72, 0.9);
-    transform: translateX(10px);
-    border-color: rgba(255, 43, 114, 0.2);
+    transform: translateY(-12px) scale(1.02);
+    border-color: rgba(255, 43, 114, 0.4);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(255, 43, 114, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .service-item:hover::before {
     opacity: 1;
 }
 
+.service-item:hover::after {
+    opacity: 0.6;
+}
+
+.service-info {
+    position: relative;
+    z-index: 2;
+}
+
 .service-info h3 {
     color: #FF2B72;
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
     font-family: 'Arial', sans-serif;
     font-weight: bold;
+    background: linear-gradient(135deg, #FF2B72, #ff4785);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.service-info h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #FF2B72, #ff4785);
+    transition: width 0.4s ease;
+}
+
+.service-item:hover .service-info h3::after {
+    width: 100%;
 }
 
 .service-info p {
-    color: #ffffff;
-    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
     font-family: 'Arial', sans-serif;
+    font-size: 1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: color 0.3s ease;
+}
+
+.service-item:hover .service-info p {
+    color: #ffffff;
+}
+
+.service-info h4 {
+    color: #FF2B72;
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    background: linear-gradient(135deg, #FF2B72, #ff4785);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.service-info h4::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #FF2B72, #ff4785);
+    transition: width 0.5s ease;
+}
+
+.service-item:hover .service-info h4::after {
+    width: 100%;
+}
+
+/* Специальные стили для длинных заголовков h4 */
+#installation.service-item .service-info h4::after {
+    width: 0;
+    transition: width 0.5s ease;
+}
+
+#installation.service-item:hover .service-info h4::after {
+    width: 100%;
+}
+
+/* Специальные стили для карточки контрактного обслуживания */
+#installation.service-item {
+    background: linear-gradient(145deg, rgba(255, 43, 114, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 43, 114, 0.2);
+    min-height: 400px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 25px;
+}
+
+#installation.service-item .service-icon {
+    margin-bottom: 10px;
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+#installation.service-item .service-info {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+#installation.service-item .service-info h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+#installation.service-item .service-info p {
+    text-align: center;
+    max-width: 100%;
+}
+
+#installation.service-item .service-info h4 {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+#installation.service-item .contract-list {
+    text-align: left;
+    max-width: 90%;
+    margin: 1.5rem auto;
+}
+
+#installation.service-item::before {
+    background: linear-gradient(135deg, rgba(255, 43, 114, 0.15), rgba(255, 255, 255, 0.08));
+}
+
+#installation.service-item:hover {
+    border-color: rgba(255, 43, 114, 0.5);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 0 50px rgba(255, 43, 114, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Удаляем неиспользуемые стили для маркеров */
@@ -1132,23 +1342,40 @@ body {
 .contract-list {
     list-style-type: none;
     padding-left: 0;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .contract-list li {
-    color: #ffffff;
-    padding: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.8rem 0;
     position: relative;
-    padding-left: 1.5rem;
+    padding-left: 2rem;
     font-family: 'Arial', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+}
+
+.contract-list li:hover {
+    color: #ffffff;
+    transform: translateX(5px);
 }
 
 .contract-list li::before {
-    content: '•';
+    content: '✓';
     color: #FF2B72;
     position: absolute;
     left: 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #FF2B72, #ff4785);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .service-footer {
@@ -1182,12 +1409,67 @@ body {
         font-size: 1.6rem;
     }
 
+    .service-list {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 10px;
+    }
+
     .service-item {
-        padding: 1rem;
+        padding: 25px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        min-height: auto;
+    }
+
+    #installation.service-item {
+        min-height: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    #installation.service-item .service-icon {
+        margin-bottom: 10px;
+        margin-top: 0;
+    }
+
+    #installation.service-item .service-info {
+        text-align: center;
+        align-items: center;
+    }
+
+    #installation.service-item .service-info h3,
+    #installation.service-item .service-info p,
+    #installation.service-item .service-info h4 {
+        text-align: center;
+    }
+
+    #installation.service-item .contract-list {
+        max-width: 100%;
+        text-align: left;
+        margin: 1.5rem auto;
+    }
+
+    .service-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .service-icon svg {
+        width: 30px;
+        height: 30px;
     }
 
     .service-info h3 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
+    }
+
+    .service-info h4 {
+        font-size: 1.1rem;
+        margin-top: 1rem;
     }
 
     .service-footer {
@@ -1213,14 +1495,67 @@ body {
         font-size: 1.4rem;
     }
 
+    .service-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 0 5px;
+    }
+
     .service-item {
+        padding: 20px;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+        min-height: auto;
+    }
+
+    #installation.service-item {
+        min-height: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    #installation.service-item .service-icon {
+        margin-bottom: 10px;
+        margin-top: 0;
+    }
+
+    #installation.service-item .service-info {
+        text-align: center;
+        align-items: center;
+    }
+
+    #installation.service-item .service-info h3,
+    #installation.service-item .service-info p,
+    #installation.service-item .service-info h4 {
+        text-align: center;
+    }
+
+    #installation.service-item .contract-list {
+        max-width: 100%;
+        text-align: left;
+        margin: 1.5rem auto;
+    }
+
+    .service-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .service-icon svg {
+        width: 25px;
+        height: 25px;
     }
 
     .service-info h3 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+    }
+
+    .service-info h4 {
+        font-size: 1rem;
+        margin-top: 0.8rem;
     }
 
     .service-footer {

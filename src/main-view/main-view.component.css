@@ -11,8 +11,9 @@ html {
     box-sizing: inherit;
 }
 
-/* Основные стили для body */
-body {
+/* Основные стили для хост-элемента компонента */
+:host {
+    display: block;
     margin: 0;
     padding: 0;
     font-family: 'Roboto', 'Open Sans', 'Segoe UI', Arial, sans-serif;
@@ -22,8 +23,6 @@ body {
     background-color: #1C243C;
     width: 100%;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
     overflow-x: hidden;
 }
 
@@ -254,7 +253,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     max-width: 600px;
     line-height: 1.4;
     font-family: 'Arial', sans-serif;
-    margin-bottom: 110px;
+    margin-bottom: 30px;
 }
 
 /* Кнопка запроса */
@@ -287,456 +286,15 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 
 /* Медиа-запросы для адаптивности */
 
-/* Медиа-запрос для устройств с очень маленькими экранами (складные устройства) */
-@media screen and (max-width: 280px) {
+/* Старые стили удалены - используются улучшенные мобильные стили ниже */
 
-    .company-name {
-        font-size: 18px;
-        margin-left: 10px;
-        text-align: center;
-    }
+/* Старые стили удалены - используются улучшенные мобильные стили ниже */
 
-    .company-subtitle {
-        font-size: 12px;
-        margin-left: 15px;
-        text-align: center;
-    }
+/* Старые стили удалены - используются улучшенные мобильные стили ниже */
 
-    .contact-info {
-        position: relative;
-        top: 10px;
-        right: 0;
-        padding: 5px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        gap: 10px;
-    }
+/* Старые стили удалены - используются улучшенные мобильные стили ниже */
 
-    .contact-text::after {
-        display: none;
-    }
-
-    .working-hours {
-        font-size: 12px;
-    }
-
-    .phone-number {
-        font-size: 14px;
-    }
-
-    .feedback-button {
-        padding: 6px 15px;
-        font-size: 10px;
-    }
-
-    .nav-menu {
-        margin: 5px;
-        padding: 5px;
-        justify-content: center;
-        gap: 5px;
-        flex-wrap: wrap;
-    }
-
-    .nav-item {
-        font-size: 12px;
-        padding: 5px;
-    }
-
-    .rounded-image-container {
-        margin: 20px auto;
-        width: 90%;
-        height: 150px;
-        border-radius: 15px;
-    }
-
-    .image-overlay-text {
-        left: 15px;
-    }
-
-    .image-overlay-title {
-        font-size: 20px;
-        margin-bottom: 5px;
-    }
-
-    .image-overlay-subtitle {
-        font-size: 18px;
-    }
-
-    .image-overlay-description {
-        font-size: 10px;
-        max-width: 220px;
-        margin-bottom: 40px;
-    }
-
-    .request-button {
-        padding: 8px 15px;
-        font-size: 11px;
-    }
-
-    .rounded-image {
-        object-position: center center;
-        transform: scale(1.05);
-    }
-}
-
-/* Медиа-запрос для устройств с маленькими экранами (мобильные телефоны) */
-@media screen and (min-width: 281px) and (max-width: 320px) {
-    /* iPhone 5/SE, обычные маленькие телефоны */
-    .company-name {
-        font-size: 18px;
-        margin-left: 15px;
-        text-align: center;
-    }
-
-    .company-subtitle {
-        font-size: 12px;
-        margin-left: 20px;
-        text-align: center;
-    }
-
-    .contact-info {
-        position: relative;
-        top: 10px;
-        right: 0;
-        padding: 5px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        gap: 10px;
-    }
-
-    .contact-text::after {
-        display: none;
-    }
-
-    .working-hours {
-        font-size: 13px;
-    }
-
-    .phone-number {
-        font-size: 15px;
-    }
-
-    .feedback-button {
-        padding: 8px 18px;
-        font-size: 11px;
-    }
-
-    .nav-menu {
-        margin: 5px;
-        padding: 8px;
-        justify-content: center;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .nav-item {
-        font-size: 12px;
-        padding: 5px;
-    }
-
-    .rounded-image-container {
-        margin: 20px auto;
-        width: 90%;
-        height: 170px;
-        border-radius: 20px;
-    }
-
-    .image-overlay-text {
-        left: 20px;
-    }
-
-    .image-overlay-title {
-        font-size: 22px;
-        margin-bottom: 8px;
-    }
-
-    .image-overlay-subtitle {
-        font-size: 20px;
-    }
-
-    .image-overlay-description {
-        font-size: 11px;
-        max-width: 240px;
-        margin-bottom: 50px;
-    }
-
-    .request-button {
-        padding: 10px 20px;
-        font-size: 12px;
-    }
-
-    .rounded-image {
-        object-position: center center;
-        transform: scale(1.05);
-    }
-}
-
-/* Медиа-запрос для устройств с маленькими экранами (iPhone и подобные) */
-@media screen and (min-width: 321px) and (max-width: 375px) {
-    /* iPhone X/11/12/13 */
-    .company-name {
-        font-size: 19px;
-        margin-left: 15px;
-        text-align: center;
-    }
-
-    .company-subtitle {
-        font-size: 13px;
-        margin-left: 20px;
-        text-align: center;
-    }
-
-    .contact-info {
-        position: relative;
-        top: 10px;
-        right: 0;
-        padding: 8px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        gap: 12px;
-    }
-
-    .contact-text::after {
-        display: none;
-    }
-
-    .working-hours {
-        font-size: 14px;
-    }
-
-    .phone-number {
-        font-size: 16px;
-    }
-
-    .feedback-button {
-        padding: 8px 20px;
-        font-size: 12px;
-    }
-
-    .nav-menu {
-        margin: 8px;
-        padding: 10px;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .nav-item {
-        font-size: 13px;
-        padding: 6px;
-    }
-
-    .rounded-image-container {
-        margin: 25px auto;
-        width: 90%;
-        height: 180px;
-        border-radius: 25px;
-    }
-
-    .image-overlay-text {
-        left: 20px;
-    }
-
-    .image-overlay-title {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .image-overlay-subtitle {
-        font-size: 22px;
-    }
-
-    .image-overlay-description {
-        font-size: 12px;
-        max-width: 280px;
-        margin-bottom: 55px;
-    }
-
-    .request-button {
-        padding: 10px 22px;
-        font-size: 13px;
-    }
-
-    .rounded-image {
-        object-position: center center;
-        transform: scale(1.05);
-    }
-}
-
-/* Медиа-запрос для средних телефонов */
-@media screen and (min-width: 376px) and (max-width: 414px) {
-    /* iPhone 6/7/8 Plus, iPhone 12/13 Pro */
-    .company-name {
-        font-size: 20px;
-        margin-left: 20px;
-        text-align: center;
-    }
-
-    .company-subtitle {
-        font-size: 14px;
-        margin-left: 25px;
-        text-align: center;
-    }
-
-    .contact-info {
-        position: relative;
-        top: 10px;
-        right: 0;
-        padding: 10px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .contact-text::after {
-        display: none;
-    }
-
-    .working-hours {
-        font-size: 14px;
-    }
-
-    .phone-number {
-        font-size: 16px;
-    }
-
-    .feedback-button {
-        padding: 8px 20px;
-        font-size: 12px;
-    }
-
-    .nav-menu {
-        margin: 10px;
-        padding: 10px;
-        justify-content: center;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .nav-item {
-        font-size: 14px;
-        padding: 6px;
-    }
-
-    .rounded-image-container {
-        margin: 30px auto;
-        width: 92%;
-        height: 200px;
-        border-radius: 30px;
-    }
-
-    .image-overlay-text {
-        left: 25px;
-    }
-
-    .image-overlay-title {
-        font-size: 26px;
-        margin-bottom: 10px;
-    }
-
-    .image-overlay-subtitle {
-        font-size: 24px;
-    }
-
-    .image-overlay-description {
-        font-size: 13px;
-        max-width: 300px;
-        margin-bottom: 60px;
-    }
-
-    .request-button {
-        padding: 12px 25px;
-        font-size: 14px;
-    }
-
-    .rounded-image {
-        object-position: center center;
-        transform: scale(1.05);
-    }
-}
-
-/* Медиа-запрос для больших телефонов */
-@media screen and (min-width: 415px) and (max-width: 480px) {
-    /* Pixel 3a, Galaxy A51/71 */
-    .company-name {
-        font-size: 20px;
-        margin-left: 20px;
-    }
-
-    .company-subtitle {
-        font-size: 14px;
-        margin-left: 25px;
-    }
-
-    .contact-info {
-        position: relative;
-        top: 10px;
-        right: 0;
-        padding: 10px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .contact-text::after {
-        display: none;
-    }
-
-    .nav-menu {
-        margin: 10px;
-        padding: 10px;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    .nav-item {
-        font-size: 14px;
-    }
-
-    .rounded-image-container {
-        margin: 30px auto;
-        width: 92%;
-        height: 220px;
-        border-radius: 35px;
-    }
-
-    .image-overlay-text {
-        left: 25px;
-    }
-
-    .image-overlay-title {
-        font-size: 28px;
-    }
-
-    .image-overlay-subtitle {
-        font-size: 24px;
-    }
-
-    .image-overlay-description {
-        font-size: 13px;
-        max-width: 320px;
-        margin-bottom: 70px;
-    }
-
-    .request-button {
-        padding: 12px 28px;
-        font-size: 14px;
-    }
-
-    .rounded-image {
-        object-position: center center;
-        transform: scale(1.05);
-    }
-}
+/* Все старые мобильные стили удалены - используются улучшенные стили в конце файла */
 
 /* Медиа-запрос для очень больших телефонов */
 @media screen and (min-width: 481px) and (max-width: 567px) {
@@ -790,7 +348,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     .image-overlay-description {
         font-size: 14px;
         max-width: 350px;
-        margin-bottom: 80px;
+        margin-bottom: 30px;
     }
 
     .request-button {
@@ -845,7 +403,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     .image-overlay-description {
         font-size: 15px;
         max-width: 400px;
-        margin-bottom: 90px;
+        margin-bottom: 30px;
     }
 
     .request-button {
@@ -887,7 +445,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     .image-overlay-description {
         font-size: 16px;
         max-width: 500px;
-        margin-bottom: 95px;
+        margin-bottom: 30px;
     }
 
     .request-button {
@@ -923,7 +481,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 
     .image-overlay-description {
         max-width: 550px;
-        margin-bottom: 100px;
+        margin-bottom: 30px;
     }
 
     .request-button {
@@ -1056,7 +614,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     .image-overlay-description {
         font-size: 18px;
         max-width: 700px;
-        margin-bottom: 120px;
+        margin-bottom: 35px;
     }
 
     .request-button {
@@ -1131,7 +689,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     .image-overlay-description {
         font-size: 22px;
         max-width: 900px;
-        margin-bottom: 140px;
+        margin-bottom: 40px;
     }
 
     .request-button {
@@ -1207,7 +765,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     .image-overlay-description {
         font-size: 26px;
         max-width: 1200px;
-        margin-bottom: 160px;
+        margin-bottom: 40px;
     }
 
     .request-button {
@@ -1485,8 +1043,8 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     padding: 30px 0;
     width: 95%;
     max-width: 1800px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid #1C243C;
+    border-bottom: 1px solid #1C243C;
     position: relative;
     z-index: 950;
     gap: 30px;
@@ -1542,7 +1100,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 2px solid rgba(255, 43, 114, 0.3);
+    border: 2px solid #1C243C;
     box-sizing: border-box;
     transition: all 0.3s ease;
 }
@@ -1556,7 +1114,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 .advantage-divider {
     width: 1px;
     height: 50px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #1C243C;
 }
 
 @media screen and (max-width: 1200px) {
@@ -1581,7 +1139,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     width: 100%;
     margin-top: 60px;
     padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid #1C243C;
 }
 
 .stat-item {
@@ -1598,7 +1156,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     top: 20%;
     height: 60%;
     width: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #1C243C;
 }
 
 .stat-item:last-child::after {
@@ -1867,7 +1425,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     width: 100%;
     margin-top: 60px;
     padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid #1C243C;
 }
 
 /* Стили для разделителей между статистикой */
@@ -1878,7 +1436,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     top: 20%;
     height: 60%;
     width: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #1C243C;
 }
 
 .stat-item:last-child::after {
@@ -2017,7 +1575,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 2px solid rgba(255, 43, 114, 0.3);
+    border: 2px solid #1C243C;
     box-sizing: border-box;
 }
 
@@ -2171,7 +1729,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    gap: 40px;
+    gap: 60px;
     padding: 0 20px;
 }
 
@@ -2200,61 +1758,48 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 .work-scheme {
     flex: 1;
     max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .work-steps {
     display: flex;
     flex-direction: column;
-    gap: 0;
-}
-
-/* Убираем отступ между первыми двумя шагами */
-.work-step.first-step {
-    margin-bottom: -2px; /* Отрицательный margin для сжатия промежутка */
-    padding-bottom: 0;
-    border-bottom: none;
-}
-
-.work-step.second-step {
-    margin-top: -2px; /* Отрицательный margin для сжатия промежутка */
-    padding-top: 0;
-    border-top: none;
+    gap: 20px;
+    align-items: flex-start;
+    margin-top: 10px;
 }
 
 .work-step {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
     position: relative;
     margin: 0;
+    padding: 10px 0;
+    width: 100%;
 }
 
 .step-icon {
     background-color: #FF2B72;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
     position: relative;
+    box-shadow: 0 4px 15px rgba(255, 43, 114, 0.3);
+    transition: all 0.3s ease;
 }
 
-.step-icon::after {
-    content: '';
-    position: absolute;
-    right: -8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 70%;
-    background-color: rgba(255, 255, 255, 0.2);
-}
+
 
 .step-icon svg {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     fill: white;
 }
 
@@ -2262,15 +1807,26 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     flex: 1;
 }
 
+.work-step:hover .step-icon {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(255, 43, 114, 0.5);
+}
+
+.work-step:hover .step-title {
+    color: #FF2B72;
+}
+
 .step-title {
-    font-size: 18px;
+    font-size: 22px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    color: #ffffff;
 }
 
 .step-description {
     color: #ccc;
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1.4;
 }
 
 /* Форма заказа */
@@ -2303,8 +1859,8 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     min-width: 220px;
     padding: 15px;
     border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid #1C243C;
+    background-color: #1C243C;
     color: white;
     font-size: 16px;
     transition: all 0.3s ease;
@@ -2312,8 +1868,8 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 
 .form-input:focus {
     outline: none;
-    border-color: rgba(255, 255, 255, 0.5);
-    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #1C243C;
+    background-color: #1C243C;
 }
 
 .form-input::placeholder {
@@ -2371,14 +1927,22 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
         font-size: 24px;
     }
     
+    .work-process-container {
+        gap: 30px;
+    }
+    
+    .work-steps {
+        gap: 15px;
+    }
+    
     .step-icon {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
     }
     
     .step-icon svg {
-        width: 25px;
-        height: 25px;
+        width: 30px;
+        height: 30px;
     }
 }
 
@@ -2804,23 +2368,157 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 /* Стили для секции с картой и контактами */
 .contact-map-section {
     width: 100%;
-    background-color: #1C243C;
+    background: linear-gradient(135deg, #1C243C 0%, #242C44 50%, #1C243C 100%);
     margin-top: auto;
     padding-bottom: 20px;
     flex-shrink: 0;
     position: relative;
     z-index: 1;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .map-container {
     width: 100%;
     position: relative;
+    margin: 0 auto;
+    max-width: 1400px;
+    padding: 20px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .yandex-map {
     width: 100%;
-    height: 400px;
+    height: 450px;
     border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.yandex-map:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Стили для элементов управления картой */
+.map-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.map-button {
+    background: linear-gradient(135deg, #FF2B72, #ff4785);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 43, 114, 0.3);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.map-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 43, 114, 0.4);
+    background: linear-gradient(135deg, #ff4785, #FF2B72);
+}
+
+.map-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(255, 43, 114, 0.3);
+}
+
+.map-button::before {
+    content: "📍";
+    font-size: 16px;
+}
+
+/* Анимации для карты */
+@keyframes mapFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes mapPulse {
+    0%, 100% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 15px 40px rgba(255, 43, 114, 0.2);
+    }
+}
+
+.map-container {
+    animation: mapFadeIn 0.8s ease-out;
+}
+
+.yandex-map {
+    animation: mapPulse 3s ease-in-out infinite;
+}
+
+/* Дополнительные эффекты для контактных блоков */
+@keyframes contactSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.contact-info-block:nth-child(1) {
+    animation: contactSlideIn 0.6s ease-out 0.2s both;
+}
+
+.contact-info-block:nth-child(2) {
+    animation: contactSlideIn 0.6s ease-out 0.4s both;
+}
+
+.contact-info-block:nth-child(3) {
+    animation: contactSlideIn 0.6s ease-out 0.6s both;
+}
+
+/* Стили для улучшения визуального восприятия */
+.contact-map-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #FF2B72, transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+    }
 }
 
 .contact-footer {
@@ -2832,19 +2530,37 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 30px;
+    border-top: 2px solid rgba(255, 43, 114, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
 }
 
 .contact-info-block {
     color: #ffffff;
     font-size: 16px;
     text-align: center;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contact-info-block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 43, 114, 0.2);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .contact-info-block.address {
     max-width: 400px;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-weight: 500;
 }
 
 .contact-phone,
@@ -2852,47 +2568,94 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     color: #FF2B72;
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
 }
 
 .contact-phone:hover,
 .contact-email:hover {
     color: #ff4785;
+    background: rgba(255, 43, 114, 0.1);
+    transform: scale(1.05);
 }
 
 /* Адаптивные стили для карты и контактов */
 @media screen and (max-width: 768px) {
+    .contact-map-section {
+        padding-bottom: 15px;
+    }
+    
+    .map-container {
+        padding: 15px;
+        border-radius: 15px;
+    }
+    
+    .yandex-map {
+        height: 350px;
+        border-radius: 12px;
+    }
+
     .contact-footer {
         flex-direction: column;
         text-align: center;
+        padding: 30px 15px;
+        gap: 20px;
     }
 
     .contact-info-block {
         width: 100%;
+        max-width: none;
+        padding: 12px 16px;
     }
 
     .map-controls {
-        flex-direction: column;
-        left: 10px;
-        bottom: 10px;
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
     }
 
     .map-button {
         font-size: 12px;
-        padding: 6px 12px;
+        padding: 8px 16px;
+        border-radius: 20px;
     }
 }
 
 @media screen and (max-width: 480px) {
+    .map-container {
+        padding: 10px;
+        border-radius: 12px;
+    }
+    
     .yandex-map {
-        height: 300px;
+        height: 280px;
+        border-radius: 10px;
     }
 
     .contact-footer {
         padding: 20px 10px;
+        gap: 15px;
     }
 
     .contact-info-block {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+    
+    .map-controls {
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .map-button {
+        font-size: 11px;
+        padding: 6px 12px;
+        border-radius: 18px;
+    }
+    
+    .map-button::before {
         font-size: 14px;
     }
 }
@@ -2927,8 +2690,8 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
     min-width: 220px;
     padding: 15px;
     border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid #1C243C;
+    background-color: #1C243C !important;
     color: white !important;
     font-size: 16px;
     cursor: pointer;
@@ -2937,8 +2700,8 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 
 .service-select:focus {
     outline: none;
-    border-color: rgba(255, 255, 255, 0.5);
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: #1C243C;
+    background-color: #1C243C !important;
 }
 
 .service-select option {
@@ -3035,9 +2798,9 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
 .form-group input,
 .form-group textarea {
     padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid #1C243C;
     border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #1C243C;
     color: #ffffff;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
@@ -3209,6 +2972,763 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, a {
   .modal button[type="submit"] {
     padding: 12px;
   }
+}
+
+/* Улучшенные мобильные стили для смартфонов */
+
+/* Базовые стили для всех мобильных устройств */
+@media screen and (max-width: 768px) {
+    /* Сброс базовых отступов и размеров */
+    html, body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        font-size: 14px;
+    }
+
+    /* Хедер */
+    .header {
+        padding: 15px 10px;
+        text-align: center;
+        background: linear-gradient(135deg, #1C243C 0%, #242C44 100%);
+    }
+
+    .company-name {
+        font-size: 20px;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+
+    .company-subtitle {
+        font-size: 12px;
+        margin-bottom: 15px;
+        line-height: 1.3;
+        padding: 0 10px;
+    }
+
+    .contact-info {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .contact-text {
+        text-align: center;
+    }
+
+    .working-hours {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .phone-number {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .feedback-button {
+        padding: 8px 16px;
+        font-size: 12px;
+        border-radius: 20px;
+        width: auto;
+        min-width: 120px;
+    }
+
+    /* Навигация */
+    .nav-menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 5px;
+    }
+
+    .nav-item {
+        padding: 6px 12px;
+        font-size: 11px;
+        border-radius: 15px;
+        white-space: nowrap;
+        flex: 0 0 auto;
+    }
+
+    /* Главное изображение */
+    .rounded-image-container {
+        margin: 15px 10px;
+        height: 300px;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .rounded-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-overlay-text {
+        padding: 20px 15px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(28, 36, 60, 0.95));
+    }
+
+    .image-overlay-subtitle {
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+
+    .image-overlay-title {
+        font-size: 18px;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+
+    .image-overlay-description {
+        font-size: 12px;
+        line-height: 1.4;
+        margin-bottom: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .request-button {
+        padding: 10px 20px;
+        font-size: 12px;
+        border-radius: 20px;
+        width: auto;
+        min-width: 140px;
+    }
+
+    /* Преимущества */
+    .advantages-container {
+        flex-direction: column;
+        padding: 20px 15px;
+        gap: 15px;
+    }
+
+    .advantage-item {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .advantage-icon-circle {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .advantage-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .advantage-text {
+        font-size: 14px;
+        line-height: 1.3;
+        margin: 0;
+    }
+
+    .advantage-divider {
+        display: none;
+    }
+
+    /* О компании */
+    .about-company-section {
+        padding: 30px 15px;
+    }
+
+    .about-company-header {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .about-company-text {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .about-company-text p {
+        margin-bottom: 15px;
+    }
+
+    .stats-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .stat-item {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .stat-text {
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    /* Услуги */
+    .services-section {
+        padding: 30px 15px;
+    }
+
+    .services-header {
+        font-size: 24px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .service-card {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .service-icon-circle {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 15px;
+    }
+
+    .service-icon-circle svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .service-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .service-button {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    /* Как мы работаем */
+    .work-process-section {
+        padding: 30px 15px;
+    }
+
+    .work-process-container {
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .work-process-info,
+    .work-scheme {
+        width: 100%;
+        padding: 0;
+    }
+
+    .work-process-header,
+    .work-scheme-header {
+        font-size: 22px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .work-process-text {
+        font-size: 14px;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    .work-steps {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .work-step {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .step-icon {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .step-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .step-content {
+        flex: 1;
+    }
+
+    .step-title {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .step-description {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Форма заказа */
+    .order-form-container {
+        padding: 25px 15px;
+        margin-top: 20px;
+    }
+
+    .order-form-header {
+        font-size: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .order-form {
+        max-width: none;
+        gap: 12px;
+    }
+
+    .form-input {
+        padding: 12px 15px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    .service-select {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .order-button {
+        padding: 12px 20px;
+        font-size: 14px;
+        border-radius: 25px;
+        margin-top: 10px;
+    }
+
+    /* Портфолио */
+    .portfolio-section {
+        padding: 30px 15px;
+    }
+
+    .portfolio-header {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .portfolio-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .portfolio-track-container {
+        overflow: visible;
+    }
+
+    .portfolio-track {
+        gap: 15px;
+        padding: 0 10px;
+    }
+
+    .portfolio-item {
+        min-width: 280px;
+        height: 200px;
+    }
+
+    .portfolio-image {
+        border-radius: 12px;
+    }
+
+    .portfolio-button {
+        width: 35px;
+        height: 35px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .portfolio-button.prev {
+        left: 5px;
+    }
+
+    .portfolio-button.next {
+        right: 5px;
+    }
+
+    .portfolio-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .portfolio-description {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    /* Отзывы */
+    .reviews-section {
+        padding: 30px 15px;
+    }
+
+    .reviews-header {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .reviews-track {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .review-card {
+        min-width: auto;
+        width: 100%;
+        padding: 20px 15px;
+        margin: 0;
+    }
+
+    .reviewer-name {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .review-date {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .review-rating {
+        margin-bottom: 10px;
+    }
+
+    .star {
+        font-size: 16px;
+    }
+
+    .review-text {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .leave-review-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 20px;
+    }
+
+    /* Карта и контакты */
+    .contact-map-section {
+        padding: 20px 10px;
+    }
+
+    .map-container {
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .yandex-map {
+        height: 250px;
+        border-radius: 12px;
+    }
+
+    .contact-footer {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 15px;
+        text-align: center;
+    }
+
+    .contact-info-block {
+        padding: 12px 15px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .contact-phone {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .contact-email {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .contact-email svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Модальное окно */
+    .modal-content {
+        width: 90%;
+        max-width: 400px;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 15px;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 10px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    .form-group textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    .modal-content form button[type="submit"] {
+        padding: 12px 20px;
+        font-size: 14px;
+        border-radius: 20px;
+        width: 100%;
+    }
+
+    .close-button {
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+    }
+
+    /* Кнопка прокрутки наверх */
+    .scroll-to-top-button {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Дополнительные стили для очень маленьких экранов */
+@media screen and (max-width: 375px) {
+    .company-name {
+        font-size: 18px;
+    }
+
+    .company-subtitle {
+        font-size: 11px;
+    }
+
+    .nav-item {
+        padding: 5px 10px;
+        font-size: 10px;
+    }
+
+    .rounded-image-container {
+        height: 250px;
+        margin: 10px 5px;
+    }
+
+    .image-overlay-title {
+        font-size: 16px;
+    }
+
+    .image-overlay-description {
+        font-size: 11px;
+        -webkit-line-clamp: 2;
+    }
+
+    .advantages-container,
+    .services-section,
+    .work-process-section,
+    .portfolio-section,
+    .reviews-section {
+        padding: 20px 10px;
+    }
+
+    .about-company-header,
+    .services-header,
+    .portfolio-header,
+    .reviews-header {
+        font-size: 20px;
+    }
+
+    .stats-wrapper {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .stat-number {
+        font-size: 24px;
+    }
+
+    .portfolio-item {
+        min-width: 250px;
+        height: 180px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+        margin: 10px;
+    }
+}
+
+/* Стили для landscape ориентации на мобильных */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .rounded-image-container {
+        height: 200px;
+    }
+
+    .image-overlay-text {
+        padding: 15px;
+    }
+
+    .image-overlay-description {
+        -webkit-line-clamp: 2;
+    }
+
+    .advantages-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .advantage-item {
+        flex: 0 0 48%;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .advantage-icon-circle {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .stats-wrapper {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .work-steps {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .work-step {
+        flex: 0 0 48%;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .step-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+/* Исправления для iPhone SE и подобных устройств */
+@media screen and (max-width: 320px) {
+    html, body {
+        font-size: 13px;
+    }
+
+    .header {
+        padding: 10px 5px;
+    }
+
+    .company-name {
+        font-size: 16px;
+    }
+
+    .company-subtitle {
+        font-size: 10px;
+        padding: 0 5px;
+    }
+
+    .nav-menu {
+        gap: 5px;
+    }
+
+    .nav-item {
+        padding: 4px 8px;
+        font-size: 9px;
+    }
+
+    .rounded-image-container {
+        height: 220px;
+        margin: 10px 5px;
+    }
+
+    .image-overlay-text {
+        padding: 15px 10px;
+    }
+
+    .image-overlay-title {
+        font-size: 14px;
+    }
+
+    .advantages-container,
+    .services-section,
+    .work-process-section,
+    .portfolio-section,
+    .reviews-section {
+        padding: 15px 5px;
+    }
+
+    .advantage-item,
+    .work-step {
+        padding: 10px;
+    }
+
+    .portfolio-item {
+        min-width: 220px;
+        height: 160px;
+    }
+
+    .contact-footer {
+        padding: 15px 10px;
+    }
 }
 
 
